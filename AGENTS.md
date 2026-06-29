@@ -5,8 +5,9 @@ Guidance for OpenCode sessions working in this repo. Park Quest is a greenfield,
 ## Workflow
 
 - Work one GitHub issue at a time.
+- Before starting a new issue: confirm the previous issue's PR was merged, switch to `main`, and pull to update before creating the new feature branch.
 - Create one feature branch per issue: `feat/<issue#>-<slug>` off `main` (e.g. `feat/3-drizzle-schema`).
-- Open one PR per issue back to `main`, defaulting to draft PRs. Reference the issue in the PR body with `Refs #<issue#>` while the work is in progress or a draft. Once the PR is ready for review and fully satisfies every acceptance criterion in the issue, use `Closes #<issue#>` instead. GitHub only closes the issue when the PR is merged (not when `Closes` is written), so `Closes` is safe on draft PRs since merging is gated by the user.
+- Open one PR per issue back to `main`, defaulting to draft PRs. Use `Closes #<issue#>` in the PR body when the PR fully satisfies every acceptance criterion in the issue — this is the default for a complete PR, even a draft. GitHub only closes the issue when the PR is merged (not when `Closes` is written), so `Closes` is safe on draft PRs since merging is gated by the user. Use `Refs #<issue#>` only while work is still in progress and the acceptance criteria are not yet met.
 - After being explicitly asked to finish an issue, you may commit, push, and open a draft PR. Never merge PRs. Stop after opening the draft PR and provide the PR link.
 - Stay strictly within an issue's scope. Each issue explicitly forbids building features that belong to a later issue — do not pre-implement UI, auth, map, quest engine, etc.
 - It is okay to skim later issues for context, but code changes must stay inside the current issue's scope.
