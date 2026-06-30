@@ -34,6 +34,10 @@ export default function SignInForm() {
         Sign in
       </h1>
 
+      <p className="mt-2 text-sm text-slate-500">
+        Welcome back to your Park Passport.
+      </p>
+
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         {error && (
           <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -48,7 +52,7 @@ export default function SignInForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
           />
         </label>
 
@@ -60,7 +64,7 @@ export default function SignInForm() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
           />
         </label>
 
