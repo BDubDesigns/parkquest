@@ -29,28 +29,30 @@ export default async function ParkDetailPage({ params }: Props) {
     <div>
       <Link
         href="/parks"
-        className="text-sm text-neutral-500 underline underline-offset-2 hover:text-neutral-800"
+        className="text-sm text-slate-500 underline underline-offset-2 hover:text-slate-800"
       >
         &larr; Back to parks
       </Link>
 
-      <article className="mt-6">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
+      <article className="mt-6 rounded-lg border border-slate-200 bg-white px-6 py-6 shadow-sm">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
           {park.name}
         </h1>
-        <p className="mt-1 text-sm text-neutral-500">{park.regionName}</p>
+        <p className="mt-1 text-sm text-slate-500">{park.regionName}</p>
 
         {park.description && (
-          <p className="mt-4 text-neutral-700">{park.description}</p>
+          <p className="mt-4 leading-relaxed text-slate-700">
+            {park.description}
+          </p>
         )}
 
-        <p className="mt-4 text-xs text-neutral-400">
+        <p className="mt-4 text-xs text-slate-400">
           {park.latitude.toFixed(4)}, {park.longitude.toFixed(4)}
         </p>
 
         {park.amenities.length > 0 && (
           <section className="mt-6">
-            <h2 className="mb-2 text-sm font-semibold text-neutral-700">
+            <h2 className="mb-3 text-sm font-semibold text-slate-700">
               Amenities
             </h2>
             <div className="flex flex-wrap gap-1.5">
@@ -63,14 +65,14 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.sourceUrl && (
           <section className="mt-6">
-            <h2 className="mb-1 text-sm font-semibold text-neutral-700">
+            <h2 className="mb-1 text-sm font-semibold text-slate-700">
               Source
             </h2>
             <a
               href={park.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-neutral-600 underline underline-offset-2 hover:text-neutral-900"
+              className="break-all text-sm text-slate-600 underline underline-offset-2 hover:text-slate-900"
             >
               {park.sourceUrl}
             </a>

@@ -23,16 +23,16 @@ export default function ParkCard({
   return (
     <Link
       href={`/parks/${slug}`}
-      className="block rounded-lg border border-neutral-200 p-4 transition-colors hover:border-neutral-400"
+      className="block rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm transition-shadow hover:shadow-md"
     >
-      <h2 className="text-lg font-semibold text-neutral-900">{name}</h2>
-      <p className="mt-0.5 text-sm text-neutral-500">{regionName}</p>
+      <h2 className="text-lg font-semibold text-slate-900">{name}</h2>
+      <p className="mt-0.5 text-sm text-slate-500">{regionName}</p>
       {description && (
-        <p className="mt-2 line-clamp-2 text-sm text-neutral-600">
+        <p className="mt-2 line-clamp-2 text-sm text-slate-600">
           {description}
         </p>
       )}
-      <p className="mt-1 text-xs text-neutral-400">
+      <p className="mt-2 text-xs text-slate-400">
         {latitude.toFixed(4)}, {longitude.toFixed(4)}
       </p>
       {amenities.length > 0 && (
