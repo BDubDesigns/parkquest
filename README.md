@@ -66,6 +66,21 @@ To stop and **also remove the Postgres volume** (wipe data):
 docker compose down -v
 ```
 
+## Seed data
+
+Bellingham city park data can be seeded into the local Postgres database:
+
+```bash
+cp .env.example .env
+# edit .env to set POSTGRES_PASSWORD and ensure DATABASE_URL points at your local Postgres
+npm run db:migrate   # ensure the schema is current (from issue #3)
+npm run db:seed      # seed Bellingham region, parks, amenities, and verified amenity links
+```
+
+The seed is idempotent — running it multiple times won't create duplicates.
+
+The seed covers **46 Bellingham parks** from the official City of Bellingham Parks Guide, **17 reusable amenity definitions**, and **66 verified park-amenity links**. Neighborhood parks with uncertain amenity data are seeded with basic info (name, coordinates, source URL) but without amenity links pending future verification.
+
 ## Coolify deployment
 
 This is a standard Node app with a `Dockerfile`, so it deploys on [Coolify](https://coolify.io) as a generic Docker service:
