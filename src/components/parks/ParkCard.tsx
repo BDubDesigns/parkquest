@@ -25,7 +25,10 @@ export default function ParkCard({
       href={`/parks/${slug}`}
       className="block rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm transition-shadow hover:shadow-md"
     >
-      <h2 className="text-lg font-semibold text-slate-900">{name}</h2>
+      <h2 className="text-lg font-semibold text-slate-900">
+        {name}
+        <span className="ml-1.5 text-slate-400">&rarr;</span>
+      </h2>
       <p className="mt-0.5 text-sm text-slate-500">{regionName}</p>
       {description && (
         <p className="mt-2 line-clamp-2 text-sm text-slate-600">
