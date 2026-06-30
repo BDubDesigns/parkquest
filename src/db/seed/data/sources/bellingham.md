@@ -35,6 +35,37 @@ Court, Sports Fields.
 **No manual or observational data** (satellite imagery, general knowledge, OSM
 tags, etc.) is used as authority for verified amenity links.
 
+### Source vs Official URL distinction
+
+Each park record carries two distinct URL fields:
+
+- **`sourceUrl`** — attribution URL pointing to the COB Parks Guide overview
+  page where the seed data (park name, description, classification, amenity
+  table facts) was sourced or verified. This is the citation metadata for the
+  seed.
+
+- **`officialUrl`** — the best user-facing official park page on the City of
+  Bellingham website, typically the individual park page within the Parks
+  Guide (e.g., `.../parks-guide/arroyo-park`). This is the link shown to users
+  as the "Official park page."
+
+All 46 seeded parks have an `officialUrl` derived from the COB Parks Guide
+link targets. Some URL slugs differ from the ParkQuest slug (noted below).
+
+Notable slug differences:
+
+| ParkQuest slug          | Official URL suffix                                                |
+| ----------------------- | ------------------------------------------------------------------ |
+| `big-rock-garden`       | `/big-rock`                                                        |
+| `bloedel-donovan`       | `/bloedel-donovan-park`                                            |
+| `depot-market-square`   | `/services/recreation/rental-facilities/...` (different base path) |
+| `lake-padden`           | `/lake-padden-park`                                                |
+| `little-squalicum`      | `/little-squalicum-park`                                           |
+| `maritime-heritage`     | `/maritime-heritage-park`                                          |
+| `rock-hill-park`        | `/rock-hill-park-2`                                                |
+| `sehome-hill-arboretum` | `/sehome-arboretum`                                                |
+| `shuksan-meadows-park`  | `/shuksan-meadows`                                                 |
+
 ### Coordinate Source
 
 Park coordinates are approximate values derived from OpenStreetMap data and

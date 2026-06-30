@@ -8,6 +8,7 @@ export interface ParkInfo {
   latitude: number;
   longitude: number;
   sourceUrl: string | null;
+  officialUrl: string | null;
   amenities: { name: string; slug: string }[];
 }
 
@@ -34,6 +35,7 @@ export async function getParks(): Promise<ParkInfo[]> {
     latitude: row.latitude,
     longitude: row.longitude,
     sourceUrl: row.sourceUrl,
+    officialUrl: row.officialUrl,
     amenities: row.parkAmenities.map((pa) => pa.amenity),
   }));
 }
@@ -63,6 +65,7 @@ export async function getParkBySlug(slug: string): Promise<ParkInfo | null> {
     latitude: row.latitude,
     longitude: row.longitude,
     sourceUrl: row.sourceUrl,
+    officialUrl: row.officialUrl,
     amenities: row.parkAmenities.map((pa) => pa.amenity),
   };
 }

@@ -37,6 +37,7 @@ export const parks = pgTable(
     latitude: doublePrecision("latitude").notNull(),
     longitude: doublePrecision("longitude").notNull(),
     sourceUrl: varchar("source_url", { length: 512 }),
+    officialUrl: varchar("official_url", { length: 512 }),
     isActive: boolean("is_active").default(true).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
