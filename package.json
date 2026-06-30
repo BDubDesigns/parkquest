@@ -18,6 +18,8 @@
     "db:seed": "npx tsx src/db/seed/run.ts"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.6.23",
+    "better-auth": "^1.6.23",
     "drizzle-orm": "^0.45.2",
     "leaflet": "^1.9.4",
     "next": "16.2.9",

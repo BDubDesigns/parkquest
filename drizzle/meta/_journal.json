@@ -15,6 +15,13 @@
       "when": 1782832458638,
       "tag": "0001_watery_dracula",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782854263375,
+      "tag": "0002_clumsy_katie_power",
+      "breakpoints": true
     }
   ]
 }

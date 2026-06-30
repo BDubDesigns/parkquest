@@ -10,10 +10,12 @@ import {
   visits,
   xpEvents,
 } from "./private";
+import { user, session, account } from "./auth";
 
 export * from "./enums";
 export * from "./public";
 export * from "./private";
+export * from "./auth";
 
 // --- Public atlas relations ---
 
@@ -59,6 +61,10 @@ export const familyMembersRelations = relations(familyMembers, ({ one }) => ({
   familyGroup: one(familyGroups, {
     fields: [familyMembers.familyGroupId],
     references: [familyGroups.id],
+  }),
+  user: one(user, {
+    fields: [familyMembers.userId],
+    references: [user.id],
   }),
 }));
 
@@ -118,5 +124,27 @@ export const questProgressRelations = relations(questProgress, ({ one }) => ({
   questDefinition: one(questDefinitions, {
     fields: [questProgress.questDefinitionId],
     references: [questDefinitions.id],
+  }),
+}));
+
+// --- Auth relations ---
+
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  familyMemberships: many(familyMembers),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
   }),
 }));
