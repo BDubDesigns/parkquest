@@ -49,12 +49,18 @@ export default async function StampSection({ parkSlug }: Props) {
   }
 
   const visitRows = await db.query.visits.findMany({
-    columns: { id: true, visitDate: true, rating: true, notes: true },
+    columns: {
+      id: true,
+      visitDate: true,
+      rating: true,
+      notes: true,
+      createdAt: true,
+    },
     where: and(
       eq(visits.familyGroupId, ctx.familyGroupId),
       eq(visits.parkId, parkId),
     ),
-    orderBy: desc(visits.visitDate),
+    orderBy: [desc(visits.visitDate), desc(visits.createdAt)],
   });
 
   if (visitRows.length === 0) {
