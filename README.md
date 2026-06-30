@@ -6,6 +6,9 @@ Turn every park into an adventure with maps, visits, quests, XP, badges, and fam
 
 - [Next.js](https://nextjs.org) (App Router) + TypeScript
 - [Tailwind CSS](https://tailwindcss.com)
+- [Drizzle ORM](https://orm.drizzle.team) + PostgreSQL
+- [Better Auth](https://www.better-auth.com) — email/password authentication
+- [Leaflet](https://leafletjs.com) + [react-leaflet](https://react-leaflet.js.org) — interactive park map
 - [Vitest](https://vitest.dev) for unit tests
 - [Playwright](https://playwright.dev) for e2e tests
 - [ESLint](https://eslint.org) + [Prettier](https://prettier.io)
@@ -14,15 +17,33 @@ Turn every park into an adventure with maps, visits, quests, XP, badges, and fam
 
 - Node.js 20+
 - npm
+- PostgreSQL (via Docker or local install)
 
 ## Local setup
 
 ```bash
+cp .env.example .env
+# edit .env:
+#   - set POSTGRES_PASSWORD (and optionally POSTGRES_USER/POSTGRES_DB)
+#   - set BETTER_AUTH_SECRET (generate with: openssl rand -base64 48)
+#   - set BETTER_AUTH_URL to http://localhost:3000
 npm install
+npm run db:migrate   # create the tables
+npm run db:seed      # seed Bellingham park data
 npm run dev
 ```
 
 The app runs at <http://localhost:3000>.
+
+## Environment variables
+
+See `.env.example` for the full list. The key vars are:
+
+| Variable             | Description                                        |
+| -------------------- | -------------------------------------------------- |
+| `DATABASE_URL`       | PostgreSQL connection string                       |
+| `BETTER_AUTH_SECRET` | Secret key for cookie signing (min 32 chars)       |
+| `BETTER_AUTH_URL`    | Base URL of the app (e.g. `http://localhost:3000`) |
 
 ## Scripts
 
@@ -37,6 +58,20 @@ The app runs at <http://localhost:3000>.
 | `npm run typecheck`    | Type-check with `tsc --noEmit`               |
 | `npm run format`       | Format the codebase with Prettier            |
 | `npm run format:check` | Check formatting without writing             |
+| `npm run db:generate`  | Generate a Drizzle migration                 |
+| `npm run db:migrate`   | Apply pending Drizzle migrations             |
+| `npm run db:studio`    | Open Drizzle Studio (GUI database browser)   |
+| `npm run db:seed`      | Seed Bellingham region, parks, and amenities |
+
+## Authentication
+
+Better Auth provides email/password sign-up and sign-in. On sign-up, a family group is automatically created and the user is added as the owner.
+
+- **Sign up:** <http://localhost:3000/sign-up>
+- **Sign in:** <http://localhost:3000/sign-in>
+- **Account:** <http://localhost:3000/account> (protected — redirects to sign-in when signed out)
+
+Public routes (`/`, `/parks`, `/parks/[slug]`, `/map`) are accessible without login.
 
 ## Health check
 
@@ -88,7 +123,7 @@ This is a standard Node app with a `Dockerfile`, so it deploys on [Coolify](http
 - **Build command:** handled by the `Dockerfile` (multi-stage, `node:20-slim`, Next.js `output: "standalone"`).
 - **Port:** `3000` (the container listens on `0.0.0.0:3000`).
 - **Health check path:** `/api/health` (returns `200 { "status": "ok" }`).
-- **Required env:** `DATABASE_URL` (Coolify can inject this; the compose local setup wires it from `POSTGRES_*`).
+- **Required env:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`.
 - **Persistent storage:** attach a Coolify volume to the Postgres service at `/var/lib/postgresql/data`.
 
 If you run Postgres as a separate Coolify resource, set `DATABASE_URL` on the app resource to that service's connection string. If you let Coolify provision Postgres alongside, the same compose env pattern applies.
