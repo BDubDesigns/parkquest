@@ -40,6 +40,16 @@ export async function getParks(): Promise<ParkInfo[]> {
   }));
 }
 
+export async function getParkIdBySlug(slug: string): Promise<string | null> {
+  const row = await db.query.parks.findFirst({
+    columns: { id: true },
+    where: (parks, { and, eq }) =>
+      and(eq(parks.slug, slug), eq(parks.isActive, true)),
+  });
+
+  return row?.id ?? null;
+}
+
 export async function getParkBySlug(slug: string): Promise<ParkInfo | null> {
   const row = await db.query.parks.findFirst({
     where: (parks, { eq }) => eq(parks.slug, slug),

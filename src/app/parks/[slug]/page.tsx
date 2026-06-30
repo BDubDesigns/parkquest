@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getParkBySlug } from "@/lib/parks";
 import AmenityBadge from "@/components/parks/AmenityBadge";
+import StampSection from "@/components/parks/StampSection";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -95,6 +96,8 @@ export default async function ParkDetailPage({ params }: Props) {
           </section>
         )}
       </article>
+
+      <StampSection parkSlug={slug} />
     </div>
   );
 }
