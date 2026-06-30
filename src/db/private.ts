@@ -15,6 +15,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { parks } from "./public";
+import { user } from "./auth";
 import { familyMemberRoleEnum, questStatusEnum } from "./enums";
 
 export const familyGroups = pgTable("family_groups", {
@@ -35,10 +36,9 @@ export const familyMembers = pgTable(
     familyGroupId: uuid("family_group_id")
       .notNull()
       .references(() => familyGroups.id, { onDelete: "cascade" }),
-    // No FK yet — Better Auth user tables arrive in issue #7.
-    // varchar (not uuid) because we don't assume Better Auth's user ID type
-    // before integration. Length 255 covers common ID formats.
-    userId: varchar("user_id", { length: 255 }).notNull(),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => user.id),
     role: familyMemberRoleEnum("role").default("member").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
