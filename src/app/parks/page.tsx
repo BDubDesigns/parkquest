@@ -25,19 +25,29 @@ export default async function ParksPage() {
   }
 
   return (
-    <div className="grid gap-4">
-      {parks.map((park) => (
-        <ParkCard
-          key={park.slug}
-          name={park.name}
-          slug={park.slug}
-          regionName={park.regionName}
-          description={park.description}
-          latitude={park.latitude}
-          longitude={park.longitude}
-          amenities={park.amenities}
-        />
-      ))}
-    </div>
+    <>
+      <div className="mb-6">
+        <p className="text-slate-500">
+          Browse public park information and verified amenities.
+        </p>
+        <p className="mt-1 text-sm text-slate-500">
+          {parks.length} parks in {parks[0].regionName}
+        </p>
+      </div>
+      <div className="grid gap-4">
+        {parks.map((park) => (
+          <ParkCard
+            key={park.slug}
+            name={park.name}
+            slug={park.slug}
+            regionName={park.regionName}
+            description={park.description}
+            latitude={park.latitude}
+            longitude={park.longitude}
+            amenities={park.amenities}
+          />
+        ))}
+      </div>
+    </>
   );
 }
