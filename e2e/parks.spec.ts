@@ -26,7 +26,17 @@ test.describe("public park pages", () => {
 
     await expect(page.getByText(/48\.\d{4}/)).toBeVisible();
 
-    await expect(page.getByRole("link", { name: /cob\.org/ })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /whatcom-falls-park$/ }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("heading", { name: "Official park page" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("heading", { name: "Data source" }),
+    ).toBeVisible();
   });
 
   test("/parks/non-existent-slug shows not-found state", async ({ page }) => {

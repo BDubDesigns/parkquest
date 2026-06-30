@@ -1,0 +1,1 @@
+ALTER TABLE "parks" ADD COLUMN "official_url" varchar(512);

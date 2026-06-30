@@ -63,16 +63,32 @@ export default async function ParkDetailPage({ params }: Props) {
           </section>
         )}
 
-        {park.sourceUrl && (
+        {park.officialUrl && (
           <section className="mt-6">
             <h2 className="mb-1 text-sm font-semibold text-slate-700">
-              Source
+              Official park page
+            </h2>
+            <a
+              href={park.officialUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="break-all text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
+            >
+              {park.officialUrl}
+            </a>
+          </section>
+        )}
+
+        {park.sourceUrl && (
+          <section className="mt-6">
+            <h2 className="mb-1 text-xs font-medium text-slate-500">
+              Data source
             </h2>
             <a
               href={park.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-sm text-slate-600 underline underline-offset-2 hover:text-slate-900"
+              className="break-all text-xs text-slate-400 underline underline-offset-2 hover:text-slate-600"
             >
               {park.sourceUrl}
             </a>

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import * as schema from "../schema";
 import { seedSharedData } from "./seed-shared";
 import { parks, parkAmenities } from "../schema";
@@ -38,8 +38,15 @@ async function main() {
     latitude: p.latitude,
     longitude: p.longitude,
     sourceUrl: p.sourceUrl,
+    officialUrl: p.officialUrl,
   }));
-  await db.insert(parks).values(parkInsertValues).onConflictDoNothing();
+  await db
+    .insert(parks)
+    .values(parkInsertValues)
+    .onConflictDoUpdate({
+      target: parks.slug,
+      set: { officialUrl: sql`excluded.official_url` },
+    });
 
   // Step 4: Resolve IDs by slug
   const allParks = await db
