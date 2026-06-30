@@ -1,5 +1,5 @@
 {
-  "id": "2b269029-9d14-4bf0-bef6-384806eb1d93",
+  "id": "fcbbc247-9f6f-4a4a-891b-a5febf583684",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -33,15 +33,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -73,35 +73,35 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "parkId": {
-          "name": "parkId",
+        "park_id": {
+          "name": "park_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "amenityId": {
-          "name": "amenityId",
+        "amenity_id": {
+          "name": "amenity_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "verificationStatus": {
-          "name": "verificationStatus",
+        "verification_status": {
+          "name": "verification_status",
           "type": "amenity_verification_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'unverified'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -113,13 +113,13 @@
           "name": "park_amenities_park_id_amenity_id_idx",
           "columns": [
             {
-              "expression": "parkId",
+              "expression": "park_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "amenityId",
+              "expression": "amenity_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -132,20 +132,20 @@
         }
       },
       "foreignKeys": {
-        "park_amenities_parkId_parks_id_fk": {
-          "name": "park_amenities_parkId_parks_id_fk",
+        "park_amenities_park_id_parks_id_fk": {
+          "name": "park_amenities_park_id_parks_id_fk",
           "tableFrom": "park_amenities",
           "tableTo": "parks",
-          "columnsFrom": ["parkId"],
+          "columnsFrom": ["park_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "park_amenities_amenityId_amenities_id_fk": {
-          "name": "park_amenities_amenityId_amenities_id_fk",
+        "park_amenities_amenity_id_amenities_id_fk": {
+          "name": "park_amenities_amenity_id_amenities_id_fk",
           "tableFrom": "park_amenities",
           "tableTo": "amenities",
-          "columnsFrom": ["amenityId"],
+          "columnsFrom": ["amenity_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -168,8 +168,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "regionId": {
-          "name": "regionId",
+        "region_id": {
+          "name": "region_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -204,28 +204,28 @@
           "primaryKey": false,
           "notNull": true
         },
-        "sourceUrl": {
-          "name": "sourceUrl",
+        "source_url": {
+          "name": "source_url",
           "type": "varchar(512)",
           "primaryKey": false,
           "notNull": false
         },
-        "isActive": {
-          "name": "isActive",
+        "is_active": {
+          "name": "is_active",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "default": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -237,7 +237,7 @@
           "name": "parks_region_id_idx",
           "columns": [
             {
-              "expression": "regionId",
+              "expression": "region_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -250,11 +250,11 @@
         }
       },
       "foreignKeys": {
-        "parks_regionId_regions_id_fk": {
-          "name": "parks_regionId_regions_id_fk",
+        "parks_region_id_regions_id_fk": {
+          "name": "parks_region_id_regions_id_fk",
           "tableFrom": "parks",
           "tableTo": "regions",
-          "columnsFrom": ["regionId"],
+          "columnsFrom": ["region_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -303,15 +303,15 @@
           "notNull": true,
           "default": "'city'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -367,15 +367,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -407,20 +407,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "familyGroupId": {
-          "name": "familyGroupId",
+        "family_group_id": {
+          "name": "family_group_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "badgeDefinitionId": {
-          "name": "badgeDefinitionId",
+        "badge_definition_id": {
+          "name": "badge_definition_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "earnedAt": {
-          "name": "earnedAt",
+        "earned_at": {
+          "name": "earned_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -432,13 +432,13 @@
           "name": "earned_badges_family_group_id_badge_definition_id_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "badgeDefinitionId",
+              "expression": "badge_definition_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -451,20 +451,20 @@
         }
       },
       "foreignKeys": {
-        "earned_badges_familyGroupId_family_groups_id_fk": {
-          "name": "earned_badges_familyGroupId_family_groups_id_fk",
+        "earned_badges_family_group_id_family_groups_id_fk": {
+          "name": "earned_badges_family_group_id_family_groups_id_fk",
           "tableFrom": "earned_badges",
           "tableTo": "family_groups",
-          "columnsFrom": ["familyGroupId"],
+          "columnsFrom": ["family_group_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "earned_badges_badgeDefinitionId_badge_definitions_id_fk": {
-          "name": "earned_badges_badgeDefinitionId_badge_definitions_id_fk",
+        "earned_badges_badge_definition_id_badge_definitions_id_fk": {
+          "name": "earned_badges_badge_definition_id_badge_definitions_id_fk",
           "tableFrom": "earned_badges",
           "tableTo": "badge_definitions",
-          "columnsFrom": ["badgeDefinitionId"],
+          "columnsFrom": ["badge_definition_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -493,15 +493,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -527,15 +527,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "familyGroupId": {
-          "name": "familyGroupId",
+        "family_group_id": {
+          "name": "family_group_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "userId": {
-          "name": "userId",
-          "type": "uuid",
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -547,15 +547,15 @@
           "notNull": true,
           "default": "'member'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -567,13 +567,13 @@
           "name": "family_members_family_group_id_user_id_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "userId",
+              "expression": "user_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -586,11 +586,11 @@
         }
       },
       "foreignKeys": {
-        "family_members_familyGroupId_family_groups_id_fk": {
-          "name": "family_members_familyGroupId_family_groups_id_fk",
+        "family_members_family_group_id_family_groups_id_fk": {
+          "name": "family_members_family_group_id_family_groups_id_fk",
           "tableFrom": "family_members",
           "tableTo": "family_groups",
-          "columnsFrom": ["familyGroupId"],
+          "columnsFrom": ["family_group_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -637,29 +637,29 @@
           "primaryKey": false,
           "notNull": false
         },
-        "xpReward": {
-          "name": "xpReward",
+        "xp_reward": {
+          "name": "xp_reward",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
         },
-        "isDaily": {
-          "name": "isDaily",
+        "is_daily": {
+          "name": "is_daily",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "default": true
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -691,20 +691,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "familyGroupId": {
-          "name": "familyGroupId",
+        "family_group_id": {
+          "name": "family_group_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "questDefinitionId": {
-          "name": "questDefinitionId",
+        "quest_definition_id": {
+          "name": "quest_definition_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "assignedDate": {
-          "name": "assignedDate",
+        "assigned_date": {
+          "name": "assigned_date",
           "type": "date",
           "primaryKey": false,
           "notNull": true
@@ -717,8 +717,8 @@
           "notNull": true,
           "default": "'assigned'"
         },
-        "completedAt": {
-          "name": "completedAt",
+        "completed_at": {
+          "name": "completed_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -729,19 +729,19 @@
           "name": "quest_progress_family_group_id_quest_definition_id_assigned_date_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "questDefinitionId",
+              "expression": "quest_definition_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "assignedDate",
+              "expression": "assigned_date",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -756,13 +756,13 @@
           "name": "quest_progress_family_group_id_assigned_date_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "assignedDate",
+              "expression": "assigned_date",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -775,20 +775,20 @@
         }
       },
       "foreignKeys": {
-        "quest_progress_familyGroupId_family_groups_id_fk": {
-          "name": "quest_progress_familyGroupId_family_groups_id_fk",
+        "quest_progress_family_group_id_family_groups_id_fk": {
+          "name": "quest_progress_family_group_id_family_groups_id_fk",
           "tableFrom": "quest_progress",
           "tableTo": "family_groups",
-          "columnsFrom": ["familyGroupId"],
+          "columnsFrom": ["family_group_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "quest_progress_questDefinitionId_quest_definitions_id_fk": {
-          "name": "quest_progress_questDefinitionId_quest_definitions_id_fk",
+        "quest_progress_quest_definition_id_quest_definitions_id_fk": {
+          "name": "quest_progress_quest_definition_id_quest_definitions_id_fk",
           "tableFrom": "quest_progress",
           "tableTo": "quest_definitions",
-          "columnsFrom": ["questDefinitionId"],
+          "columnsFrom": ["quest_definition_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -811,32 +811,32 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "familyGroupId": {
-          "name": "familyGroupId",
+        "family_group_id": {
+          "name": "family_group_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "parkId": {
-          "name": "parkId",
+        "park_id": {
+          "name": "park_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "visitDate": {
-          "name": "visitDate",
+        "visit_date": {
+          "name": "visit_date",
           "type": "date",
           "primaryKey": false,
           "notNull": true
         },
-        "arrivalTime": {
-          "name": "arrivalTime",
+        "arrival_time": {
+          "name": "arrival_time",
           "type": "time",
           "primaryKey": false,
           "notNull": false
         },
-        "leaveTime": {
-          "name": "leaveTime",
+        "leave_time": {
+          "name": "leave_time",
           "type": "time",
           "primaryKey": false,
           "notNull": false
@@ -847,8 +847,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "feltSafe": {
-          "name": "feltSafe",
+        "felt_safe": {
+          "name": "felt_safe",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
@@ -859,21 +859,21 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdByUserId": {
-          "name": "createdByUserId",
-          "type": "uuid",
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -885,13 +885,13 @@
           "name": "visits_family_group_id_park_id_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "parkId",
+              "expression": "park_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -904,20 +904,20 @@
         }
       },
       "foreignKeys": {
-        "visits_familyGroupId_family_groups_id_fk": {
-          "name": "visits_familyGroupId_family_groups_id_fk",
+        "visits_family_group_id_family_groups_id_fk": {
+          "name": "visits_family_group_id_family_groups_id_fk",
           "tableFrom": "visits",
           "tableTo": "family_groups",
-          "columnsFrom": ["familyGroupId"],
+          "columnsFrom": ["family_group_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "visits_parkId_parks_id_fk": {
-          "name": "visits_parkId_parks_id_fk",
+        "visits_park_id_parks_id_fk": {
+          "name": "visits_park_id_parks_id_fk",
           "tableFrom": "visits",
           "tableTo": "parks",
-          "columnsFrom": ["parkId"],
+          "columnsFrom": ["park_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -945,8 +945,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "familyGroupId": {
-          "name": "familyGroupId",
+        "family_group_id": {
+          "name": "family_group_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -963,14 +963,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "sourceVisitId": {
-          "name": "sourceVisitId",
+        "source_visit_id": {
+          "name": "source_visit_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -982,7 +982,7 @@
           "name": "xp_events_family_group_id_idx",
           "columns": [
             {
-              "expression": "familyGroupId",
+              "expression": "family_group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -995,20 +995,20 @@
         }
       },
       "foreignKeys": {
-        "xp_events_familyGroupId_family_groups_id_fk": {
-          "name": "xp_events_familyGroupId_family_groups_id_fk",
+        "xp_events_family_group_id_family_groups_id_fk": {
+          "name": "xp_events_family_group_id_family_groups_id_fk",
           "tableFrom": "xp_events",
           "tableTo": "family_groups",
-          "columnsFrom": ["familyGroupId"],
+          "columnsFrom": ["family_group_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "xp_events_sourceVisitId_visits_id_fk": {
-          "name": "xp_events_sourceVisitId_visits_id_fk",
+        "xp_events_source_visit_id_visits_id_fk": {
+          "name": "xp_events_source_visit_id_visits_id_fk",
           "tableFrom": "xp_events",
           "tableTo": "visits",
-          "columnsFrom": ["sourceVisitId"],
+          "columnsFrom": ["source_visit_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
