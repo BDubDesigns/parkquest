@@ -166,7 +166,7 @@ export default async function PassportPage() {
         {ctx.familyGroupName ?? "Family"} Park Passport
       </h1>
 
-      <p className="mt-2 max-w-prose text-sm text-emerald-200/80">
+      <p className="mt-2 max-w-prose text-sm text-emerald-100/75">
         Your Park Passport is private to your family. Other families cannot see
         your stamps, memories, Adventure Points, or stickers.
       </p>
@@ -178,7 +178,7 @@ export default async function PassportPage() {
             style={{ width: `${percent}%` }}
           />
         </div>
-        <p className="mt-2 text-sm font-medium text-emerald-200">
+        <p className="mt-2 text-sm font-medium text-white">
           {uniqueStamped} / {totalParks} {region.name} parks stamped
         </p>
 
@@ -186,40 +186,43 @@ export default async function PassportPage() {
           <span className="text-lg font-bold text-amber-300">
             {totalAdventurePoints.toLocaleString()}
           </span>{" "}
-          <span className="text-sm text-emerald-200/80">Adventure Points</span>
+          <span className="text-sm text-stone-300/80">Adventure Points</span>
         </p>
       </section>
 
       {todayChallenges.length > 0 && (
-        <section className="mt-8 border-t border-emerald-800 pt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
+        <section className="mt-8 rounded-2xl bg-emerald-900/60 p-4 ring-1 ring-emerald-800 sm:p-5">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
             Today&apos;s Quests
           </h2>
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3">
             {todayChallenges.map((ch) => (
-              <li key={ch.id} className="text-sm">
-                {ch.status === "completed" ? (
-                  <>
-                    <span aria-hidden="true" className="text-emerald-300">
-                      ✓
-                    </span>{" "}
-                    <span className="font-medium text-emerald-200">
-                      {ch.name}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span aria-hidden="true" className="text-emerald-500/50">
-                      ○
-                    </span>{" "}
-                    <span className="text-emerald-300/60">{ch.name}</span>
-                  </>
-                )}
-                <span className="ml-2 text-xs text-emerald-400/80">
-                  {ch.xpReward} Adventure Points
-                </span>
+              <li
+                key={ch.id}
+                className="flex flex-col gap-0.5 border-b border-emerald-800/50 py-2 text-sm last:border-b-0"
+              >
+                <div className="flex items-center gap-2">
+                  {ch.status === "completed" ? (
+                    <>
+                      <span aria-hidden="true" className="text-amber-300">
+                        ✓
+                      </span>
+                      <span className="font-medium text-white">{ch.name}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span aria-hidden="true" className="text-stone-500/60">
+                        ○
+                      </span>
+                      <span className="text-stone-300/70">{ch.name}</span>
+                    </>
+                  )}
+                  <span className="ml-auto text-xs font-medium text-amber-300/80">
+                    {ch.xpReward} Adventure Points
+                  </span>
+                </div>
                 {ch.description && (
-                  <p className="ml-4 mt-0.5 text-xs text-emerald-300/60">
+                  <p className="ml-5 text-xs text-stone-400/70">
                     {ch.description}
                   </p>
                 )}
@@ -229,25 +232,28 @@ export default async function PassportPage() {
         </section>
       )}
 
-      <section className="mt-8 border-t border-emerald-800 pt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-          Stickers ({earnedStickers.length} / {allDefinitions.length})
+      <section className="mt-8 rounded-2xl bg-emerald-900/60 p-4 ring-1 ring-emerald-800 sm:p-5">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
+          Stickers{" "}
+          <span className="text-white">
+            ({earnedStickers.length} / {allDefinitions.length})
+          </span>
         </h2>
 
         {earnedStickers.length > 0 && (
           <div className="mt-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-emerald-200/70">
+            <p className="text-xs font-medium uppercase tracking-wide text-amber-300/80">
               Earned
             </p>
             <ul className="mt-1 space-y-1">
               {earnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-emerald-300">
+                  <span aria-hidden="true" className="text-amber-300">
                     ✓
                   </span>{" "}
-                  <span className="font-medium text-emerald-100">{s.name}</span>
+                  <span className="font-medium text-white">{s.name}</span>
                   {s.description && (
-                    <span className="ml-2 text-emerald-200/70">
+                    <span className="ml-2 text-stone-400/70">
                       &mdash; {s.description}
                     </span>
                   )}
@@ -259,18 +265,18 @@ export default async function PassportPage() {
 
         {unearnedStickers.length > 0 && (
           <div className={earnedStickers.length > 0 ? "mt-4" : "mt-3"}>
-            <p className="text-xs font-medium uppercase tracking-wide text-emerald-200/70">
+            <p className="text-xs font-medium uppercase tracking-wide text-stone-400/70">
               Still to earn
             </p>
             <ul className="mt-1 space-y-1">
               {unearnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-emerald-500/50">
+                  <span aria-hidden="true" className="text-stone-500/60">
                     ○
                   </span>{" "}
-                  <span className="text-emerald-300/60">{s.name}</span>
+                  <span className="text-stone-400/70">{s.name}</span>
                   {s.description && (
-                    <span className="ml-2 text-emerald-200/70">
+                    <span className="ml-2 text-stone-400/70">
                       &mdash; {s.description}
                     </span>
                   )}
@@ -282,29 +288,34 @@ export default async function PassportPage() {
       </section>
 
       {recentStamps.length > 0 && (
-        <section className="mt-8 border-t border-emerald-800 pt-6">
+        <section className="mt-8 rounded-2xl bg-emerald-900/60 p-4 ring-1 ring-emerald-800 sm:p-5">
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Recently stamped
           </h2>
-          <ol className="mt-3 space-y-3">
+          <ol className="mt-3">
             {recentStamps.map((stamp) => (
-              <li key={stamp.id} className="text-sm">
-                <Link
-                  href={`/parks/${stamp.park.slug}`}
-                  className="font-medium text-emerald-50 underline decoration-emerald-500 underline-offset-2 hover:text-emerald-200"
-                >
-                  {stamp.park.name}
-                </Link>
-                <span className="ml-2 text-emerald-200/70">
-                  &mdash; {formatDate(stamp.visitDate)}
-                </span>
-                {stamp.rating && (
-                  <span className="ml-2">
-                    <Stars count={stamp.rating} />
+              <li
+                key={stamp.id}
+                className="border-b border-emerald-800/50 py-2 text-sm last:border-b-0"
+              >
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <Link
+                    href={`/parks/${stamp.park.slug}`}
+                    className="font-medium text-white underline decoration-amber-500/40 underline-offset-2 hover:decoration-amber-300"
+                  >
+                    {stamp.park.name}
+                  </Link>
+                  <span className="text-stone-400/70">
+                    &mdash; {formatDate(stamp.visitDate)}
                   </span>
-                )}
+                  {stamp.rating && (
+                    <span>
+                      <Stars count={stamp.rating} />
+                    </span>
+                  )}
+                </div>
                 {stamp.notes && (
-                  <p className="mt-0.5 text-emerald-100/80 italic">
+                  <p className="mt-1 text-stone-300/80 italic">
                     &ldquo;{stamp.notes}&rdquo;
                   </p>
                 )}
@@ -315,19 +326,19 @@ export default async function PassportPage() {
       )}
 
       {stamped.length > 0 && (
-        <section className="mt-8 border-t border-emerald-800 pt-6">
+        <section className="mt-8 rounded-2xl bg-emerald-900/60 p-4 ring-1 ring-emerald-800 sm:p-5">
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Stamped parks ({stamped.length})
           </h2>
-          <ul className="mt-3 space-y-1">
+          <ul className="mt-3 space-y-1.5">
             {stamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-emerald-300">
+                <span aria-hidden="true" className="text-amber-300">
                   ✓
                 </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
-                  className="text-emerald-100 underline decoration-emerald-500 underline-offset-2 hover:text-white"
+                  className="text-white underline decoration-amber-500/40 underline-offset-2 hover:decoration-amber-300"
                 >
                   {p.name}
                 </Link>
@@ -338,19 +349,19 @@ export default async function PassportPage() {
       )}
 
       {unstamped.length > 0 && (
-        <section className="mt-8 border-t border-emerald-800 pt-6">
+        <section className="mt-8 rounded-2xl bg-emerald-900/60 p-4 ring-1 ring-emerald-800 sm:p-5">
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Still waiting for a stamp ({unstamped.length})
           </h2>
-          <ul className="mt-3 space-y-1">
+          <ul className="mt-3 space-y-1.5">
             {unstamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-emerald-500/50">
+                <span aria-hidden="true" className="text-stone-500/60">
                   ○
                 </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
-                  className="text-emerald-300/60 underline decoration-emerald-500 underline-offset-2 hover:text-white"
+                  className="text-stone-300/70 underline decoration-stone-500/40 underline-offset-2 hover:text-white"
                 >
                   {p.name}
                 </Link>

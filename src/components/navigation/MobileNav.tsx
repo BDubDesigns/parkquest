@@ -85,7 +85,7 @@ export default function MobileNav() {
                 className={`flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[0.6875rem] font-medium transition-colors ${
                   isActive
                     ? "text-amber-300"
-                    : "text-emerald-300/70 hover:text-emerald-100"
+                    : "text-stone-400/70 hover:text-stone-200"
                 }`}
               >
                 <svg
