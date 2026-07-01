@@ -4,6 +4,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Link from "next/link";
 import type { ParkInfo } from "@/lib/parks";
+import { linkPrimary, mutedText } from "@/components/ui/styles";
 
 const defaultIcon = new L.Icon({
   iconUrl: "/leaflet/marker-icon.png",
@@ -70,14 +71,12 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
                 <div className="text-sm">
                   <Link
                     href={`/parks/${park.slug}`}
-                    className="font-semibold text-emerald-50 underline decoration-emerald-500 underline-offset-2 hover:text-white"
+                    className={`font-semibold ${linkPrimary}`}
                   >
                     {park.name}
                   </Link>
-                  <p className="mt-0.5 text-emerald-200/70">
-                    {park.regionName}
-                  </p>
-                  <p className="text-emerald-300/60">
+                  <p className={`mt-0.5 ${mutedText}`}>{park.regionName}</p>
+                  <p className={mutedText}>
                     {park.amenities.length}{" "}
                     {park.amenities.length === 1 ? "amenity" : "amenities"}
                   </p>
@@ -85,8 +84,8 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
                     <p
                       className={
                         isStamped
-                          ? "mt-1 font-medium text-emerald-300"
-                          : "mt-1 text-emerald-300/50"
+                          ? "mt-1 font-medium text-amber-300"
+                          : "mt-1 text-stone-500/60"
                       }
                     >
                       {isStamped ? "Stamped" : "Not stamped yet"}

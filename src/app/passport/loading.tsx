@@ -1,7 +1,9 @@
+import { pageContainer, pageShell } from "@/components/ui/styles";
+
 export default function PassportLoading() {
   return (
-    <div className="min-h-screen bg-emerald-950">
-      <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className={pageShell}>
+      <div className={`${pageContainer} py-8`}>
         <div className="mb-8 flex gap-3">
           <div className="h-4 w-10 animate-pulse rounded bg-emerald-800" />
           <div className="h-4 w-10 animate-pulse rounded bg-emerald-800" />

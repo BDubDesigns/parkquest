@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { card, mutedText } from "@/components/ui/styles";
 import AmenityBadge from "./AmenityBadge";
 
 interface ParkCardProps {
@@ -23,19 +24,19 @@ export default function ParkCard({
   return (
     <Link
       href={`/parks/${slug}`}
-      className="block rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 transition-all hover:border-emerald-600/80 hover:shadow-xl hover:shadow-emerald-950/50 sm:p-6"
+      className={`block transition-all hover:border-emerald-600/80 hover:shadow-xl hover:shadow-emerald-950/50 ${card}`}
     >
       <h2 className="text-lg font-bold text-white">
         {name}
-        <span className="ml-1.5 text-emerald-300">&rarr;</span>
+        <span className="ml-1.5 text-amber-300">&rarr;</span>
       </h2>
-      <p className="mt-0.5 text-sm text-emerald-200/70">{regionName}</p>
+      <p className={`mt-0.5 text-sm ${mutedText}`}>{regionName}</p>
       {description && (
-        <p className="mt-2 line-clamp-2 text-sm text-emerald-100/80">
+        <p className="mt-2 line-clamp-2 text-sm text-stone-300/80">
           {description}
         </p>
       )}
-      <p className="mt-2 text-xs text-emerald-300/60">
+      <p className="mt-2 text-xs text-stone-500/60">
         {latitude.toFixed(4)}, {longitude.toFixed(4)}
       </p>
       {amenities.length > 0 && (

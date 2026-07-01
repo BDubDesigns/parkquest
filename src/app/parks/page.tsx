@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getParks } from "@/lib/parks";
 import ParkCard from "@/components/parks/ParkCard";
+import { card, mutedText } from "@/components/ui/styles";
 
 export const metadata: Metadata = {
   title: "Parks - Park Quest",
@@ -11,9 +12,11 @@ export default async function ParksPage() {
 
   if (parks.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 px-6 py-16 text-center shadow-2xl shadow-emerald-950/40">
+      <div
+        className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${card}`}
+      >
         <h2 className="text-xl font-semibold text-white">No parks found</h2>
-        <p className="max-w-md text-emerald-200/80">
+        <p className={`max-w-md ${mutedText}`}>
           If you are running this locally, your database may not be seeded yet.
           Run the following commands and then reload this page:
         </p>
@@ -27,10 +30,10 @@ export default async function ParksPage() {
   return (
     <>
       <div className="mb-6">
-        <p className="text-emerald-200/80">
+        <p className="text-stone-300/80">
           Browse public park information and verified amenities.
         </p>
-        <p className="mt-1 text-sm text-emerald-300/70">
+        <p className={`mt-1 text-sm ${mutedText}`}>
           {parks.length} parks in {parks[0].regionName}
         </p>
       </div>

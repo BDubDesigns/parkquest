@@ -1,3 +1,9 @@
+import {
+  card,
+  dividerSubtle,
+  eyebrow,
+  mutedText,
+} from "@/components/ui/styles";
 import StampForm from "./StampForm";
 
 interface VisitRow {
@@ -37,31 +43,27 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
   const displayVisits = visits.slice(0, 5);
 
   return (
-    <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-8 sm:p-6">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-        Park Passport
-      </h2>
+    <section className={`mt-6 sm:mt-8 ${card}`}>
+      <h2 className={eyebrow}>Park Passport</h2>
 
       <p className="mt-2 text-sm font-medium text-white">
         Stamped! This park is in your family passport.
       </p>
 
-      <p className="mt-1 text-sm text-emerald-200/80">
+      <p className={`mt-1 text-sm ${mutedText}`}>
         Stamped {visitCount} time{visitCount !== 1 ? "s" : ""}
       </p>
 
       {displayVisits.length > 0 && (
-        <ol className="mt-4 space-y-3 border-t border-emerald-700/70 pt-4">
+        <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
           {displayVisits.map((v) => (
             <li key={v.id} className="text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-emerald-200">
-                  {formatDate(v.visitDate)}
-                </span>
+                <span className={mutedText}>{formatDate(v.visitDate)}</span>
                 {v.rating && <Stars count={v.rating} />}
               </div>
               {v.notes && (
-                <p className="mt-1 text-emerald-100/80 italic">
+                <p className="mt-1 text-stone-300/80 italic">
                   &ldquo;{v.notes}&rdquo;
                 </p>
               )}
@@ -71,12 +73,12 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
       )}
 
       {visitCount > 5 && (
-        <p className="mt-3 text-xs text-emerald-300/60">
+        <p className={`mt-3 text-xs ${mutedText}`}>
           Showing 5 most recent of {visitCount} stamps.
         </p>
       )}
 
-      <div className="mt-4 border-t border-emerald-700/70 pt-4">
+      <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
         <StampForm parkSlug={parkSlug} alreadyStamped />
       </div>
     </section>

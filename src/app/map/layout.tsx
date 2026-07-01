@@ -1,28 +1,23 @@
 import Link from "next/link";
 import UserMenu from "@/components/auth/UserMenu";
+import { linkText, pageContainerWide, pageShell } from "@/components/ui/styles";
 
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-emerald-950">
-      <div className="mx-auto max-w-5xl px-3 py-4 sm:px-4 md:py-8">
+    <div className={pageShell}>
+      <div className={pageContainerWide}>
         <header className="mb-4 md:mb-6">
-          <nav className="hidden items-center gap-3 text-sm text-emerald-200/70 md:flex">
-            <Link
-              href="/"
-              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
-            >
+          <nav className="hidden items-center gap-3 text-sm md:flex">
+            <Link href="/" className={linkText}>
               Home
             </Link>
-            <span aria-hidden="true" className="text-emerald-500">
+            <span aria-hidden="true" className="text-stone-500/60">
               &middot;
             </span>
-            <Link
-              href="/parks"
-              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
-            >
+            <Link href="/parks" className={linkText}>
               Parks
             </Link>
-            <span aria-hidden="true" className="text-emerald-500">
+            <span aria-hidden="true" className="text-stone-500/60">
               &middot;
             </span>
             <UserMenu />

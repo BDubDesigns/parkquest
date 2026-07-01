@@ -5,6 +5,7 @@ import { familyMembers } from "@/db/private";
 import { eq } from "drizzle-orm";
 import SignOutButton from "@/components/auth/SignOutButton";
 import { createFamilyGroup } from "./actions";
+import { card, ctaPrimary, eyebrow, mutedText } from "@/components/ui/styles";
 
 export default async function AccountPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -22,17 +23,15 @@ export default async function AccountPage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight text-white">Account</h1>
 
-      <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-          Profile
-        </h2>
+      <section className={`mt-6 ${card}`}>
+        <h2 className={eyebrow}>Profile</h2>
         <dl className="mt-3 space-y-2 text-sm">
           <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-            <dt className="text-emerald-200/70">Name</dt>
+            <dt className={mutedText}>Name</dt>
             <dd className="font-medium text-white">{session.user.name}</dd>
           </div>
           <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-            <dt className="text-emerald-200/70">Email</dt>
+            <dt className={mutedText}>Email</dt>
             <dd className="break-all font-medium text-white">
               {session.user.email}
             </dd>
@@ -41,19 +40,17 @@ export default async function AccountPage() {
       </section>
 
       {member ? (
-        <section className="mt-4 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-            Family Group
-          </h2>
+        <section className={`mt-4 ${card}`}>
+          <h2 className={eyebrow}>Family Group</h2>
           <dl className="mt-3 space-y-2 text-sm">
             <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-              <dt className="text-emerald-200/70">Name</dt>
+              <dt className={mutedText}>Name</dt>
               <dd className="font-medium text-white">
                 {member.familyGroup.name ?? "(unnamed)"}
               </dd>
             </div>
             <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-              <dt className="text-emerald-200/70">Role</dt>
+              <dt className={mutedText}>Role</dt>
               <dd className="font-medium text-white">{member.role}</dd>
             </div>
           </dl>
@@ -65,10 +62,7 @@ export default async function AccountPage() {
             normally created when you sign up.
           </p>
           <form action={createFamilyGroup} className="mt-3">
-            <button
-              type="submit"
-              className="min-h-11 rounded-full bg-amber-300 px-6 py-2 text-sm font-bold text-emerald-950 transition-colors hover:bg-amber-200"
-            >
+            <button type="submit" className={`min-h-11 ${ctaPrimary}`}>
               Repair: Create Family Group
             </button>
           </form>

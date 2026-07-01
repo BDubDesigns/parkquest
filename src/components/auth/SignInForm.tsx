@@ -4,6 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
+import {
+  ctaPrimary,
+  formInput,
+  formLabel,
+  linkText,
+  mutedText,
+} from "@/components/ui/styles";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -32,7 +39,7 @@ export default function SignInForm() {
     <div className="mx-auto max-w-sm">
       <h1 className="text-2xl font-bold tracking-tight text-white">Sign in</h1>
 
-      <p className="mt-2 text-sm text-emerald-200/80">
+      <p className={`mt-2 text-sm ${mutedText}`}>
         Welcome back to your Park Passport.
       </p>
 
@@ -44,43 +51,40 @@ export default function SignInForm() {
         )}
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-emerald-200">Email</span>
+          <span className={formLabel}>Email</span>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
+            className={`min-h-11 text-base ${formInput}`}
           />
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-emerald-200">Password</span>
+          <span className={formLabel}>Password</span>
           <input
             type="password"
             required
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
+            className={`min-h-11 text-base ${formInput}`}
           />
         </label>
 
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 min-h-11 rounded-full bg-amber-300 px-6 py-2 text-sm font-bold text-emerald-950 transition-colors hover:bg-amber-200 disabled:opacity-50"
+          className={`mt-2 min-h-11 ${ctaPrimary} disabled:opacity-50`}
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-emerald-200/70">
+      <p className={`mt-4 text-center text-sm ${mutedText}`}>
         Don&apos;t have an account?{" "}
-        <Link
-          href="/sign-up"
-          className="text-emerald-200 underline decoration-emerald-500 underline-offset-4 hover:text-white"
-        >
+        <Link href="/sign-up" className={linkText}>
           Sign up
         </Link>
       </p>

@@ -4,6 +4,14 @@ import Link from "next/link";
 import { getParkBySlug } from "@/lib/parks";
 import AmenityBadge from "@/components/parks/AmenityBadge";
 import StampSection from "@/components/parks/StampSection";
+import {
+  card,
+  eyebrow,
+  linkMuted,
+  linkPrimary,
+  linkText,
+  mutedText,
+} from "@/components/ui/styles";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,34 +36,29 @@ export default async function ParkDetailPage({ params }: Props) {
 
   return (
     <div>
-      <Link
-        href="/parks"
-        className="text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
-      >
+      <Link href="/parks" className={`text-sm ${linkText}`}>
         &larr; Back to parks
       </Link>
 
-      <article className="mt-5 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-6 sm:p-6">
+      <article className={`mt-5 sm:mt-6 ${card}`}>
         <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
           {park.name}
         </h1>
-        <p className="mt-1 text-sm text-emerald-200/70">{park.regionName}</p>
+        <p className={`mt-1 text-sm ${mutedText}`}>{park.regionName}</p>
 
         {park.description && (
-          <p className="mt-4 leading-relaxed text-emerald-100/80">
+          <p className="mt-4 leading-relaxed text-stone-300/80">
             {park.description}
           </p>
         )}
 
-        <p className="mt-4 text-xs text-emerald-300/60">
+        <p className="mt-4 text-xs text-stone-500/60">
           {park.latitude.toFixed(4)}, {park.longitude.toFixed(4)}
         </p>
 
         {park.amenities.length > 0 && (
           <section className="mt-6">
-            <h2 className="mb-3 text-sm font-semibold text-emerald-200">
-              Amenities
-            </h2>
+            <h2 className={`mb-3 ${eyebrow}`}>Amenities</h2>
             <div className="flex flex-wrap gap-1.5">
               {park.amenities.map((a) => (
                 <AmenityBadge key={a.slug} name={a.name} />
@@ -66,14 +69,12 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.officialUrl && (
           <section className="mt-6">
-            <h2 className="mb-1 text-sm font-semibold text-emerald-200">
-              Official park page
-            </h2>
+            <h2 className={`mb-1 ${eyebrow}`}>Official park page</h2>
             <a
               href={park.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-sm font-medium text-emerald-200 underline decoration-emerald-500 underline-offset-2 hover:text-white"
+              className={`break-all text-sm font-medium ${linkPrimary}`}
             >
               {park.officialUrl}
             </a>
@@ -82,14 +83,14 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.sourceUrl && (
           <section className="mt-6">
-            <h2 className="mb-1 text-xs font-medium text-emerald-200/70">
+            <h2 className={`mb-1 text-xs font-medium ${mutedText}`}>
               Data source
             </h2>
             <a
               href={park.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-xs text-emerald-400/60 underline underline-offset-2 hover:text-emerald-200"
+              className={`break-all text-xs ${linkMuted}`}
             >
               {park.sourceUrl}
             </a>

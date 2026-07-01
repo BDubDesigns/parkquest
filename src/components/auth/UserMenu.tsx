@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
+import { linkText, mutedText } from "@/components/ui/styles";
 
 export default function UserMenu() {
   const { data: session, isPending } = useSession();
 
   if (isPending) {
     return (
-      <span className="text-sm text-emerald-400/60" aria-hidden="true">
+      <span className={mutedText} aria-hidden="true">
         &middot;
       </span>
     );
@@ -16,10 +17,7 @@ export default function UserMenu() {
 
   if (!session) {
     return (
-      <Link
-        href="/sign-in"
-        className="text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
-      >
+      <Link href="/sign-in" className={`text-sm ${linkText}`}>
         Sign in
       </Link>
     );
@@ -27,23 +25,17 @@ export default function UserMenu() {
 
   return (
     <>
-      <span className="text-sm text-emerald-200/80">{session.user.name}</span>
-      <span aria-hidden="true" className="text-emerald-400/60">
+      <span className="text-sm text-stone-300/80">{session.user.name}</span>
+      <span aria-hidden="true" className={mutedText}>
         &middot;
       </span>
-      <Link
-        href="/passport"
-        className="text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
-      >
+      <Link href="/passport" className={`text-sm ${linkText}`}>
         Passport
       </Link>
-      <span aria-hidden="true" className="text-emerald-400/60">
+      <span aria-hidden="true" className={mutedText}>
         &middot;
       </span>
-      <Link
-        href="/account"
-        className="text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
-      >
+      <Link href="/account" className={`text-sm ${linkText}`}>
         Account
       </Link>
     </>

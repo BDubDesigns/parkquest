@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { linkText, pageContainer, pageShell } from "@/components/ui/styles";
 
 export default async function PassportLayout({
   children,
@@ -15,32 +16,23 @@ export default async function PassportLayout({
   }
 
   return (
-    <div className="min-h-screen bg-emerald-950">
-      <div className="mx-auto max-w-2xl px-4 py-6 md:py-8">
+    <div className={pageShell}>
+      <div className={pageContainer}>
         <header className="mb-8 hidden md:block">
-          <nav className="flex items-center gap-3 text-sm text-emerald-200/70">
-            <Link
-              href="/"
-              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
-            >
+          <nav className="flex items-center gap-3 text-sm">
+            <Link href="/" className={linkText}>
               Home
             </Link>
-            <span aria-hidden="true" className="text-emerald-500">
+            <span aria-hidden="true" className="text-stone-500/60">
               &middot;
             </span>
-            <Link
-              href="/parks"
-              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
-            >
+            <Link href="/parks" className={linkText}>
               Parks
             </Link>
-            <span aria-hidden="true" className="text-emerald-500">
+            <span aria-hidden="true" className="text-stone-500/60">
               &middot;
             </span>
-            <Link
-              href="/map"
-              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
-            >
+            <Link href="/map" className={linkText}>
               Map
             </Link>
           </nav>
