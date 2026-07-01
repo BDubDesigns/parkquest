@@ -35,8 +35,8 @@ export default async function ParkDetailPage({ params }: Props) {
         &larr; Back to parks
       </Link>
 
-      <article className="mt-6 rounded-lg border border-slate-200 bg-white px-6 py-6 shadow-sm">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+      <article className="mt-5 rounded-lg border border-slate-200 bg-white px-4 py-5 shadow-sm sm:mt-6 sm:px-6 sm:py-6">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
           {park.name}
         </h1>
         <p className="mt-1 text-sm text-slate-500">{park.regionName}</p>

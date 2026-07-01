@@ -8,9 +8,9 @@ export default function ParksLayout({
 }) {
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-2xl px-4 py-8">
-        <header className="mb-8">
-          <nav className="flex items-center gap-3 text-sm text-slate-500">
+      <div className="mx-auto max-w-2xl px-4 py-6 md:py-8">
+        <header className="mb-6 md:mb-8">
+          <nav className="hidden items-center gap-3 text-sm text-slate-500 md:flex">
             <Link
               href="/"
               className="underline underline-offset-2 hover:text-slate-800"
@@ -27,7 +27,7 @@ export default function ParksLayout({
             <span aria-hidden="true">&middot;</span>
             <UserMenu />
           </nav>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:mt-2">
             Parks
           </h1>
         </header>

@@ -162,7 +162,7 @@ export default async function PassportPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
         {ctx.familyGroupName ?? "Family"} Park Passport
       </h1>
 

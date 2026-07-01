@@ -37,7 +37,7 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
   const displayVisits = visits.slice(0, 5);
 
   return (
-    <section className="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
         Park Passport
       </h2>

@@ -24,35 +24,37 @@ export default async function AccountPage() {
         Account
       </h1>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
           Profile
         </h2>
         <dl className="mt-3 space-y-2 text-sm">
-          <div className="flex justify-between">
+          <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
             <dt className="text-slate-500">Name</dt>
             <dd className="font-medium text-slate-900">{session.user.name}</dd>
           </div>
-          <div className="flex justify-between">
+          <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
             <dt className="text-slate-500">Email</dt>
-            <dd className="font-medium text-slate-900">{session.user.email}</dd>
+            <dd className="break-all font-medium text-slate-900">
+              {session.user.email}
+            </dd>
           </div>
         </dl>
       </section>
 
       {member ? (
-        <section className="mt-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="mt-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
             Family Group
           </h2>
           <dl className="mt-3 space-y-2 text-sm">
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <dt className="text-slate-500">Name</dt>
               <dd className="font-medium text-slate-900">
                 {member.familyGroup.name ?? "(unnamed)"}
               </dd>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <dt className="text-slate-500">Role</dt>
               <dd className="font-medium text-slate-900">{member.role}</dd>
             </div>
@@ -67,7 +69,7 @@ export default async function AccountPage() {
           <form action={createFamilyGroup} className="mt-3">
             <button
               type="submit"
-              className="rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700"
+              className="min-h-11 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
             >
               Repair: Create Family Group
             </button>

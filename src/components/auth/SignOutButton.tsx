@@ -15,7 +15,7 @@ export default function SignOutButton() {
           },
         })
       }
-      className="text-sm text-slate-500 underline underline-offset-2 hover:text-slate-800"
+      className="inline-flex min-h-11 items-center text-sm text-slate-500 underline underline-offset-2 hover:text-slate-800"
     >
       Sign out
     </button>

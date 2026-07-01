@@ -1,0 +1,8 @@
+<!-- TODO: Replace this placeholder PQ mark when ParkQuest's final visual identity is available. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">ParkQuest placeholder app icon</title>
+  <rect width="512" height="512" rx="112" fill="#064e3b"/>
+  <circle cx="256" cy="256" r="178" fill="#fcd34d"/>
+  <path d="M164 354V158h91c51 0 82 27 82 72 0 46-31 74-82 74h-39v50h-52Zm52-94h33c24 0 37-10 37-30 0-19-13-29-37-29h-33v59Z" fill="#064e3b"/>
+  <path d="m311 315 45 45" fill="none" stroke="#064e3b" stroke-width="28" stroke-linecap="round"/>
+</svg>
