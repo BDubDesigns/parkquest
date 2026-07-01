@@ -163,7 +163,9 @@ export default async function PassportPage() {
             <ul className="mt-1 space-y-1">
               {earnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span className="text-green-600">&check;</span>{" "}
+                  <span aria-hidden="true" className="text-green-600">
+                    ✓
+                  </span>{" "}
                   <span className="font-medium text-slate-700">{s.name}</span>
                   {s.description && (
                     <span className="ml-2 text-slate-400">
@@ -184,7 +186,9 @@ export default async function PassportPage() {
             <ul className="mt-1 space-y-1">
               {unearnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span className="text-slate-300">&cir;</span>{" "}
+                  <span aria-hidden="true" className="text-slate-300">
+                    ○
+                  </span>{" "}
                   <span className="text-slate-500">{s.name}</span>
                   {s.description && (
                     <span className="ml-2 text-slate-400">
