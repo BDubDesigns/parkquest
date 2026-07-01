@@ -195,7 +195,7 @@ export default async function PassportPage() {
       {todayChallenges.length > 0 && (
         <section className="mt-8">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Today&apos;s Passport Challenges
+            Today&apos;s Quests
           </h2>
           <ul className="mt-3 space-y-1">
             {todayChallenges.map((ch) => (

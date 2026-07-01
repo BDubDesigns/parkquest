@@ -15,8 +15,7 @@ const steps = [
   {
     number: "03",
     title: "Keep the adventure going",
-    description:
-      "Earn Adventure Points, stickers, and Passport Challenge rewards.",
+    description: "Earn Adventure Points, stickers, and Daily Quest rewards.",
   },
 ];
 
@@ -61,7 +60,7 @@ export default function Home() {
             <p className="mt-6 max-w-xl text-base leading-7 text-emerald-100/80 sm:text-lg">
               Discover Bellingham parks together, stamp every family visit, and
               turn days outside into a collection of Adventure Points, stickers,
-              and daily Passport Challenges.
+              and Daily Quests.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
