@@ -129,6 +129,11 @@ export default async function PassportPage() {
         {ctx.familyGroupName ?? "Family"} Park Passport
       </h1>
 
+      <p className="mt-2 max-w-prose text-sm text-slate-500">
+        Your Park Passport is private to your family. Other families cannot see
+        your stamps, memories, Adventure Points, or stickers.
+      </p>
+
       <section className="mt-6">
         <div className="h-3 w-full rounded-full bg-slate-200">
           <div
