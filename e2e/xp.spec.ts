@@ -59,9 +59,10 @@ test.describe.serial("adventure points", () => {
     await page.getByRole("button", { name: "Stamp again!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
     await page.getByRole("button", { name: "Save Stamp" }).click();
-    await expect(
-      page.getByText("Stamped! This park is in your family passport."),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Stamped 2 times")).toBeVisible({
+      timeout: 10_000,
+    });
+    await page.waitForTimeout(500);
 
     await page.goto("/passport");
     await expect(page.getByText("55 Adventure Points")).toBeVisible({

@@ -49,10 +49,17 @@ test.describe.serial("sticker awards", () => {
     await stampPark(page, "whatcom-falls-park");
 
     await page.goto("/passport");
-    await expect(page.getByText("First Stamp")).toBeVisible();
-    await expect(page.getByText("Stamped your first park.")).toBeVisible();
-    await expect(page.getByText("Five Parks")).not.toBeVisible();
-    await expect(page.getByText("Return Explorer")).not.toBeVisible();
+    await expect(page.getByText("Stickers (1 / 3)")).toBeVisible();
+    await expect(page.getByText("Earned")).toBeVisible();
+    await expect(page.getByText("Still to earn")).toBeVisible();
+
+    const earned = page.getByText("Earned").locator("..");
+    await expect(earned.getByText("First Stamp")).toBeVisible();
+    await expect(earned.getByText("Stamped your first park.")).toBeVisible();
+
+    const toEarn = page.getByText("Still to earn").locator("..");
+    await expect(toEarn.getByText("Five Parks")).toBeVisible();
+    await expect(toEarn.getByText("Return Explorer")).toBeVisible();
   });
 
   test("stamp second park — no Five Parks yet", async ({ page }) => {
@@ -75,7 +82,7 @@ test.describe.serial("sticker awards", () => {
     await stampPark(page, "bloedel-donovan");
 
     await page.goto("/passport");
-    await expect(page.getByText("Five Parks")).toBeVisible();
+    await expect(page.getByText("Stickers (2 / 3)")).toBeVisible();
     await expect(page.getByText("Stamped 5 different parks.")).toBeVisible();
   });
 
@@ -92,18 +99,24 @@ test.describe.serial("sticker awards", () => {
     await page.waitForTimeout(500);
 
     await page.goto("/passport");
-    await expect(page.getByText("Return Explorer")).toBeVisible();
+    await expect(page.getByText("Stickers (3 / 3)")).toBeVisible();
     await expect(
       page.getByText("Returned to a park you already stamped."),
     ).toBeVisible();
+    await expect(page.getByText("Still to earn")).not.toBeVisible();
   });
 
-  test("second family sees no stickers", async ({ page }) => {
+  test("second family sees all stickers as unearned", async ({ page }) => {
     await signUp(page, nameB, emailB);
 
     await page.goto("/passport");
-    await expect(page.getByText("First Stamp")).not.toBeVisible();
-    await expect(page.getByText("Five Parks")).not.toBeVisible();
-    await expect(page.getByText("Return Explorer")).not.toBeVisible();
+    await expect(page.getByText("Stickers (0 / 3)")).toBeVisible();
+    await expect(page.getByText("Earned")).not.toBeVisible();
+    await expect(page.getByText("Still to earn")).toBeVisible();
+
+    const toEarn = page.getByText("Still to earn").locator("..");
+    await expect(toEarn.getByText("First Stamp")).toBeVisible();
+    await expect(toEarn.getByText("Five Parks")).toBeVisible();
+    await expect(toEarn.getByText("Return Explorer")).toBeVisible();
   });
 });

@@ -94,19 +94,34 @@ export default async function PassportPage() {
     .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
   const totalAdventurePoints = xpResult[0].total;
 
-  const earnedStickers = await db
+  const allDefinitions = await db
     .select({
       name: badgeDefinitions.name,
       description: badgeDefinitions.description,
       slug: badgeDefinitions.slug,
     })
-    .from(earnedBadges)
-    .innerJoin(
-      badgeDefinitions,
-      eq(earnedBadges.badgeDefinitionId, badgeDefinitions.id),
-    )
-    .where(eq(earnedBadges.familyGroupId, ctx.familyGroupId))
-    .orderBy(asc(earnedBadges.earnedAt));
+    .from(badgeDefinitions)
+    .orderBy(asc(badgeDefinitions.name));
+
+  const earnedSlugs = new Set(
+    (
+      await db
+        .select({
+          slug: badgeDefinitions.slug,
+        })
+        .from(earnedBadges)
+        .innerJoin(
+          badgeDefinitions,
+          eq(earnedBadges.badgeDefinitionId, badgeDefinitions.id),
+        )
+        .where(eq(earnedBadges.familyGroupId, ctx.familyGroupId))
+    ).map((r) => r.slug),
+  );
+
+  const earnedStickers = allDefinitions.filter((d) => earnedSlugs.has(d.slug));
+  const unearnedStickers = allDefinitions.filter(
+    (d) => !earnedSlugs.has(d.slug),
+  );
 
   return (
     <div>
@@ -135,25 +150,53 @@ export default async function PassportPage() {
         </p>
       </section>
 
-      {earnedStickers.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Stickers ({earnedStickers.length})
-          </h2>
-          <ul className="mt-3 space-y-2">
-            {earnedStickers.map((s) => (
-              <li key={s.slug} className="text-sm">
-                <span className="font-medium text-slate-700">{s.name}</span>
-                {s.description && (
-                  <span className="ml-2 text-slate-400">
-                    &mdash; {s.description}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <section className="mt-8">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+          Stickers ({earnedStickers.length} / {allDefinitions.length})
+        </h2>
+
+        {earnedStickers.length > 0 && (
+          <div className="mt-2">
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              Earned
+            </p>
+            <ul className="mt-1 space-y-1">
+              {earnedStickers.map((s) => (
+                <li key={s.slug} className="text-sm">
+                  <span className="text-green-600">&check;</span>{" "}
+                  <span className="font-medium text-slate-700">{s.name}</span>
+                  {s.description && (
+                    <span className="ml-2 text-slate-400">
+                      &mdash; {s.description}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {unearnedStickers.length > 0 && (
+          <div className={earnedStickers.length > 0 ? "mt-4" : "mt-2"}>
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              Still to earn
+            </p>
+            <ul className="mt-1 space-y-1">
+              {unearnedStickers.map((s) => (
+                <li key={s.slug} className="text-sm">
+                  <span className="text-slate-300">&cir;</span>{" "}
+                  <span className="text-slate-500">{s.name}</span>
+                  {s.description && (
+                    <span className="ml-2 text-slate-400">
+                      &mdash; {s.description}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
 
       {recentStamps.length > 0 && (
         <section className="mt-8">
