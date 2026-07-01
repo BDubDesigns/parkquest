@@ -12,6 +12,11 @@ const ParkMap = dynamic(() => import("@/components/map/ParkMap"), {
   ),
 });
 
-export default function MapWrapper({ parks }: { parks: ParkInfo[] }) {
-  return <ParkMap parks={parks} />;
+interface Props {
+  parks: ParkInfo[];
+  stampedParkSlugs: string[] | null;
+}
+
+export default function MapWrapper({ parks, stampedParkSlugs }: Props) {
+  return <ParkMap parks={parks} stampedParkSlugs={stampedParkSlugs} />;
 }
