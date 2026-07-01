@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
+import { completeMatchingPassportChallenges } from "@/lib/challenges";
 
 export interface StampState {
   error: string | null;
@@ -136,6 +137,14 @@ export async function stampPark(
         })
         .onConflictDoNothing();
     }
+
+    await completeMatchingPassportChallenges(tx, {
+      familyGroupId: ctx.familyGroupId,
+      parkId: park.id,
+      isFirstStampOfPark,
+      today,
+      visitId,
+    });
   });
 
   revalidatePath(`/parks/${parkSlug}`);

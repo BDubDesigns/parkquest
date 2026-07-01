@@ -3,7 +3,11 @@ import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import * as schema from "../schema";
-import { seedSharedData, seedStickerDefinitions } from "./seed-shared";
+import {
+  seedSharedData,
+  seedPassportChallengeDefinitions,
+  seedStickerDefinitions,
+} from "./seed-shared";
 import { parks, parkAmenities } from "../schema";
 import { bellinghamParkRecords } from "./data/parks/bellingham";
 import { bellinghamParkAmenityLinks } from "./data/park-amenities/bellingham";
@@ -22,6 +26,9 @@ async function main() {
 
   // Step 1b: Sticker definitions
   await seedStickerDefinitions(db);
+
+  // Step 1c: Passport Challenge definitions (daily quests)
+  await seedPassportChallengeDefinitions(db);
 
   // Step 2: Look up Bellingham region ID
   const regionRow = await db

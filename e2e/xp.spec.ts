@@ -52,7 +52,7 @@ test.describe.serial("adventure points", () => {
     });
   });
 
-  test("repeat stamp adds 5 more points for 55 total", async ({ page }) => {
+  test("repeat stamp completes matching challenges for 105 total", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
@@ -65,7 +65,7 @@ test.describe.serial("adventure points", () => {
     await page.waitForTimeout(500);
 
     await page.goto("/passport");
-    await expect(page.getByText("55 Adventure Points")).toBeVisible({
+    await expect(page.getByText("105 Adventure Points")).toBeVisible({
       timeout: 10_000,
     });
   });
@@ -74,7 +74,9 @@ test.describe.serial("adventure points", () => {
     await signUp(page, nameB, emailB);
 
     await page.goto("/passport");
-    await expect(page.getByText("0 Adventure Points")).toBeVisible({
+    await expect(
+      page.getByText("0 Adventure Points", { exact: true }),
+    ).toBeVisible({
       timeout: 10_000,
     });
   });

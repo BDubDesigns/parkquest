@@ -2,7 +2,14 @@ import Link from "next/link";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { parks, regions } from "@/db/public";
-import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
+import {
+  badgeDefinitions,
+  earnedBadges,
+  questDefinitions,
+  questProgress,
+  visits,
+  xpEvents,
+} from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 
 function formatDate(dateStr: string): string {
@@ -94,6 +101,48 @@ export default async function PassportPage() {
     .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
   const totalAdventurePoints = xpResult[0].total;
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const dailyDefs = await db.query.questDefinitions.findMany({
+    where: eq(questDefinitions.isDaily, true),
+    orderBy: asc(questDefinitions.name),
+  });
+
+  if (dailyDefs.length > 0) {
+    await db
+      .insert(questProgress)
+      .values(
+        dailyDefs.map((def) => ({
+          familyGroupId: ctx.familyGroupId,
+          questDefinitionId: def.id,
+          assignedDate: today,
+        })),
+      )
+      .onConflictDoNothing();
+  }
+
+  const todayChallenges = await db
+    .select({
+      id: questProgress.id,
+      status: questProgress.status,
+      name: questDefinitions.name,
+      description: questDefinitions.description,
+      slug: questDefinitions.slug,
+      xpReward: questDefinitions.xpReward,
+    })
+    .from(questProgress)
+    .innerJoin(
+      questDefinitions,
+      eq(questProgress.questDefinitionId, questDefinitions.id),
+    )
+    .where(
+      and(
+        eq(questProgress.familyGroupId, ctx.familyGroupId),
+        eq(questProgress.assignedDate, today),
+      ),
+    )
+    .orderBy(asc(questDefinitions.name));
+
   const allDefinitions = await db
     .select({
       name: badgeDefinitions.name,
@@ -154,6 +203,45 @@ export default async function PassportPage() {
           Adventure Points
         </p>
       </section>
+
+      {todayChallenges.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+            Today&apos;s Passport Challenges
+          </h2>
+          <ul className="mt-3 space-y-1">
+            {todayChallenges.map((ch) => (
+              <li key={ch.id} className="text-sm">
+                {ch.status === "completed" ? (
+                  <>
+                    <span aria-hidden="true" className="text-green-600">
+                      ✓
+                    </span>{" "}
+                    <span className="font-medium text-slate-700">
+                      {ch.name}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span aria-hidden="true" className="text-slate-300">
+                      ○
+                    </span>{" "}
+                    <span className="text-slate-500">{ch.name}</span>
+                  </>
+                )}
+                <span className="ml-2 text-xs text-slate-400">
+                  {ch.xpReward} Adventure Points
+                </span>
+                {ch.description && (
+                  <p className="ml-4 mt-0.5 text-xs text-slate-400">
+                    {ch.description}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-8">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
