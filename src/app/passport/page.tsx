@@ -243,7 +243,9 @@ export default async function PassportPage() {
           <ul className="mt-3 space-y-1">
             {stamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span className="text-green-600">&check;</span>{" "}
+                <span aria-hidden="true" className="text-green-600">
+                  ✓
+                </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
                   className="text-slate-700 underline underline-offset-2 hover:text-slate-900"
@@ -264,7 +266,9 @@ export default async function PassportPage() {
           <ul className="mt-3 space-y-1">
             {unstamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span className="text-slate-300">&cir;</span>{" "}
+                <span aria-hidden="true" className="text-slate-300">
+                  ○
+                </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
                   className="text-slate-500 underline underline-offset-2 hover:text-slate-700"
