@@ -23,3 +23,7 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.leaflet-marker-stamped {
+  filter: hue-rotate(95deg) saturate(1.4);
+}
