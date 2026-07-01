@@ -1,4 +1,9 @@
-import { amenities, badgeDefinitions, questDefinitions, regions } from "../schema";
+import {
+  amenities,
+  badgeDefinitions,
+  questDefinitions,
+  regions,
+} from "../schema";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type * as schema from "../schema";
 

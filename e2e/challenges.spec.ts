@@ -2,9 +2,11 @@ import { test, expect, type Page } from "@playwright/test";
 
 const emailA = `test-challenges-${Date.now()}-a@example.com`;
 const emailB = `test-challenges-${Date.now()}-b@example.com`;
+const emailC = `test-challenges-${Date.now()}-c@example.com`;
 const password = "testpassword123";
 const nameA = "Alice";
 const nameB = "Bob";
+const nameC = "Charlie";
 
 function getChallengeSection(page: Page) {
   return page.getByText("Today's Passport Challenges").locator("..");
@@ -107,5 +109,25 @@ test.describe.serial("passport challenges", () => {
     await expect(
       page.getByText("0 Adventure Points", { exact: true }),
     ).toBeVisible();
+  });
+
+  test("stamp before visiting /passport completes challenges", async ({
+    page,
+  }) => {
+    await signUp(page, nameC, emailC);
+
+    await stampPark(page, "whatcom-falls-park");
+
+    await page.goto("/passport");
+
+    const section = getChallengeSection(page);
+    await expect(section.locator("li")).toHaveCount(4);
+
+    await expect(section.getByText("Park Passport Stamp")).toBeVisible();
+    await expect(section.getByText("Park Scout")).toBeVisible();
+    await expect(section.getByText("Tiny Mountaineer")).toBeVisible();
+    await expect(section.getByText("Playground Mission")).toBeVisible();
+
+    await expect(page.getByText("125 Adventure Points")).toBeVisible();
   });
 });

@@ -32,7 +32,9 @@ test.describe.serial("adventure points", () => {
     await signUp(page, nameA, emailA);
   });
 
-  test("first stamp awards 50 points", async ({ page }) => {
+  test("first stamp also completes daily challenges for 125 total", async ({
+    page,
+  }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
@@ -47,12 +49,12 @@ test.describe.serial("adventure points", () => {
     ).toBeVisible({ timeout: 10_000 });
 
     await page.goto("/passport");
-    await expect(page.getByText("50 Adventure Points")).toBeVisible({
+    await expect(page.getByText("125 Adventure Points")).toBeVisible({
       timeout: 10_000,
     });
   });
 
-  test("repeat stamp completes matching challenges for 105 total", async ({ page }) => {
+  test("repeat stamp adds 5 more points for 130 total", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
@@ -65,7 +67,7 @@ test.describe.serial("adventure points", () => {
     await page.waitForTimeout(500);
 
     await page.goto("/passport");
-    await expect(page.getByText("105 Adventure Points")).toBeVisible({
+    await expect(page.getByText("130 Adventure Points")).toBeVisible({
       timeout: 10_000,
     });
   });

@@ -11,6 +11,7 @@ import {
   xpEvents,
 } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
+import { ensureDailyPassportChallenges } from "@/lib/challenges";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -103,23 +104,10 @@ export default async function PassportPage() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const dailyDefs = await db.query.questDefinitions.findMany({
-    where: eq(questDefinitions.isDaily, true),
-    orderBy: asc(questDefinitions.name),
+  await ensureDailyPassportChallenges(db, {
+    familyGroupId: ctx.familyGroupId,
+    today,
   });
-
-  if (dailyDefs.length > 0) {
-    await db
-      .insert(questProgress)
-      .values(
-        dailyDefs.map((def) => ({
-          familyGroupId: ctx.familyGroupId,
-          questDefinitionId: def.id,
-          assignedDate: today,
-        })),
-      )
-      .onConflictDoNothing();
-  }
 
   const todayChallenges = await db
     .select({

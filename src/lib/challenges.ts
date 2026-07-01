@@ -4,6 +4,36 @@ import type * as schema from "@/db/schema";
 import { questDefinitions, questProgress, xpEvents } from "@/db/private";
 import { amenities, parkAmenities } from "@/db/public";
 
+/**
+ * Ensure daily challenge quest_progress rows exist for (= family, today).
+ * Idempotent via unique index + onConflictDoNothing.
+ * MVP assigns all seeded daily challenges each UTC day.
+ */
+export async function ensureDailyPassportChallenges(
+  tx: NodePgDatabase<typeof schema>,
+  params: { familyGroupId: string; today: string },
+): Promise<void> {
+  const { familyGroupId, today } = params;
+
+  const dailyDefs = await tx
+    .select()
+    .from(questDefinitions)
+    .where(eq(questDefinitions.isDaily, true));
+
+  if (dailyDefs.length > 0) {
+    await tx
+      .insert(questProgress)
+      .values(
+        dailyDefs.map((def) => ({
+          familyGroupId,
+          questDefinitionId: def.id,
+          assignedDate: today,
+        })),
+      )
+      .onConflictDoNothing();
+  }
+}
+
 export interface ChallengeParams {
   familyGroupId: string;
   parkId: string;
@@ -66,9 +96,7 @@ export async function completeMatchingPassportChallenges(
           typeof ch.criteria === "object" &&
           (ch.criteria as { type: string; slug?: string }).type === "amenity",
       )
-      .map(
-        (ch) => (ch.criteria as { type: string; slug?: string }).slug ?? "",
-      )
+      .map((ch) => (ch.criteria as { type: string; slug?: string }).slug ?? "")
       .filter(Boolean);
 
     if (amenitySlugsNeeded.length > 0) {
@@ -113,10 +141,7 @@ export async function completeMatchingPassportChallenges(
       .update(questProgress)
       .set({ status: "completed", completedAt: new Date() })
       .where(
-        and(
-          eq(questProgress.id, ch.id),
-          eq(questProgress.status, "assigned"),
-        ),
+        and(eq(questProgress.id, ch.id), eq(questProgress.status, "assigned")),
       )
       .returning({ id: questProgress.id });
 
