@@ -2,7 +2,7 @@ import Link from "next/link";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { parks, regions } from "@/db/public";
-import { visits, xpEvents } from "@/db/private";
+import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 
 function formatDate(dateStr: string): string {
@@ -94,6 +94,35 @@ export default async function PassportPage() {
     .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
   const totalAdventurePoints = xpResult[0].total;
 
+  const allDefinitions = await db
+    .select({
+      name: badgeDefinitions.name,
+      description: badgeDefinitions.description,
+      slug: badgeDefinitions.slug,
+    })
+    .from(badgeDefinitions)
+    .orderBy(asc(badgeDefinitions.name));
+
+  const earnedSlugs = new Set(
+    (
+      await db
+        .select({
+          slug: badgeDefinitions.slug,
+        })
+        .from(earnedBadges)
+        .innerJoin(
+          badgeDefinitions,
+          eq(earnedBadges.badgeDefinitionId, badgeDefinitions.id),
+        )
+        .where(eq(earnedBadges.familyGroupId, ctx.familyGroupId))
+    ).map((r) => r.slug),
+  );
+
+  const earnedStickers = allDefinitions.filter((d) => earnedSlugs.has(d.slug));
+  const unearnedStickers = allDefinitions.filter(
+    (d) => !earnedSlugs.has(d.slug),
+  );
+
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -119,6 +148,58 @@ export default async function PassportPage() {
           </span>{" "}
           Adventure Points
         </p>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+          Stickers ({earnedStickers.length} / {allDefinitions.length})
+        </h2>
+
+        {earnedStickers.length > 0 && (
+          <div className="mt-2">
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              Earned
+            </p>
+            <ul className="mt-1 space-y-1">
+              {earnedStickers.map((s) => (
+                <li key={s.slug} className="text-sm">
+                  <span aria-hidden="true" className="text-green-600">
+                    ✓
+                  </span>{" "}
+                  <span className="font-medium text-slate-700">{s.name}</span>
+                  {s.description && (
+                    <span className="ml-2 text-slate-400">
+                      &mdash; {s.description}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {unearnedStickers.length > 0 && (
+          <div className={earnedStickers.length > 0 ? "mt-4" : "mt-2"}>
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              Still to earn
+            </p>
+            <ul className="mt-1 space-y-1">
+              {unearnedStickers.map((s) => (
+                <li key={s.slug} className="text-sm">
+                  <span aria-hidden="true" className="text-slate-300">
+                    ○
+                  </span>{" "}
+                  <span className="text-slate-500">{s.name}</span>
+                  {s.description && (
+                    <span className="ml-2 text-slate-400">
+                      &mdash; {s.description}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       {recentStamps.length > 0 && (
@@ -162,7 +243,9 @@ export default async function PassportPage() {
           <ul className="mt-3 space-y-1">
             {stamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span className="text-green-600">&check;</span>{" "}
+                <span aria-hidden="true" className="text-green-600">
+                  ✓
+                </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
                   className="text-slate-700 underline underline-offset-2 hover:text-slate-900"
@@ -183,7 +266,9 @@ export default async function PassportPage() {
           <ul className="mt-3 space-y-1">
             {unstamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span className="text-slate-300">&cir;</span>{" "}
+                <span aria-hidden="true" className="text-slate-300">
+                  ○
+                </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
                   className="text-slate-500 underline underline-offset-2 hover:text-slate-700"

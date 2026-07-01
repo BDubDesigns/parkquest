@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { and, eq, count } from "drizzle-orm";
 import { db } from "@/db";
-import { visits, xpEvents } from "@/db/private";
+import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
 
@@ -57,7 +57,7 @@ export async function stampPark(
   const today = new Date().toISOString().split("T")[0];
 
   await db.transaction(async (tx) => {
-    const prior = await tx
+    const priorForPark = await tx
       .select({ count: count() })
       .from(visits)
       .where(
@@ -67,7 +67,13 @@ export async function stampPark(
         ),
       );
 
-    const isFirstStamp = prior[0].count === 0;
+    const priorTotal = await tx
+      .select({ count: count() })
+      .from(visits)
+      .where(eq(visits.familyGroupId, ctx.familyGroupId));
+
+    const isFirstStampOfPark = priorForPark[0].count === 0;
+    const isFirstStampEver = priorTotal[0].count === 0;
     const visitId = crypto.randomUUID();
 
     await tx.insert(visits).values({
@@ -83,13 +89,57 @@ export async function stampPark(
 
     await tx.insert(xpEvents).values({
       familyGroupId: ctx.familyGroupId,
-      amount: isFirstStamp ? 50 : 5,
-      reason: isFirstStamp ? "First park stamp" : "Repeat park stamp",
+      amount: isFirstStampOfPark ? 50 : 5,
+      reason: isFirstStampOfPark ? "First park stamp" : "Repeat park stamp",
       sourceVisitId: visitId,
     });
+
+    const badgeDefs = await tx
+      .select({ id: badgeDefinitions.id, slug: badgeDefinitions.slug })
+      .from(badgeDefinitions);
+    const stickerId = new Map(badgeDefs.map((b) => [b.slug, b.id]));
+
+    const firstStampId = stickerId.get("first-stamp");
+    if (isFirstStampEver && firstStampId) {
+      await tx
+        .insert(earnedBadges)
+        .values({
+          familyGroupId: ctx.familyGroupId,
+          badgeDefinitionId: firstStampId,
+        })
+        .onConflictDoNothing();
+    }
+
+    const returnExplorerId = stickerId.get("return-explorer");
+    if (!isFirstStampOfPark && returnExplorerId) {
+      await tx
+        .insert(earnedBadges)
+        .values({
+          familyGroupId: ctx.familyGroupId,
+          badgeDefinitionId: returnExplorerId,
+        })
+        .onConflictDoNothing();
+    }
+
+    const uniqueRows = await tx
+      .select({ parkId: visits.parkId })
+      .from(visits)
+      .where(eq(visits.familyGroupId, ctx.familyGroupId))
+      .groupBy(visits.parkId);
+    const fiveParksId = stickerId.get("five-parks");
+    if (uniqueRows.length >= 5 && fiveParksId) {
+      await tx
+        .insert(earnedBadges)
+        .values({
+          familyGroupId: ctx.familyGroupId,
+          badgeDefinitionId: fiveParksId,
+        })
+        .onConflictDoNothing();
+    }
   });
 
   revalidatePath(`/parks/${parkSlug}`);
+  revalidatePath("/passport");
 
   return { error: null, success: true };
 }
