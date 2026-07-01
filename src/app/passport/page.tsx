@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { parks, regions } from "@/db/public";
-import { visits } from "@/db/private";
+import { visits, xpEvents } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 
 function formatDate(dateStr: string): string {
@@ -88,6 +88,12 @@ export default async function PassportPage() {
     with: { park: { columns: { name: true, slug: true } } },
   });
 
+  const xpResult = await db
+    .select({ total: sql<number>`COALESCE(SUM(${xpEvents.amount}), 0)::int` })
+    .from(xpEvents)
+    .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
+  const totalAdventurePoints = xpResult[0].total;
+
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -103,6 +109,15 @@ export default async function PassportPage() {
         </div>
         <p className="mt-2 text-sm font-medium text-slate-700">
           {uniqueStamped} / {totalParks} {region.name} parks stamped
+        </p>
+      </section>
+
+      <section className="mt-4">
+        <p className="text-sm text-slate-500">
+          <span className="font-medium text-slate-700">
+            {totalAdventurePoints.toLocaleString()}
+          </span>{" "}
+          Adventure Points
         </p>
       </section>
 

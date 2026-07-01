@@ -1,0 +1,80 @@
+import { test, expect, type Page } from "@playwright/test";
+
+const emailA = `test-xp-${Date.now()}-a@example.com`;
+const emailB = `test-xp-${Date.now()}-b@example.com`;
+const password = "testpassword123";
+const nameA = "Alice";
+const nameB = "Bob";
+
+async function signUp(page: Page, name: string, email: string) {
+  await page.goto("/sign-up");
+  await page.getByLabel("Name").fill(name);
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Sign up" }).click();
+  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
+    timeout: 10_000,
+  });
+}
+
+async function signIn(page: Page, email: string) {
+  await page.goto("/sign-in");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
+    timeout: 10_000,
+  });
+}
+
+test.describe.serial("adventure points", () => {
+  test("sign up first user", async ({ page }) => {
+    await signUp(page, nameA, emailA);
+  });
+
+  test("first stamp awards 50 points", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/whatcom-falls-park");
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
+    await page.getByRole("radio", { name: "Yes" }).check();
+    await page
+      .getByLabel(/What do you want to remember/)
+      .fill("Lara loved the waterfall overlook!");
+    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await expect(
+      page.getByText("Stamped! This park is in your family passport."),
+    ).toBeVisible({ timeout: 10_000 });
+
+    await page.goto("/passport");
+    await expect(page.getByText("50 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+
+  test("repeat stamp adds 5 more points for 55 total", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/whatcom-falls-park");
+    await page.getByRole("button", { name: "Stamp again!" }).click();
+    await page.getByRole("radio", { name: "Yes" }).check();
+    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await expect(
+      page.getByText("Stamped! This park is in your family passport."),
+    ).toBeVisible({ timeout: 10_000 });
+
+    await page.goto("/passport");
+    await expect(page.getByText("55 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+
+  test("second family sees 0 points", async ({ page }) => {
+    await signUp(page, nameB, emailB);
+
+    await page.goto("/passport");
+    await expect(page.getByText("0 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+});
