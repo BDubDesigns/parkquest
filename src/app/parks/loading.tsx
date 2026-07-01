@@ -4,12 +4,12 @@ export default function ParksLoading() {
       {[1, 2, 3].map((i) => (
         <div
           key={i}
-          className="animate-pulse rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm"
+          className="animate-pulse rounded-2xl border border-emerald-700/70 bg-emerald-900/70 px-5 py-4 shadow-2xl shadow-emerald-950/40"
         >
-          <div className="mb-2 h-5 w-48 rounded bg-slate-200" />
-          <div className="mb-1 h-4 w-32 rounded bg-slate-100" />
-          <div className="mb-1 h-4 w-full rounded bg-slate-100" />
-          <div className="h-4 w-3/4 rounded bg-slate-100" />
+          <div className="mb-2 h-5 w-48 rounded bg-emerald-800" />
+          <div className="mb-1 h-4 w-32 rounded bg-emerald-800/60" />
+          <div className="mb-1 h-4 w-full rounded bg-emerald-800/60" />
+          <div className="h-4 w-3/4 rounded bg-emerald-800/60" />
         </div>
       ))}
     </div>

@@ -13,3 +13,18 @@ body {
 img.leaflet-marker-icon.leaflet-marker-stamped {
   filter: hue-rotate(270deg) saturate(1.5);
 }
+
+.leaflet-popup-content-wrapper {
+  background: #064e3b;
+  color: #ecfdf5;
+  border-radius: 1rem;
+  border: 1px solid rgba(6, 78, 59, 0.6);
+}
+
+.leaflet-popup-tip {
+  background: #064e3b;
+}
+
+.leaflet-popup-close-button {
+  color: #a7f3d0 !important;
+}

@@ -50,7 +50,7 @@ export default function SignInForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none"
+            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
           />
         </label>
 
@@ -62,7 +62,7 @@ export default function SignInForm() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none"
+            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
           />
         </label>
 

@@ -35,12 +35,12 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className={`min-h-11 rounded-full px-6 py-2 text-sm font-bold transition-colors ${
+        className={`min-h-11 rounded-full py-2 text-sm font-bold transition-colors ${
           expanded
             ? "border border-emerald-600/40 px-4 text-emerald-200/80 hover:bg-emerald-900/60"
             : alreadyStamped
-              ? "border border-emerald-400/60 text-white hover:bg-emerald-900"
-              : "bg-amber-300 text-emerald-950 hover:bg-amber-200"
+              ? "border border-emerald-400/60 px-6 text-white hover:bg-emerald-900"
+              : "bg-amber-300 px-6 text-emerald-950 hover:bg-amber-200"
         }`}
       >
         {expanded
@@ -93,7 +93,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
             <select
               name="rating"
               defaultValue=""
-              className="min-h-11 w-full rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none sm:w-48"
+              className="min-h-11 w-full rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50 sm:w-48"
             >
               <option value="">No rating</option>
               <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
@@ -112,7 +112,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
               name="memory"
               maxLength={1000}
               rows={3}
-              className="rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-sm text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none"
+              className="rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-sm text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
               placeholder="A favorite moment, who came along, what you saw..."
             />
             <span className="text-xs text-emerald-300/60">
