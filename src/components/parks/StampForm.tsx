@@ -3,6 +3,13 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { stampPark, type StampState } from "@/app/parks/[slug]/actions";
+import {
+  ctaGhost,
+  ctaPrimary,
+  ctaSecondary,
+  formInput,
+  formLabel,
+} from "@/components/ui/styles";
 
 const initialState: StampState = { error: null, success: false };
 
@@ -13,7 +20,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="min-h-11 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+      className={`min-h-11 ${ctaPrimary} disabled:opacity-50`}
     >
       {pending ? "Saving..." : "Save Stamp"}
     </button>
@@ -35,7 +42,9 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="min-h-11 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+        className={`min-h-11 text-sm font-bold transition-colors ${
+          expanded ? ctaGhost : alreadyStamped ? ctaSecondary : ctaPrimary
+        }`}
       >
         {expanded
           ? "Cancel"
@@ -47,33 +56,33 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
       {expanded && (
         <form action={formAction} className="mt-4 space-y-4">
           {state.error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
               {state.error}
             </p>
           )}
 
           <fieldset>
-            <legend className="text-sm font-medium text-slate-700">
+            <legend className={formLabel}>
               Did you feel safe for the entirety of your visit?
             </legend>
             <div className="mt-2 flex gap-6">
-              <label className="flex min-h-11 items-center gap-2 text-sm text-slate-600">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-stone-300/80">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="yes"
                   required
-                  className="size-5 accent-slate-700"
+                  className="size-5 accent-amber-300"
                 />
                 Yes
               </label>
-              <label className="flex min-h-11 items-center gap-2 text-sm text-slate-600">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-stone-300/80">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="no"
                   required
-                  className="size-5 accent-slate-700"
+                  className="size-5 accent-amber-300"
                 />
                 No
               </label>
@@ -81,13 +90,11 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
           </fieldset>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">
-              Rating (optional)
-            </span>
+            <span className={formLabel}>Rating (optional)</span>
             <select
               name="rating"
               defaultValue=""
-              className="min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none sm:w-48"
+              className={`min-h-11 w-full ${formInput} sm:w-48`}
             >
               <option value="">No rating</option>
               <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
@@ -99,17 +106,17 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">
+            <span className={formLabel}>
               What do you want to remember about this visit? (optional)
             </span>
             <textarea
               name="memory"
               maxLength={1000}
               rows={3}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+              className={formInput}
               placeholder="A favorite moment, who came along, what you saw..."
             />
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-stone-400/70">
               Up to 1000 characters. Your memories are private to your family.
             </span>
           </label>
@@ -119,7 +126,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
             <button
               type="button"
               onClick={() => setExpanded(false)}
-              className="min-h-11 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className={`min-h-11 ${ctaGhost}`}
             >
               Cancel
             </button>

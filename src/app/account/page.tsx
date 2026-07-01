@@ -5,6 +5,7 @@ import { familyMembers } from "@/db/private";
 import { eq } from "drizzle-orm";
 import SignOutButton from "@/components/auth/SignOutButton";
 import { createFamilyGroup } from "./actions";
+import { card, ctaPrimary, eyebrow, mutedText } from "@/components/ui/styles";
 
 export default async function AccountPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -20,22 +21,18 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-        Account
-      </h1>
+      <h1 className="text-2xl font-bold tracking-tight text-white">Account</h1>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-          Profile
-        </h2>
+      <section className={`mt-6 ${card}`}>
+        <h2 className={eyebrow}>Profile</h2>
         <dl className="mt-3 space-y-2 text-sm">
           <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-            <dt className="text-slate-500">Name</dt>
-            <dd className="font-medium text-slate-900">{session.user.name}</dd>
+            <dt className={mutedText}>Name</dt>
+            <dd className="font-medium text-white">{session.user.name}</dd>
           </div>
           <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-            <dt className="text-slate-500">Email</dt>
-            <dd className="break-all font-medium text-slate-900">
+            <dt className={mutedText}>Email</dt>
+            <dd className="break-all font-medium text-white">
               {session.user.email}
             </dd>
           </div>
@@ -43,34 +40,29 @@ export default async function AccountPage() {
       </section>
 
       {member ? (
-        <section className="mt-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Family Group
-          </h2>
+        <section className={`mt-4 ${card}`}>
+          <h2 className={eyebrow}>Family Group</h2>
           <dl className="mt-3 space-y-2 text-sm">
             <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-              <dt className="text-slate-500">Name</dt>
-              <dd className="font-medium text-slate-900">
+              <dt className={mutedText}>Name</dt>
+              <dd className="font-medium text-white">
                 {member.familyGroup.name ?? "(unnamed)"}
               </dd>
             </div>
             <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
-              <dt className="text-slate-500">Role</dt>
-              <dd className="font-medium text-slate-900">{member.role}</dd>
+              <dt className={mutedText}>Role</dt>
+              <dd className="font-medium text-white">{member.role}</dd>
             </div>
           </dl>
         </section>
       ) : (
-        <section className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-6">
-          <p className="text-sm text-amber-800">
+        <section className="mt-4 rounded-2xl border border-amber-700/60 bg-amber-900/30 p-6 text-amber-200">
+          <p className="text-sm">
             No family group found. This shouldn&apos;t happen &mdash; a group is
             normally created when you sign up.
           </p>
           <form action={createFamilyGroup} className="mt-3">
-            <button
-              type="submit"
-              className="min-h-11 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
-            >
+            <button type="submit" className={`min-h-11 ${ctaPrimary}`}>
               Repair: Create Family Group
             </button>
           </form>

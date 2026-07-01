@@ -46,7 +46,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+      <body className="flex min-h-full flex-col bg-emerald-950 pb-[calc(4rem+env(safe-area-inset-bottom))] text-white md:pb-0">
         <div className="flex-1">{children}</div>
         <MobileNav />
       </body>

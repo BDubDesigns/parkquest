@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { visits } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getParkIdBySlug } from "@/lib/parks";
+import { card, eyebrow, linkText, mutedText } from "@/components/ui/styles";
 import StampForm from "./StampForm";
 import StampHistory from "./StampHistory";
 
@@ -16,16 +17,14 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!ctx) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-          Park Passport
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">
+      <section className={`mt-6 sm:mt-8 ${card}`}>
+        <h2 className={eyebrow}>Park Passport</h2>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           Sign in to stamp this park in your family passport.
         </p>
         <Link
           href="/sign-in"
-          className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
+          className={`mt-3 inline-flex min-h-11 items-center text-sm ${linkText}`}
         >
           Sign in
         </Link>
@@ -37,11 +36,9 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!parkId) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-          Park Passport
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">
+      <section className={`mt-6 sm:mt-8 ${card}`}>
+        <h2 className={eyebrow}>Park Passport</h2>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           This park is not available for stamping.
         </p>
       </section>
@@ -65,11 +62,9 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (visitRows.length === 0) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-          Park Passport
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">
+      <section className={`mt-6 sm:mt-8 ${card}`}>
+        <h2 className={eyebrow}>Park Passport</h2>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           You haven&apos;t stamped this park yet.
         </p>
         <div className="mt-3">
