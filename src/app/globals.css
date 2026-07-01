@@ -24,6 +24,10 @@ body {
   color: var(--foreground);
 }
 
-.leaflet-marker-stamped {
-  filter: hue-rotate(95deg) saturate(1.4);
+img.leaflet-marker-icon.leaflet-marker-stamped {
+  filter: hue-rotate(270deg) saturate(1.5);
+}
+
+img.leaflet-marker-shadow.leaflet-marker-stamped {
+  filter: hue-rotate(270deg) saturate(1.5);
 }
