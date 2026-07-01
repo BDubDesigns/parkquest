@@ -16,7 +16,7 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!ctx) {
     return (
-      <section className="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
           Park Passport
         </h2>
@@ -25,7 +25,7 @@ export default async function StampSection({ parkSlug }: Props) {
         </p>
         <Link
           href="/sign-in"
-          className="mt-3 inline-block text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
+          className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
         >
           Sign in
         </Link>
@@ -37,7 +37,7 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!parkId) {
     return (
-      <section className="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
           Park Passport
         </h2>
@@ -65,7 +65,7 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (visitRows.length === 0) {
     return (
-      <section className="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
           Park Passport
         </h2>

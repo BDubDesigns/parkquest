@@ -9,7 +9,7 @@ const nameB = "Bob";
 const nameC = "Charlie";
 
 function getChallengeSection(page: Page) {
-  return page.getByText("Today's Passport Challenges").locator("..");
+  return page.getByText("Today's Quests").locator("..");
 }
 
 async function signUp(page: Page, name: string, email: string) {
@@ -55,7 +55,7 @@ test.describe.serial("passport challenges", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText("Today's Passport Challenges")).toBeVisible({
+    await expect(page.getByText("Today's Quests")).toBeVisible({
       timeout: 10_000,
     });
 
@@ -98,7 +98,7 @@ test.describe.serial("passport challenges", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText("Today's Passport Challenges")).toBeVisible({
+    await expect(page.getByText("Today's Quests")).toBeVisible({
       timeout: 10_000,
     });
 

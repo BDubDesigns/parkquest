@@ -53,7 +53,7 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
         center={BELLINGHAM_CENTER}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom={false}
-        className="h-[600px] w-full rounded-lg"
+        className="h-[calc(100dvh-13rem)] min-h-88 max-h-[600px] w-full rounded-lg"
       >
         <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
         {parks.map((park) => {

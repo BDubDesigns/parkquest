@@ -13,7 +13,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+      className="min-h-11 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
     >
       {pending ? "Saving..." : "Save Stamp"}
     </button>
@@ -35,7 +35,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+        className="min-h-11 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
       >
         {expanded
           ? "Cancel"
@@ -57,23 +57,23 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
               Did you feel safe for the entirety of your visit?
             </legend>
             <div className="mt-2 flex gap-6">
-              <label className="flex items-center gap-1.5 text-sm text-slate-600">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-slate-600">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="yes"
                   required
-                  className="accent-slate-700"
+                  className="size-5 accent-slate-700"
                 />
                 Yes
               </label>
-              <label className="flex items-center gap-1.5 text-sm text-slate-600">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-slate-600">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="no"
                   required
-                  className="accent-slate-700"
+                  className="size-5 accent-slate-700"
                 />
                 No
               </label>
@@ -87,7 +87,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
             <select
               name="rating"
               defaultValue=""
-              className="w-48 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
+              className="min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none sm:w-48"
             >
               <option value="">No rating</option>
               <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
@@ -119,7 +119,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
             <button
               type="button"
               onClick={() => setExpanded(false)}
-              className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className="min-h-11 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
             >
               Cancel
             </button>

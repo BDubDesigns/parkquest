@@ -162,7 +162,7 @@ export default async function PassportPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
         {ctx.familyGroupName ?? "Family"} Park Passport
       </h1>
 
@@ -195,7 +195,7 @@ export default async function PassportPage() {
       {todayChallenges.length > 0 && (
         <section className="mt-8">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Today&apos;s Passport Challenges
+            Today&apos;s Quests
           </h2>
           <ul className="mt-3 space-y-1">
             {todayChallenges.map((ch) => (
