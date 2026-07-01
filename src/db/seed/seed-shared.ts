@@ -1,6 +1,60 @@
-import { amenities, badgeDefinitions, regions } from "../schema";
+import {
+  amenities,
+  badgeDefinitions,
+  questDefinitions,
+  regions,
+} from "../schema";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type * as schema from "../schema";
+
+/**
+ * Daily Passport Challenges roll over by UTC date for MVP.
+ * MVP assigns all seeded daily challenges each day.
+ * Future work can rotate or select a smaller subset.
+ */
+export async function seedPassportChallengeDefinitions(
+  db: NodePgDatabase<typeof schema>,
+) {
+  console.log("Seeding Passport Challenge definitions...");
+
+  await db
+    .insert(questDefinitions)
+    .values([
+      {
+        name: "Park Passport Stamp",
+        slug: "park-passport-stamp",
+        description: "Stamp any park today.",
+        criteria: { type: "any_park" },
+        xpReward: 10,
+        isDaily: true,
+      },
+      {
+        name: "Park Scout",
+        slug: "park-scout",
+        description: "Visit a park you have not stamped before.",
+        criteria: { type: "new_park" },
+        xpReward: 25,
+        isDaily: true,
+      },
+      {
+        name: "Tiny Mountaineer",
+        slug: "tiny-mountaineer",
+        description: "Visit a park with a trail.",
+        criteria: { type: "amenity", slug: "trail" },
+        xpReward: 20,
+        isDaily: true,
+      },
+      {
+        name: "Playground Mission",
+        slug: "playground-mission",
+        description: "Visit a park with a playground.",
+        criteria: { type: "amenity", slug: "playground" },
+        xpReward: 20,
+        isDaily: true,
+      },
+    ])
+    .onConflictDoNothing();
+}
 
 export async function seedStickerDefinitions(
   db: NodePgDatabase<typeof schema>,
