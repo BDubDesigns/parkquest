@@ -16,16 +16,16 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!ctx) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-8 sm:p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
           Park Passport
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-emerald-200/80">
           Sign in to stamp this park in your family passport.
         </p>
         <Link
           href="/sign-in"
-          className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
+          className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-emerald-200 underline decoration-emerald-500 underline-offset-2 hover:text-white"
         >
           Sign in
         </Link>
@@ -37,11 +37,11 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (!parkId) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-8 sm:p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
           Park Passport
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-emerald-200/80">
           This park is not available for stamping.
         </p>
       </section>
@@ -65,11 +65,11 @@ export default async function StampSection({ parkSlug }: Props) {
 
   if (visitRows.length === 0) {
     return (
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-8 sm:p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
           Park Passport
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-emerald-200/80">
           You haven&apos;t stamped this park yet.
         </p>
         <div className="mt-3">

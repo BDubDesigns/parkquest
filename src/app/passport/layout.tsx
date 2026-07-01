@@ -15,27 +15,31 @@ export default async function PassportLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-emerald-950">
       <div className="mx-auto max-w-2xl px-4 py-6 md:py-8">
         <header className="mb-8 hidden md:block">
-          <nav className="flex items-center gap-3 text-sm text-slate-500">
+          <nav className="flex items-center gap-3 text-sm text-emerald-200/70">
             <Link
               href="/"
-              className="underline underline-offset-2 hover:text-slate-800"
+              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
             >
               Home
             </Link>
-            <span aria-hidden="true">&middot;</span>
+            <span aria-hidden="true" className="text-emerald-500">
+              &middot;
+            </span>
             <Link
               href="/parks"
-              className="underline underline-offset-2 hover:text-slate-800"
+              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
             >
               Parks
             </Link>
-            <span aria-hidden="true">&middot;</span>
+            <span aria-hidden="true" className="text-emerald-500">
+              &middot;
+            </span>
             <Link
               href="/map"
-              className="underline underline-offset-2 hover:text-slate-800"
+              className="underline underline-offset-4 decoration-emerald-500 hover:text-white"
             >
               Map
             </Link>

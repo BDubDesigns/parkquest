@@ -37,31 +37,31 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
   const displayVisits = visits.slice(0, 5);
 
   return (
-    <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+    <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-8 sm:p-6">
+      <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
         Park Passport
       </h2>
 
-      <p className="mt-2 text-sm font-medium text-slate-900">
+      <p className="mt-2 text-sm font-medium text-white">
         Stamped! This park is in your family passport.
       </p>
 
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-emerald-200/80">
         Stamped {visitCount} time{visitCount !== 1 ? "s" : ""}
       </p>
 
       {displayVisits.length > 0 && (
-        <ol className="mt-4 space-y-3 border-t border-slate-100 pt-4">
+        <ol className="mt-4 space-y-3 border-t border-emerald-700/70 pt-4">
           {displayVisits.map((v) => (
             <li key={v.id} className="text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-slate-600">
+                <span className="text-emerald-200">
                   {formatDate(v.visitDate)}
                 </span>
                 {v.rating && <Stars count={v.rating} />}
               </div>
               {v.notes && (
-                <p className="mt-1 text-slate-500 italic">
+                <p className="mt-1 text-emerald-100/80 italic">
                   &ldquo;{v.notes}&rdquo;
                 </p>
               )}
@@ -71,12 +71,12 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
       )}
 
       {visitCount > 5 && (
-        <p className="mt-3 text-xs text-slate-400">
+        <p className="mt-3 text-xs text-emerald-300/60">
           Showing 5 most recent of {visitCount} stamps.
         </p>
       )}
 
-      <div className="mt-4 border-t border-slate-100 pt-4">
+      <div className="mt-4 border-t border-emerald-700/70 pt-4">
         <StampForm parkSlug={parkSlug} alreadyStamped />
       </div>
     </section>

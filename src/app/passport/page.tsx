@@ -36,13 +36,13 @@ export default async function PassportPage() {
 
   if (!ctx) {
     return (
-      <section className="rounded-lg border border-amber-200 bg-amber-50 p-6">
-        <p className="text-sm text-amber-800">
+      <section className="rounded-2xl border border-amber-700/60 bg-amber-900/30 p-6 text-amber-200">
+        <p className="text-sm">
           No family group found. Create one to start your park passport.
         </p>
         <Link
           href="/account"
-          className="mt-3 inline-block text-sm font-medium text-amber-700 underline underline-offset-2 hover:text-amber-900"
+          className="mt-3 inline-block text-sm font-medium text-amber-100 underline decoration-amber-500 underline-offset-2 hover:text-white"
         >
           Go to Account
         </Link>
@@ -56,7 +56,7 @@ export default async function PassportPage() {
 
   if (!region) {
     return (
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-emerald-200/80">
         No region data available. Run the seed to populate parks.
       </p>
     );
@@ -162,66 +162,64 @@ export default async function PassportPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
         {ctx.familyGroupName ?? "Family"} Park Passport
       </h1>
 
-      <p className="mt-2 max-w-prose text-sm text-slate-500">
+      <p className="mt-2 max-w-prose text-sm text-emerald-200/80">
         Your Park Passport is private to your family. Other families cannot see
         your stamps, memories, Adventure Points, or stickers.
       </p>
 
-      <section className="mt-6">
-        <div className="h-3 w-full rounded-full bg-slate-200">
+      <section className="mt-6 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:p-6">
+        <div className="h-3 w-full rounded-full bg-emerald-800">
           <div
-            className="h-3 rounded-full bg-slate-800 transition-[width]"
+            className="h-3 rounded-full bg-amber-300 transition-[width]"
             style={{ width: `${percent}%` }}
           />
         </div>
-        <p className="mt-2 text-sm font-medium text-slate-700">
+        <p className="mt-2 text-sm font-medium text-emerald-200">
           {uniqueStamped} / {totalParks} {region.name} parks stamped
         </p>
-      </section>
 
-      <section className="mt-4">
-        <p className="text-sm text-slate-500">
-          <span className="font-medium text-slate-700">
+        <p className="mt-4">
+          <span className="text-lg font-bold text-amber-300">
             {totalAdventurePoints.toLocaleString()}
           </span>{" "}
-          Adventure Points
+          <span className="text-sm text-emerald-200/80">Adventure Points</span>
         </p>
       </section>
 
       {todayChallenges.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <section className="mt-8 border-t border-emerald-800 pt-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Today&apos;s Quests
           </h2>
-          <ul className="mt-3 space-y-1">
+          <ul className="mt-3 space-y-2">
             {todayChallenges.map((ch) => (
               <li key={ch.id} className="text-sm">
                 {ch.status === "completed" ? (
                   <>
-                    <span aria-hidden="true" className="text-green-600">
+                    <span aria-hidden="true" className="text-emerald-300">
                       ✓
                     </span>{" "}
-                    <span className="font-medium text-slate-700">
+                    <span className="font-medium text-emerald-200">
                       {ch.name}
                     </span>
                   </>
                 ) : (
                   <>
-                    <span aria-hidden="true" className="text-slate-300">
+                    <span aria-hidden="true" className="text-emerald-500/50">
                       ○
                     </span>{" "}
-                    <span className="text-slate-500">{ch.name}</span>
+                    <span className="text-emerald-300/60">{ch.name}</span>
                   </>
                 )}
-                <span className="ml-2 text-xs text-slate-400">
+                <span className="ml-2 text-xs text-emerald-400/80">
                   {ch.xpReward} Adventure Points
                 </span>
                 {ch.description && (
-                  <p className="ml-4 mt-0.5 text-xs text-slate-400">
+                  <p className="ml-4 mt-0.5 text-xs text-emerald-300/60">
                     {ch.description}
                   </p>
                 )}
@@ -231,25 +229,25 @@ export default async function PassportPage() {
         </section>
       )}
 
-      <section className="mt-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <section className="mt-8 border-t border-emerald-800 pt-6">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
           Stickers ({earnedStickers.length} / {allDefinitions.length})
         </h2>
 
         {earnedStickers.length > 0 && (
-          <div className="mt-2">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          <div className="mt-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-200/70">
               Earned
             </p>
             <ul className="mt-1 space-y-1">
               {earnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-green-600">
+                  <span aria-hidden="true" className="text-emerald-300">
                     ✓
                   </span>{" "}
-                  <span className="font-medium text-slate-700">{s.name}</span>
+                  <span className="font-medium text-emerald-100">{s.name}</span>
                   {s.description && (
-                    <span className="ml-2 text-slate-400">
+                    <span className="ml-2 text-emerald-200/70">
                       &mdash; {s.description}
                     </span>
                   )}
@@ -260,19 +258,19 @@ export default async function PassportPage() {
         )}
 
         {unearnedStickers.length > 0 && (
-          <div className={earnedStickers.length > 0 ? "mt-4" : "mt-2"}>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          <div className={earnedStickers.length > 0 ? "mt-4" : "mt-3"}>
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-200/70">
               Still to earn
             </p>
             <ul className="mt-1 space-y-1">
               {unearnedStickers.map((s) => (
                 <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-slate-300">
+                  <span aria-hidden="true" className="text-emerald-500/50">
                     ○
                   </span>{" "}
-                  <span className="text-slate-500">{s.name}</span>
+                  <span className="text-emerald-300/60">{s.name}</span>
                   {s.description && (
-                    <span className="ml-2 text-slate-400">
+                    <span className="ml-2 text-emerald-200/70">
                       &mdash; {s.description}
                     </span>
                   )}
@@ -284,8 +282,8 @@ export default async function PassportPage() {
       </section>
 
       {recentStamps.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <section className="mt-8 border-t border-emerald-800 pt-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Recently stamped
           </h2>
           <ol className="mt-3 space-y-3">
@@ -293,11 +291,11 @@ export default async function PassportPage() {
               <li key={stamp.id} className="text-sm">
                 <Link
                   href={`/parks/${stamp.park.slug}`}
-                  className="font-medium text-slate-900 underline underline-offset-2 hover:text-slate-600"
+                  className="font-medium text-emerald-50 underline decoration-emerald-500 underline-offset-2 hover:text-emerald-200"
                 >
                   {stamp.park.name}
                 </Link>
-                <span className="ml-2 text-slate-500">
+                <span className="ml-2 text-emerald-200/70">
                   &mdash; {formatDate(stamp.visitDate)}
                 </span>
                 {stamp.rating && (
@@ -306,7 +304,7 @@ export default async function PassportPage() {
                   </span>
                 )}
                 {stamp.notes && (
-                  <p className="mt-0.5 text-slate-500 italic">
+                  <p className="mt-0.5 text-emerald-100/80 italic">
                     &ldquo;{stamp.notes}&rdquo;
                   </p>
                 )}
@@ -317,19 +315,19 @@ export default async function PassportPage() {
       )}
 
       {stamped.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <section className="mt-8 border-t border-emerald-800 pt-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Stamped parks ({stamped.length})
           </h2>
           <ul className="mt-3 space-y-1">
             {stamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-green-600">
+                <span aria-hidden="true" className="text-emerald-300">
                   ✓
                 </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
-                  className="text-slate-700 underline underline-offset-2 hover:text-slate-900"
+                  className="text-emerald-100 underline decoration-emerald-500 underline-offset-2 hover:text-white"
                 >
                   {p.name}
                 </Link>
@@ -340,19 +338,19 @@ export default async function PassportPage() {
       )}
 
       {unstamped.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <section className="mt-8 border-t border-emerald-800 pt-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             Still waiting for a stamp ({unstamped.length})
           </h2>
           <ul className="mt-3 space-y-1">
             {unstamped.map((p) => (
               <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-slate-300">
+                <span aria-hidden="true" className="text-emerald-500/50">
                   ○
                 </span>{" "}
                 <Link
                   href={`/parks/${p.slug}`}
-                  className="text-slate-500 underline underline-offset-2 hover:text-slate-700"
+                  className="text-emerald-300/60 underline decoration-emerald-500 underline-offset-2 hover:text-white"
                 >
                   {p.name}
                 </Link>

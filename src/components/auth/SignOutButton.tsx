@@ -15,7 +15,7 @@ export default function SignOutButton() {
           },
         })
       }
-      className="inline-flex min-h-11 items-center text-sm text-slate-500 underline underline-offset-2 hover:text-slate-800"
+      className="inline-flex min-h-11 items-center text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
     >
       Sign out
     </button>

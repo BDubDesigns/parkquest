@@ -149,7 +149,7 @@ export async function completeMatchingPassportChallenges(
       await tx.insert(xpEvents).values({
         familyGroupId,
         amount: ch.xpReward,
-        reason: `Passport Challenge: ${ch.slug}`,
+        reason: `Daily Quest: ${ch.slug}`,
         sourceVisitId: visitId,
       });
     }

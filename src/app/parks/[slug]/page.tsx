@@ -30,30 +30,30 @@ export default async function ParkDetailPage({ params }: Props) {
     <div>
       <Link
         href="/parks"
-        className="text-sm text-slate-500 underline underline-offset-2 hover:text-slate-800"
+        className="text-sm text-emerald-200/70 underline decoration-emerald-500 underline-offset-4 hover:text-white"
       >
         &larr; Back to parks
       </Link>
 
-      <article className="mt-5 rounded-lg border border-slate-200 bg-white px-4 py-5 shadow-sm sm:mt-6 sm:px-6 sm:py-6">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      <article className="mt-5 rounded-2xl border border-emerald-700/70 bg-emerald-900/70 p-4 shadow-2xl shadow-emerald-950/40 sm:mt-6 sm:p-6">
+        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
           {park.name}
         </h1>
-        <p className="mt-1 text-sm text-slate-500">{park.regionName}</p>
+        <p className="mt-1 text-sm text-emerald-200/70">{park.regionName}</p>
 
         {park.description && (
-          <p className="mt-4 leading-relaxed text-slate-700">
+          <p className="mt-4 leading-relaxed text-emerald-100/80">
             {park.description}
           </p>
         )}
 
-        <p className="mt-4 text-xs text-slate-400">
+        <p className="mt-4 text-xs text-emerald-300/60">
           {park.latitude.toFixed(4)}, {park.longitude.toFixed(4)}
         </p>
 
         {park.amenities.length > 0 && (
           <section className="mt-6">
-            <h2 className="mb-3 text-sm font-semibold text-slate-700">
+            <h2 className="mb-3 text-sm font-semibold text-emerald-200">
               Amenities
             </h2>
             <div className="flex flex-wrap gap-1.5">
@@ -66,14 +66,14 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.officialUrl && (
           <section className="mt-6">
-            <h2 className="mb-1 text-sm font-semibold text-slate-700">
+            <h2 className="mb-1 text-sm font-semibold text-emerald-200">
               Official park page
             </h2>
             <a
               href={park.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-sm font-medium text-slate-700 underline underline-offset-2 hover:text-slate-900"
+              className="break-all text-sm font-medium text-emerald-200 underline decoration-emerald-500 underline-offset-2 hover:text-white"
             >
               {park.officialUrl}
             </a>
@@ -82,14 +82,14 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.sourceUrl && (
           <section className="mt-6">
-            <h2 className="mb-1 text-xs font-medium text-slate-500">
+            <h2 className="mb-1 text-xs font-medium text-emerald-200/70">
               Data source
             </h2>
             <a
               href={park.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-xs text-slate-400 underline underline-offset-2 hover:text-slate-600"
+              className="break-all text-xs text-emerald-400/60 underline underline-offset-2 hover:text-emerald-200"
             >
               {park.sourceUrl}
             </a>

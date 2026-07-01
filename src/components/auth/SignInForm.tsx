@@ -30,58 +30,56 @@ export default function SignInForm() {
 
   return (
     <div className="mx-auto max-w-sm">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-        Sign in
-      </h1>
+      <h1 className="text-2xl font-bold tracking-tight text-white">Sign in</h1>
 
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 text-sm text-emerald-200/80">
         Welcome back to your Park Passport.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         {error && (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
             {error}
           </p>
         )}
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-slate-700">Email</span>
+          <span className="font-medium text-emerald-200">Email</span>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="min-h-11 rounded-md border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-slate-700">Password</span>
+          <span className="font-medium text-emerald-200">Password</span>
           <input
             type="password"
             required
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="min-h-11 rounded-md border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+            className="min-h-11 rounded-md border border-emerald-600/60 bg-emerald-900/40 px-3 py-2 text-base text-white placeholder:text-emerald-300/50 focus:border-emerald-400 focus:outline-none"
           />
         </label>
 
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 min-h-11 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+          className="mt-2 min-h-11 rounded-full bg-amber-300 px-6 py-2 text-sm font-bold text-emerald-950 transition-colors hover:bg-amber-200 disabled:opacity-50"
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-slate-500">
+      <p className="mt-4 text-center text-sm text-emerald-200/70">
         Don&apos;t have an account?{" "}
         <Link
           href="/sign-up"
-          className="underline underline-offset-2 hover:text-slate-800"
+          className="text-emerald-200 underline decoration-emerald-500 underline-offset-4 hover:text-white"
         >
           Sign up
         </Link>

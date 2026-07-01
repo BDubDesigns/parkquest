@@ -70,12 +70,14 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
                 <div className="text-sm">
                   <Link
                     href={`/parks/${park.slug}`}
-                    className="font-semibold text-slate-900 underline underline-offset-2 hover:text-slate-600"
+                    className="font-semibold text-emerald-50 underline decoration-emerald-500 underline-offset-2 hover:text-white"
                   >
                     {park.name}
                   </Link>
-                  <p className="mt-0.5 text-slate-500">{park.regionName}</p>
-                  <p className="text-slate-400">
+                  <p className="mt-0.5 text-emerald-200/70">
+                    {park.regionName}
+                  </p>
+                  <p className="text-emerald-300/60">
                     {park.amenities.length}{" "}
                     {park.amenities.length === 1 ? "amenity" : "amenities"}
                   </p>
@@ -83,8 +85,8 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
                     <p
                       className={
                         isStamped
-                          ? "mt-1 font-medium text-green-600"
-                          : "mt-1 text-slate-400"
+                          ? "mt-1 font-medium text-emerald-300"
+                          : "mt-1 text-emerald-300/50"
                       }
                     >
                       {isStamped ? "Stamped" : "Not stamped yet"}
