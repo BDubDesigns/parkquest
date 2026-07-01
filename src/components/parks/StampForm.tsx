@@ -110,7 +110,7 @@ export default function StampForm({ parkSlug, alreadyStamped }: Props) {
               placeholder="A favorite moment, who came along, what you saw..."
             />
             <span className="text-xs text-slate-400">
-              Up to 1000 characters
+              Up to 1000 characters. Your memories are private to your family.
             </span>
           </label>
 
