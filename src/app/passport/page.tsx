@@ -2,7 +2,7 @@ import Link from "next/link";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { parks, regions } from "@/db/public";
-import { visits, xpEvents } from "@/db/private";
+import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 
 function formatDate(dateStr: string): string {
@@ -94,6 +94,20 @@ export default async function PassportPage() {
     .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
   const totalAdventurePoints = xpResult[0].total;
 
+  const earnedStickers = await db
+    .select({
+      name: badgeDefinitions.name,
+      description: badgeDefinitions.description,
+      slug: badgeDefinitions.slug,
+    })
+    .from(earnedBadges)
+    .innerJoin(
+      badgeDefinitions,
+      eq(earnedBadges.badgeDefinitionId, badgeDefinitions.id),
+    )
+    .where(eq(earnedBadges.familyGroupId, ctx.familyGroupId))
+    .orderBy(asc(earnedBadges.earnedAt));
+
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -120,6 +134,26 @@ export default async function PassportPage() {
           Adventure Points
         </p>
       </section>
+
+      {earnedStickers.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+            Stickers ({earnedStickers.length})
+          </h2>
+          <ul className="mt-3 space-y-2">
+            {earnedStickers.map((s) => (
+              <li key={s.slug} className="text-sm">
+                <span className="font-medium text-slate-700">{s.name}</span>
+                {s.description && (
+                  <span className="ml-2 text-slate-400">
+                    &mdash; {s.description}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {recentStamps.length > 0 && (
         <section className="mt-8">

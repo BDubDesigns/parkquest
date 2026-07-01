@@ -1,6 +1,36 @@
-import { amenities, regions } from "../schema";
+import { amenities, badgeDefinitions, regions } from "../schema";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type * as schema from "../schema";
+
+export async function seedStickerDefinitions(
+  db: NodePgDatabase<typeof schema>,
+) {
+  console.log("Seeding sticker definitions...");
+
+  await db
+    .insert(badgeDefinitions)
+    .values([
+      {
+        name: "First Stamp",
+        slug: "first-stamp",
+        description: "Stamped your first park.",
+        criteria: { type: "first_stamp" },
+      },
+      {
+        name: "Five Parks",
+        slug: "five-parks",
+        description: "Stamped 5 different parks.",
+        criteria: { type: "unique_park_count", count: 5 },
+      },
+      {
+        name: "Return Explorer",
+        slug: "return-explorer",
+        description: "Returned to a park you already stamped.",
+        criteria: { type: "repeat_park" },
+      },
+    ])
+    .onConflictDoNothing();
+}
 
 export async function seedSharedData(db: NodePgDatabase<typeof schema>) {
   console.log("Seeding amenities...");
