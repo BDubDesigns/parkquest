@@ -42,52 +42,60 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
   const stampedSet = stampedParkSlugs ? new Set(stampedParkSlugs) : null;
 
   return (
-    <MapContainer
-      center={BELLINGHAM_CENTER}
-      zoom={DEFAULT_ZOOM}
-      scrollWheelZoom={false}
-      className="h-[600px] w-full rounded-lg"
-    >
-      <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
-      {parks.map((park) => {
-        const isStamped = stampedSet?.has(park.slug) ?? false;
-        const signedIn = stampedParkSlugs !== null;
+    <>
+      <style>{`
+        img.leaflet-marker-icon.leaflet-marker-stamped {
+          filter: hue-rotate(270deg) saturate(1.5);
+        }
+      `}</style>
 
-        return (
-          <Marker
-            key={park.slug}
-            position={[park.latitude, park.longitude]}
-            icon={isStamped ? stampedIcon : defaultIcon}
-          >
-            <Popup>
-              <div className="text-sm">
-                <Link
-                  href={`/parks/${park.slug}`}
-                  className="font-semibold text-slate-900 underline underline-offset-2 hover:text-slate-600"
-                >
-                  {park.name}
-                </Link>
-                <p className="mt-0.5 text-slate-500">{park.regionName}</p>
-                <p className="text-slate-400">
-                  {park.amenities.length}{" "}
-                  {park.amenities.length === 1 ? "amenity" : "amenities"}
-                </p>
-                {signedIn && (
-                  <p
-                    className={
-                      isStamped
-                        ? "mt-1 font-medium text-green-600"
-                        : "mt-1 text-slate-400"
-                    }
+      <MapContainer
+        center={BELLINGHAM_CENTER}
+        zoom={DEFAULT_ZOOM}
+        scrollWheelZoom={false}
+        className="h-[600px] w-full rounded-lg"
+      >
+        <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
+        {parks.map((park) => {
+          const isStamped = stampedSet?.has(park.slug) ?? false;
+          const signedIn = stampedParkSlugs !== null;
+
+          return (
+            <Marker
+              key={park.slug}
+              position={[park.latitude, park.longitude]}
+              icon={isStamped ? stampedIcon : defaultIcon}
+            >
+              <Popup>
+                <div className="text-sm">
+                  <Link
+                    href={`/parks/${park.slug}`}
+                    className="font-semibold text-slate-900 underline underline-offset-2 hover:text-slate-600"
                   >
-                    {isStamped ? "Stamped" : "Not stamped yet"}
+                    {park.name}
+                  </Link>
+                  <p className="mt-0.5 text-slate-500">{park.regionName}</p>
+                  <p className="text-slate-400">
+                    {park.amenities.length}{" "}
+                    {park.amenities.length === 1 ? "amenity" : "amenities"}
                   </p>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        );
-      })}
-    </MapContainer>
+                  {signedIn && (
+                    <p
+                      className={
+                        isStamped
+                          ? "mt-1 font-medium text-green-600"
+                          : "mt-1 text-slate-400"
+                      }
+                    >
+                      {isStamped ? "Stamped" : "Not stamped yet"}
+                    </p>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+    </>
   );
 }
