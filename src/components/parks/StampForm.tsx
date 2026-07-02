@@ -13,7 +13,7 @@ import {
 import ParkQuestStamp from "./ParkQuestStamp";
 import PassportSurface from "./PassportSurface";
 
-const initialState: StampState = { error: null, success: false };
+const initialState: StampState = { error: null, info: null, success: false };
 
 const STAMP_PALETTE = [
   { value: "#064e3b", label: "Emerald green" },
@@ -92,6 +92,12 @@ export default function StampForm({
   const [state, formAction] = useActionState(stampAction, initialState);
 
   const serialNumber = makeSerialNumber(parkSlug);
+
+  if (state.error && phase === "form-submitting") {
+    setPhase("idle");
+    setDragY(0);
+    setShowImprint(false);
+  }
 
   const isStamping =
     phase !== "idle" &&
@@ -175,6 +181,11 @@ export default function StampForm({
           {state.error && (
             <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
               {state.error}
+            </p>
+          )}
+          {state.info && (
+            <p className="rounded-md bg-amber-900/30 px-3 py-2 text-sm text-amber-300">
+              {state.info}
             </p>
           )}
 

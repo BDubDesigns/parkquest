@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { and, eq, count } from "drizzle-orm";
+import { and, eq, count, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { parks } from "@/db/public";
@@ -14,6 +14,7 @@ import {
 
 export interface StampState {
   error: string | null;
+  info: string | null;
   success: boolean;
 }
 
@@ -24,7 +25,11 @@ export async function stampPark(
 ): Promise<StampState> {
   const ctx = await getCurrentFamilyContext();
   if (!ctx) {
-    return { error: "You must be signed in to stamp a park.", success: false };
+    return {
+      error: "You must be signed in to stamp a park.",
+      success: false,
+      info: null,
+    };
   }
 
   const park = await db.query.parks.findFirst({
@@ -32,7 +37,7 @@ export async function stampPark(
     where: and(eq(parks.slug, parkSlug), eq(parks.isActive, true)),
   });
   if (!park) {
-    return { error: "Park not found.", success: false };
+    return { error: "Park not found.", success: false, info: null };
   }
 
   const feltSafe = formData.get("feltSafe");
@@ -40,6 +45,7 @@ export async function stampPark(
     return {
       error: "Please answer the safety question.",
       success: false,
+      info: null,
     };
   }
 
@@ -48,7 +54,11 @@ export async function stampPark(
   if (ratingRaw && typeof ratingRaw === "string" && ratingRaw !== "") {
     const parsed = parseInt(ratingRaw, 10);
     if (isNaN(parsed) || parsed < 1 || parsed > 5) {
-      return { error: "Rating must be between 1 and 5.", success: false };
+      return {
+        error: "Rating must be between 1 and 5.",
+        success: false,
+        info: null,
+      };
     }
     rating = parsed;
   }
@@ -61,105 +71,166 @@ export async function stampPark(
 
   const today = new Date().toISOString().split("T")[0];
 
-  await db.transaction(async (tx) => {
-    const priorForPark = await tx
-      .select({ count: count() })
-      .from(visits)
-      .where(
-        and(
-          eq(visits.familyGroupId, ctx.familyGroupId),
-          eq(visits.parkId, park.id),
-        ),
+  try {
+    const result = await db.transaction(async (tx) => {
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtextextended(${`${ctx.familyGroupId}:${today}`}, 0))`,
       );
 
-    const priorTotal = await tx
-      .select({ count: count() })
-      .from(visits)
-      .where(eq(visits.familyGroupId, ctx.familyGroupId));
+      const existingToday = await tx
+        .select({ count: count() })
+        .from(visits)
+        .where(
+          and(
+            eq(visits.familyGroupId, ctx.familyGroupId),
+            eq(visits.parkId, park.id),
+            eq(visits.visitDate, today),
+          ),
+        );
 
-    const isFirstStampOfPark = priorForPark[0].count === 0;
-    const isFirstStampEver = priorTotal[0].count === 0;
-    const visitId = crypto.randomUUID();
+      if (existingToday[0].count > 0) {
+        return {
+          error:
+            "You already stamped this park today. Come back another day for a fresh stamp.",
+          success: false,
+          info: null,
+        };
+      }
 
-    await tx.insert(visits).values({
-      id: visitId,
-      familyGroupId: ctx.familyGroupId,
-      parkId: park.id,
-      visitDate: today,
-      rating,
-      feltSafe: feltSafe === "yes",
-      notes: memory,
-      createdByUserId: ctx.userId,
-    });
+      const todayStampCount = await tx
+        .select({ count: count() })
+        .from(visits)
+        .where(
+          and(
+            eq(visits.familyGroupId, ctx.familyGroupId),
+            eq(visits.visitDate, today),
+          ),
+        );
 
-    await tx.insert(xpEvents).values({
-      familyGroupId: ctx.familyGroupId,
-      amount: isFirstStampOfPark ? 50 : 5,
-      reason: isFirstStampOfPark ? "First park stamp" : "Repeat park stamp",
-      sourceVisitId: visitId,
-    });
+      const stampsToday = todayStampCount[0].count;
 
-    const badgeDefs = await tx
-      .select({ id: badgeDefinitions.id, slug: badgeDefinitions.slug })
-      .from(badgeDefinitions);
-    const stickerId = new Map(badgeDefs.map((b) => [b.slug, b.id]));
+      const priorForPark = await tx
+        .select({ count: count() })
+        .from(visits)
+        .where(
+          and(
+            eq(visits.familyGroupId, ctx.familyGroupId),
+            eq(visits.parkId, park.id),
+          ),
+        );
 
-    const firstStampId = stickerId.get("first-stamp");
-    if (isFirstStampEver && firstStampId) {
-      await tx
-        .insert(earnedBadges)
-        .values({
+      const priorTotal = await tx
+        .select({ count: count() })
+        .from(visits)
+        .where(eq(visits.familyGroupId, ctx.familyGroupId));
+
+      const isFirstStampOfPark = priorForPark[0].count === 0;
+      const isFirstStampEver = priorTotal[0].count === 0;
+      const visitId = crypto.randomUUID();
+
+      await tx.insert(visits).values({
+        id: visitId,
+        familyGroupId: ctx.familyGroupId,
+        parkId: park.id,
+        visitDate: today,
+        rating,
+        feltSafe: feltSafe === "yes",
+        notes: memory,
+        createdByUserId: ctx.userId,
+      });
+
+      if (stampsToday < 3) {
+        await tx.insert(xpEvents).values({
           familyGroupId: ctx.familyGroupId,
-          badgeDefinitionId: firstStampId,
-        })
-        .onConflictDoNothing();
+          amount: isFirstStampOfPark ? 50 : 5,
+          reason: isFirstStampOfPark ? "First park stamp" : "Repeat park stamp",
+          sourceVisitId: visitId,
+        });
+      }
+
+      const badgeDefs = await tx
+        .select({ id: badgeDefinitions.id, slug: badgeDefinitions.slug })
+        .from(badgeDefinitions);
+      const stickerId = new Map(badgeDefs.map((b) => [b.slug, b.id]));
+
+      const firstStampId = stickerId.get("first-stamp");
+      if (isFirstStampEver && firstStampId) {
+        await tx
+          .insert(earnedBadges)
+          .values({
+            familyGroupId: ctx.familyGroupId,
+            badgeDefinitionId: firstStampId,
+          })
+          .onConflictDoNothing();
+      }
+
+      const returnExplorerId = stickerId.get("return-explorer");
+      if (!isFirstStampOfPark && returnExplorerId) {
+        await tx
+          .insert(earnedBadges)
+          .values({
+            familyGroupId: ctx.familyGroupId,
+            badgeDefinitionId: returnExplorerId,
+          })
+          .onConflictDoNothing();
+      }
+
+      const uniqueRows = await tx
+        .select({ parkId: visits.parkId })
+        .from(visits)
+        .where(eq(visits.familyGroupId, ctx.familyGroupId))
+        .groupBy(visits.parkId);
+      const fiveParksId = stickerId.get("five-parks");
+      if (uniqueRows.length >= 5 && fiveParksId) {
+        await tx
+          .insert(earnedBadges)
+          .values({
+            familyGroupId: ctx.familyGroupId,
+            badgeDefinitionId: fiveParksId,
+          })
+          .onConflictDoNothing();
+      }
+
+      await ensureDailyPassportChallenges(tx, {
+        familyGroupId: ctx.familyGroupId,
+        today,
+      });
+
+      await completeMatchingPassportChallenges(tx, {
+        familyGroupId: ctx.familyGroupId,
+        parkId: park.id,
+        isFirstStampOfPark,
+        today,
+        visitId,
+      });
+
+      let info: string | null = null;
+      if (stampsToday >= 3) {
+        info =
+          "Today's base Adventure Points limit has been reached, but this stamp is saved and you can still earn points from quests!";
+      }
+
+      return { error: null, info, success: true };
+    });
+
+    if (result?.success) {
+      revalidatePath(`/parks/${parkSlug}`);
+      revalidatePath("/passport");
     }
 
-    const returnExplorerId = stickerId.get("return-explorer");
-    if (!isFirstStampOfPark && returnExplorerId) {
-      await tx
-        .insert(earnedBadges)
-        .values({
-          familyGroupId: ctx.familyGroupId,
-          badgeDefinitionId: returnExplorerId,
-        })
-        .onConflictDoNothing();
+    return result;
+  } catch (err) {
+    const pgErr = err as { code?: string; constraint?: string };
+    if (pgErr?.code === "23505") {
+      return {
+        error:
+          "You already stamped this park today. Come back another day for a fresh stamp.",
+        success: false,
+        info: null,
+      };
     }
-
-    const uniqueRows = await tx
-      .select({ parkId: visits.parkId })
-      .from(visits)
-      .where(eq(visits.familyGroupId, ctx.familyGroupId))
-      .groupBy(visits.parkId);
-    const fiveParksId = stickerId.get("five-parks");
-    if (uniqueRows.length >= 5 && fiveParksId) {
-      await tx
-        .insert(earnedBadges)
-        .values({
-          familyGroupId: ctx.familyGroupId,
-          badgeDefinitionId: fiveParksId,
-        })
-        .onConflictDoNothing();
-    }
-
-    await ensureDailyPassportChallenges(tx, {
-      familyGroupId: ctx.familyGroupId,
-      today,
-    });
-
-    await completeMatchingPassportChallenges(tx, {
-      familyGroupId: ctx.familyGroupId,
-      parkId: park.id,
-      isFirstStampOfPark,
-      today,
-      visitId,
-    });
-  });
-
-  revalidatePath(`/parks/${parkSlug}`);
-  revalidatePath("/passport");
-
-  return { error: null, success: true };
+    throw err;
+  }
 }
 
 export interface NicknameState {

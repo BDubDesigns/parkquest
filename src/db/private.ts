@@ -86,6 +86,11 @@ export const visits = pgTable(
       .notNull(),
   },
   (table) => [
+    uniqueIndex("visits_family_group_id_park_id_visit_date_idx").on(
+      table.familyGroupId,
+      table.parkId,
+      table.visitDate,
+    ),
     index("visits_family_group_id_park_id_idx").on(
       table.familyGroupId,
       table.parkId,

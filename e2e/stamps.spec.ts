@@ -63,7 +63,7 @@ test.describe.serial("stamp flow", () => {
     await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
-      page.getByText("Stamped! This park is in your family passport."),
+      page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible({ timeout: 10_000 });
 
     await expect(page.getByText("Stamped 1 time")).toBeVisible();
@@ -73,22 +73,42 @@ test.describe.serial("stamp flow", () => {
     ).toBeVisible();
   });
 
-  test("repeat stamp increments count", async ({ page }) => {
+  test("same-park same-day shows locked state", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
 
     await expect(
-      page.getByText("Stamped! This park is in your family passport."),
+      page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Stamp again!" }).click();
+    await expect(
+      page.getByText("Come back tomorrow for a fresh stamp."),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: "Stamp again!" }),
+    ).not.toBeVisible();
+  });
+
+  test("different park on same day is allowed", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/arroyo-park");
+
+    await expect(
+      page.getByText("You haven't stamped this park yet"),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
     await page.getByRole("button", { name: "Stamp it!" }).click();
 
-    await expect(page.getByText("Stamped 2 times")).toBeVisible({
-      timeout: 10_000,
-    });
+    await expect(
+      page.getByText("Today's stamp is already in your passport."),
+    ).toBeVisible({ timeout: 10_000 });
+
+    await expect(page.getByText("Stamped 1 time")).toBeVisible();
   });
 
   test("second family cannot see first family's stamps", async ({ page }) => {
@@ -108,8 +128,8 @@ test.describe.serial("stamp flow", () => {
   test("stamp color can be changed", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: "Stamp again!" }).click();
+    await page.goto("/parks/big-rock-garden");
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
 
     const amberButton = page.getByRole("button", { name: "Amber gold" });
     await amberButton.click();
@@ -119,12 +139,27 @@ test.describe.serial("stamp flow", () => {
   test("stamp rotation slider updates tilt value", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: "Stamp again!" }).click();
+    await page.goto("/parks/birchwood-park");
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
 
     const slider = page.getByRole("slider", { name: "Stamp tilt" });
     await expect(slider).toBeVisible();
     await slider.fill("10");
     await expect(page.getByText("10°", { exact: true })).toBeVisible();
+  });
+
+  test("fourth park on same day shows daily cap info", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/boulevard-park");
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
+    await page.getByRole("radio", { name: "Yes" }).check();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
+
+    await expect(
+      page.getByText("Today's stamp is already in your passport."),
+    ).toBeVisible({ timeout: 10_000 });
+
+    await expect(page.getByText("Stamped 1 time")).toBeVisible();
   });
 });

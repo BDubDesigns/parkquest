@@ -46,6 +46,8 @@ export default async function StampSection({ parkSlug }: Props) {
     );
   }
 
+  const today = new Date().toISOString().split("T")[0];
+
   const visitRows = await db.query.visits.findMany({
     columns: {
       id: true,
@@ -60,6 +62,8 @@ export default async function StampSection({ parkSlug }: Props) {
     ),
     orderBy: [desc(visits.visitDate), desc(visits.createdAt)],
   });
+
+  const hasStampedToday = visitRows.some((v) => v.visitDate === today);
 
   if (visitRows.length === 0) {
     return (
@@ -81,6 +85,7 @@ export default async function StampSection({ parkSlug }: Props) {
       visitCount={visitRows.length}
       parkSlug={parkSlug}
       parkName={park.name}
+      stampedToday={hasStampedToday}
     />
   );
 }

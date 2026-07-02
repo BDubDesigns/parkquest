@@ -34,7 +34,7 @@ async function stampPark(page: Page, slug: string) {
   await page.getByRole("radio", { name: "Yes" }).check();
   await page.getByRole("button", { name: "Stamp it!" }).click();
   await expect(
-    page.getByText("Stamped! This park is in your family passport."),
+    page.getByText("Today's stamp is already in your passport."),
   ).toBeVisible({ timeout: 10_000 });
   await page.waitForTimeout(300);
 }
@@ -86,24 +86,17 @@ test.describe.serial("sticker awards", () => {
     await expect(page.getByText("Stamped 5 different parks.")).toBeVisible();
   });
 
-  test("repeat stamp earns Return Explorer sticker", async ({ page }) => {
+  test("same-park same-day shows locked state", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: /Stamp again!/ }).click();
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Stamp it!" }).click();
-    await expect(page.getByText("Stamped 2 times")).toBeVisible({
-      timeout: 10_000,
-    });
-    await page.waitForTimeout(500);
-
-    await page.goto("/passport");
-    await expect(page.getByText("Stickers (3 / 3)")).toBeVisible();
     await expect(
-      page.getByText("Returned to a park you already stamped."),
+      page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible();
-    await expect(page.getByText("Still to earn")).not.toBeVisible();
+
+    await expect(
+      page.getByText("Come back tomorrow for a fresh stamp."),
+    ).toBeVisible();
   });
 
   test("second family sees all stickers as unearned", async ({ page }) => {
@@ -118,5 +111,14 @@ test.describe.serial("sticker awards", () => {
     await expect(toEarn.getByText("First Stamp")).toBeVisible();
     await expect(toEarn.getByText("Five Parks")).toBeVisible();
     await expect(toEarn.getByText("Return Explorer")).toBeVisible();
+  });
+
+  test("same-park same-day on first family shows 2/3 stickers", async ({
+    page,
+  }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/passport");
+    await expect(page.getByText("Stickers (2 / 3)")).toBeVisible();
   });
 });

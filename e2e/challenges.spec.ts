@@ -40,7 +40,7 @@ async function stampPark(page: Page, slug: string) {
   await page.getByRole("radio", { name: "Yes" }).check();
   await page.getByRole("button", { name: "Stamp it!" }).click();
   await expect(
-    page.getByText("Stamped! This park is in your family passport."),
+    page.getByText("Today's stamp is already in your passport."),
   ).toBeVisible({ timeout: 10_000 });
   await page.waitForTimeout(300);
 }

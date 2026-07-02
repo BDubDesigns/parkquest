@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "visits_family_group_id_park_id_visit_date_idx" ON "visits" USING btree ("family_group_id","park_id","visit_date");
