@@ -6,6 +6,7 @@ import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNickname } from "@/lib/park-nicknames";
 import AmenityBadge from "@/components/parks/AmenityBadge";
 import NicknameForm from "@/components/parks/NicknameForm";
+import ParkDisplayName from "@/components/parks/ParkDisplayName";
 import StampSection from "@/components/parks/StampSection";
 import {
   card,
@@ -53,21 +54,12 @@ export default async function ParkDetailPage({ params }: Props) {
       </Link>
 
       <article className={`mt-5 sm:mt-6 ${card}`}>
-        {nickname ? (
-          <div>
-            <p className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              {nickname}
-            </p>
-            <p className={`mt-1 text-sm ${mutedText}`}>Official: {park.name}</p>
-          </div>
-        ) : (
-          <>
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              {park.name}
-            </h1>
-            <p className={`mt-1 text-sm ${mutedText}`}>{park.regionName}</p>
-          </>
-        )}
+        <ParkDisplayName
+          officialName={park.name}
+          nickname={nickname}
+          regionName={park.regionName}
+          as="h1"
+        />
 
         {park.description && (
           <p className="mt-4 leading-relaxed text-stone-300/80">

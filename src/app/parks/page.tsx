@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getParks } from "@/lib/parks";
+import { getCurrentFamilyContext } from "@/lib/family";
+import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import ParkCard from "@/components/parks/ParkCard";
 import { card, mutedText } from "@/components/ui/styles";
 
@@ -27,6 +29,15 @@ export default async function ParksPage() {
     );
   }
 
+  const ctx = await getCurrentFamilyContext();
+  let nicknames: Record<string, string | null> = {};
+  if (ctx) {
+    nicknames = await getFamilyParkNicknames(
+      ctx.familyGroupId,
+      parks.map((p) => p.id),
+    );
+  }
+
   return (
     <>
       <div className="mb-6">
@@ -48,6 +59,7 @@ export default async function ParksPage() {
             latitude={park.latitude}
             longitude={park.longitude}
             amenities={park.amenities}
+            nickname={nicknames[park.id] ?? null}
           />
         ))}
       </div>
