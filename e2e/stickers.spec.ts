@@ -34,7 +34,7 @@ async function stampPark(page: Page, slug: string) {
   await page.getByRole("radio", { name: "Yes" }).check();
   await page.getByRole("button", { name: "Stamp it!" }).click();
   await expect(
-    page.getByText("Stamped! This park is in your family passport."),
+    page.getByText("Today's stamp is already in your passport."),
   ).toBeVisible({ timeout: 10_000 });
   await page.waitForTimeout(300);
 }
@@ -86,19 +86,17 @@ test.describe.serial("sticker awards", () => {
     await expect(page.getByText("Stamped 5 different parks.")).toBeVisible();
   });
 
-  test("same-park same-day stamp shows duplicate error", async ({ page }) => {
+  test("same-park same-day shows locked state", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: /Stamp again!/ }).click();
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Stamp it!" }).click();
+    await expect(
+      page.getByText("Today's stamp is already in your passport."),
+    ).toBeVisible();
 
     await expect(
-      page.getByText(
-        "You already stamped this park today. Come back another day for a fresh stamp.",
-      ),
-    ).toBeVisible({ timeout: 10_000 });
+      page.getByText("Come back tomorrow for a fresh stamp."),
+    ).toBeVisible();
   });
 
   test("second family sees all stickers as unearned", async ({ page }) => {

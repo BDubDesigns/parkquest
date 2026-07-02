@@ -18,6 +18,7 @@ interface Props {
   visitCount: number;
   parkSlug: string;
   parkName: string;
+  stampedToday?: boolean;
 }
 
 function formatDate(dateStr: string): string {
@@ -45,20 +46,29 @@ export default function StampHistory({
   visitCount,
   parkSlug,
   parkName,
+  stampedToday,
 }: Props) {
   const displayVisits = visits.slice(0, 5);
+
+  const heading = stampedToday
+    ? "Today\u2019s stamp is already in your passport."
+    : "Stamped! This park is in your family passport.";
 
   return (
     <section className={`mt-6 sm:mt-8 ${card}`}>
       <h2 className={eyebrow}>Park Passport</h2>
 
-      <p className="mt-2 text-sm font-medium text-white">
-        Stamped! This park is in your family passport.
-      </p>
+      <p className="mt-2 text-sm font-medium text-white">{heading}</p>
 
       <p className={`mt-1 text-sm ${mutedText}`}>
         Stamped {visitCount} time{visitCount !== 1 ? "s" : ""}
       </p>
+
+      {stampedToday && (
+        <p className={`mt-2 text-sm ${mutedText}`}>
+          Come back tomorrow for a fresh stamp.
+        </p>
+      )}
 
       {displayVisits.length > 0 && (
         <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
@@ -84,14 +94,16 @@ export default function StampHistory({
         </p>
       )}
 
-      <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
-        <StampForm
-          key={`${parkSlug}-${visitCount}`}
-          parkSlug={parkSlug}
-          parkName={parkName}
-          alreadyStamped
-        />
-      </div>
+      {!stampedToday && (
+        <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
+          <StampForm
+            key={`${parkSlug}-${visitCount}`}
+            parkSlug={parkSlug}
+            parkName={parkName}
+            alreadyStamped
+          />
+        </div>
+      )}
     </section>
   );
 }
