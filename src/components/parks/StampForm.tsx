@@ -11,6 +11,7 @@ import {
   formLabel,
 } from "@/components/ui/styles";
 import ParkQuestStamp from "./ParkQuestStamp";
+import PassportSurface from "./PassportSurface";
 
 const initialState: StampState = { error: null, success: false };
 
@@ -82,6 +83,7 @@ export default function StampForm({
   const [expanded, setExpanded] = useState(false);
   const [stampColor, setStampColor] = useState(STAMP_PALETTE[0].value);
   const [rotation, setRotation] = useState(0);
+  const [placement] = useState<"left" | "center" | "right">("center");
   const [dragY, setDragY] = useState(0);
   const [phase, setPhase] = useState<StampPhase>("idle");
   const [showImprint, setShowImprint] = useState(false);
@@ -150,8 +152,6 @@ export default function StampForm({
     setDragY(0);
     setShowImprint(false);
   }
-
-  const targetStyle = { left: "50%" };
   const stamperTranslateY = Math.max(-48, dragY * 0.7 - 48);
 
   return (
@@ -209,89 +209,79 @@ export default function StampForm({
 
           {/* Step 2: Passport stamp stage */}
           <section aria-label="Stamp your passport">
-            <div className="passport-page relative overflow-hidden rounded-lg border border-stone-200">
-              <div className="relative flex min-h-[320px] flex-col items-center justify-center px-4 py-8 sm:min-h-[360px]">
-                {/* Target guide */}
-                {!showImprint && (
-                  <div
-                    className="stamp-target"
-                    data-visible={phase !== "form-submitting"}
-                    style={{
-                      left: targetStyle.left,
-                      translate: "-50% -50%",
-                    }}
-                    aria-hidden="true"
-                  />
-                )}
-
-                {/* Imprint — revealed after stamp */}
+            <div className="relative">
+              <PassportSurface
+                placement={placement}
+                showTarget={!showImprint && phase !== "form-submitting"}
+              >
                 {showImprint && (
-                  <div className="flex w-full items-center justify-center">
-                    <div
-                      className="animate-imprint-reveal"
-                      style={
-                        {
-                          "--rotation": `${rotation}deg`,
-                        } as React.CSSProperties
-                      }
-                    >
-                      <ParkQuestStamp
-                        topText="ParkQuest"
-                        bottomText="Family Park Passport"
-                        centerText={parkName}
-                        date={stampDate}
-                        serialNumber={serialNumber}
-                        color={stampColor}
-                        rotation={rotation}
-                        size={200}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Impact ring (thud overlay) */}
-                {phase === "stamper-pressed" && (
-                  <div className="stamp-impact-ring" aria-hidden="true" />
-                )}
-
-                {/* Physical stamper */}
-                {!isStamping && !showImprint && (
                   <div
-                    className="stamper"
-                    data-phase={phase}
-                    role="button"
-                    tabIndex={0}
-                    aria-label="Rubber stamper — drag down to stamp your passport"
-                    style={{
-                      top: "0px",
-                      transform: `translateY(${stamperTranslateY}px) rotate(${rotation}deg)`,
-                      transition:
-                        phase === "stamper-dragging"
-                          ? "filter 120ms ease-out"
-                          : "transform 200ms ease-out, filter 150ms ease-out",
-                    }}
-                    onPointerDown={handlePointerDown}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                    onPointerCancel={handlePointerUp}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        completeStamp();
-                      }
-                    }}
+                    className="animate-imprint-reveal"
+                    style={
+                      {
+                        "--rotation": `${rotation}deg`,
+                      } as React.CSSProperties
+                    }
                   >
-                    <div className="stamper-handle" />
-                    <div className="stamper-neck" />
-                    <div className="stamper-base">
-                      <div
-                        className="stamper-ink-ring"
-                        style={{ borderColor: stampColor }}
-                      />
-                    </div>
+                    <ParkQuestStamp
+                      topText="ParkQuest"
+                      bottomText="Family Park Passport"
+                      centerText={parkName}
+                      date={stampDate}
+                      serialNumber={serialNumber}
+                      color={stampColor}
+                      rotation={rotation}
+                      size={160}
+                    />
                   </div>
                 )}
-              </div>
+              </PassportSurface>
+
+              {/* Impact ring (thud overlay) */}
+              {phase === "stamper-pressed" && (
+                <div
+                  className="stamp-impact-ring pointer-events-none absolute inset-0 rounded-lg"
+                  aria-hidden="true"
+                />
+              )}
+
+              {/* Physical stamper */}
+              {!isStamping && !showImprint && (
+                <div
+                  className="stamper absolute left-1/2"
+                  data-phase={phase}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Rubber stamper — drag down to stamp your passport"
+                  style={{
+                    top: "46%",
+                    transform: `translate(-50%, -50%) translateY(${stamperTranslateY}px) rotate(${rotation}deg)`,
+                    transition:
+                      phase === "stamper-dragging"
+                        ? "filter 120ms ease-out"
+                        : "transform 200ms ease-out, filter 150ms ease-out",
+                  }}
+                  onPointerDown={handlePointerDown}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                  onPointerCancel={handlePointerUp}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      completeStamp();
+                    }
+                  }}
+                >
+                  <div className="stamper-handle" />
+                  <div className="stamper-neck" />
+                  <div className="stamper-base">
+                    <div
+                      className="stamper-ink-ring"
+                      style={{ borderColor: stampColor }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <p className="mt-2 text-center text-xs text-stone-400/70">
