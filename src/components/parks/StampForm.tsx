@@ -81,7 +81,6 @@ export default function StampForm({
   alreadyStamped,
 }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const isStampingRef = useRef(false);
   const startYRef = useRef(0);
   const reducedMotionRef = useRef(
     typeof window !== "undefined" &&
@@ -114,10 +113,9 @@ export default function StampForm({
     phase !== "stamper-dragging";
 
   function completeStamp() {
-    if (isStampingRef.current) return;
+    if (isStamping || state.success || state.error) return;
     if (!formRef.current?.reportValidity()) return;
 
-    isStampingRef.current = true;
     setPhase("stamper-pressed");
     const reducedMotion = reducedMotionRef.current;
 
@@ -167,7 +165,6 @@ export default function StampForm({
     setPhase("idle");
     setDragY(0);
     setShowImprint(false);
-    isStampingRef.current = false;
   }
 
   const targetLeft =
@@ -452,15 +449,17 @@ export default function StampForm({
               <button
                 type="button"
                 onClick={completeStamp}
-                disabled={isStamping}
+                disabled={isStamping || state.success}
                 className={`inline-flex min-h-11 items-center gap-2 ${ctaPrimary} disabled:opacity-50`}
               >
                 <StampIcon className="size-5" />
-                {phase === "form-submitting"
-                  ? "Saving..."
-                  : isStamping
-                    ? "Stamping..."
-                    : "Stamp it!"}
+                {state.success
+                  ? "Stamped!"
+                  : phase === "form-submitting"
+                    ? "Saving..."
+                    : isStamping
+                      ? "Stamping..."
+                      : "Stamp it!"}
               </button>
               <button
                 type="button"
