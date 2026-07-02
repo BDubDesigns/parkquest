@@ -99,7 +99,7 @@ export default function StampForm({
     phase !== "stamper-dragging";
 
   function completeStamp() {
-    if (isStamping || state.success || state.error) return;
+    if (isStamping) return;
     if (!formRef.current?.reportValidity()) return;
 
     setPhase("stamper-pressed");
@@ -398,17 +398,15 @@ export default function StampForm({
               <button
                 type="button"
                 onClick={completeStamp}
-                disabled={isStamping || state.success}
+                disabled={isStamping}
                 className={`inline-flex min-h-11 items-center gap-2 ${ctaPrimary} disabled:opacity-50`}
               >
                 <StampIcon className="size-5" />
-                {state.success
-                  ? "Stamped!"
-                  : phase === "form-submitting"
-                    ? "Saving..."
-                    : isStamping
-                      ? "Stamping..."
-                      : "Stamp it!"}
+                {phase === "form-submitting"
+                  ? "Saving..."
+                  : isStamping
+                    ? "Stamping..."
+                    : "Stamp it!"}
               </button>
               <button
                 type="button"
