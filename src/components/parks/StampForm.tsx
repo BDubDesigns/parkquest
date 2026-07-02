@@ -152,7 +152,7 @@ export default function StampForm({
     setDragY(0);
     setShowImprint(false);
   }
-  const stamperTranslateY = Math.max(-48, dragY * 0.7 - 48);
+  const stamperTranslateY = Math.max(-72, dragY * 0.7 - 72);
 
   return (
     <div>
@@ -255,7 +255,7 @@ export default function StampForm({
                   aria-label="Rubber stamper — drag down to stamp your passport"
                   style={{
                     top: "46%",
-                    transform: `translate(-50%, -50%) translateY(${stamperTranslateY}px) rotate(${rotation}deg)`,
+                    transform: `translate(-50%, -100%) translateY(${stamperTranslateY}px) rotate(${rotation}deg)`,
                     transition:
                       phase === "stamper-dragging"
                         ? "filter 120ms ease-out"

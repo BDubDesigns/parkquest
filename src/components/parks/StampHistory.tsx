@@ -85,7 +85,12 @@ export default function StampHistory({
       )}
 
       <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
-        <StampForm parkSlug={parkSlug} parkName={parkName} alreadyStamped />
+        <StampForm
+          key={parkSlug}
+          parkSlug={parkSlug}
+          parkName={parkName}
+          alreadyStamped
+        />
       </div>
     </section>
   );

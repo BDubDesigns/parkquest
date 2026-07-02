@@ -69,7 +69,7 @@ export default async function StampSection({ parkSlug }: Props) {
           You haven&apos;t stamped this park yet.
         </p>
         <div className="mt-3">
-          <StampForm parkSlug={parkSlug} parkName={park.name} />
+          <StampForm key={parkSlug} parkSlug={parkSlug} parkName={park.name} />
         </div>
       </section>
     );
