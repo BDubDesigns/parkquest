@@ -45,19 +45,9 @@ export default function NicknameForm({
     <section className="mt-6">
       {!editing ? (
         <div>
-          {currentNickname ? (
-            <div>
-              <p className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                {currentNickname}
-              </p>
-              <p className={`mt-1 text-sm ${mutedText}`}>
-                Official: {parkName}
-              </p>
-            </div>
-          ) : null}
           <button
             onClick={() => setEditing(true)}
-            className={`mt-3 min-h-11 text-sm ${currentNickname ? ctaGhost : ctaSecondary}`}
+            className={`min-h-11 text-sm ${currentNickname ? ctaGhost : ctaSecondary}`}
           >
             {currentNickname ? "Edit nickname" : "Add a family nickname"}
           </button>

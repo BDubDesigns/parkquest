@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { familyParkPreferences } from "@/db/private";
 
@@ -31,7 +31,7 @@ export async function getFamilyParkNicknames(
     columns: { parkId: true, nickname: true },
     where: and(
       eq(familyParkPreferences.familyGroupId, familyGroupId),
-      ...parkIds.map((id) => eq(familyParkPreferences.parkId, id)),
+      inArray(familyParkPreferences.parkId, parkIds),
     ),
   });
 

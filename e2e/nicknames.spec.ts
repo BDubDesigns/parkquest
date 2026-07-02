@@ -5,8 +5,9 @@ const emailB = `test-nickname-${Date.now()}-b@example.com`;
 const password = "testpassword123";
 const nameA = "Charlie";
 const nameB = "Diana";
-const NICKNAME = "Duck Bridge Park";
-const OFFICIAL = "Maritime Heritage Park";
+const NICKNAME = "The Big Swing Park";
+const OFFICIAL = "Elizabeth Park";
+const PARK_SLUG = "elizabeth-park";
 
 async function signUp(page: Page, name: string, email: string) {
   await page.goto("/sign-up");
@@ -29,24 +30,12 @@ async function signIn(page: Page, email: string) {
   });
 }
 
-async function signOut(page: Page) {
-  await page.goto("/account");
-  await page.getByRole("button", { name: "Sign out" }).click();
-  await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
 test("signed-out user sees only official park name", async ({ page }) => {
-  await page.goto("/parks/maritime-heritage-park");
+  await page.goto(`/parks/${PARK_SLUG}`);
 
-  await expect(
-    page.getByRole("heading", { name: OFFICIAL }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible();
 
-  await expect(
-    page.getByText("Add a family nickname"),
-  ).not.toBeVisible();
+  await expect(page.getByText("Add a family nickname")).not.toBeVisible();
 });
 
 test.describe.serial("park nicknames", () => {
@@ -57,7 +46,7 @@ test.describe.serial("park nicknames", () => {
   test("family can add a nickname", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/maritime-heritage-park");
+    await page.goto(`/parks/${PARK_SLUG}`);
 
     await page.getByRole("button", { name: "Add a family nickname" }).click();
 
@@ -65,13 +54,9 @@ test.describe.serial("park nicknames", () => {
 
     await page.getByRole("button", { name: "Add nickname" }).click();
 
-    await expect(
-      page.getByText(NICKNAME),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(NICKNAME)).toBeVisible({ timeout: 10_000 });
 
-    await expect(
-      page.getByText(`Official: ${OFFICIAL}`),
-    ).toBeVisible();
+    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
   });
 
   test("nickname appears on passport page", async ({ page }) => {
@@ -87,11 +72,9 @@ test.describe.serial("park nicknames", () => {
   test("another family does not see the nickname", async ({ page }) => {
     await signUp(page, nameB, emailB);
 
-    await page.goto("/parks/maritime-heritage-park");
+    await page.goto(`/parks/${PARK_SLUG}`);
 
-    await expect(
-      page.getByRole("heading", { name: OFFICIAL }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible();
 
     await expect(page.getByText(NICKNAME)).not.toBeVisible();
   });
@@ -99,29 +82,29 @@ test.describe.serial("park nicknames", () => {
   test("family can edit a nickname", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/maritime-heritage-park");
+    await page.goto(`/parks/${PARK_SLUG}`);
 
     await expect(page.getByText(NICKNAME)).toBeVisible();
 
     await page.getByRole("button", { name: "Edit nickname" }).click();
 
-    await page.getByPlaceholder("e.g. Duck Bridge Park").fill("Edited Nickname");
+    await page
+      .getByPlaceholder("e.g. Duck Bridge Park")
+      .fill("Edited Nickname");
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await expect(
-      page.getByText("Edited Nickname"),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("Edited Nickname")).toBeVisible({
+      timeout: 10_000,
+    });
 
-    await expect(
-      page.getByText(`Official: ${OFFICIAL}`),
-    ).toBeVisible();
+    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
   });
 
   test("family can remove a nickname", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/maritime-heritage-park");
+    await page.goto(`/parks/${PARK_SLUG}`);
 
     await expect(page.getByText("Edited Nickname")).toBeVisible();
 
@@ -129,9 +112,9 @@ test.describe.serial("park nicknames", () => {
 
     await page.getByRole("button", { name: "Remove nickname" }).click();
 
-    await expect(
-      page.getByRole("heading", { name: OFFICIAL }),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible({
+      timeout: 10_000,
+    });
 
     await expect(page.getByText("Edited Nickname")).not.toBeVisible();
   });
