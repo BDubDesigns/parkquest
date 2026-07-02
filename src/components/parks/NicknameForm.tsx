@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useRef } from "react";
+import { useActionState, useRef, useState } from "react";
 import { setNickname, type NicknameState } from "@/app/parks/[slug]/actions";
 import {
   ctaGhost,
