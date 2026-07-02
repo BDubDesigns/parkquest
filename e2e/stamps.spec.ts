@@ -73,7 +73,7 @@ test.describe.serial("stamp flow", () => {
     ).toBeVisible();
   });
 
-  test("repeat stamp increments count", async ({ page }) => {
+  test("same-park same-day duplicate is rejected", async ({ page }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
@@ -86,9 +86,31 @@ test.describe.serial("stamp flow", () => {
     await page.getByRole("radio", { name: "Yes" }).check();
     await page.getByRole("button", { name: "Stamp it!" }).click();
 
-    await expect(page.getByText("Stamped 2 times")).toBeVisible({
-      timeout: 10_000,
-    });
+    await expect(
+      page.getByText(
+        "You already stamped this park today. Come back another day for a fresh stamp.",
+      ),
+    ).toBeVisible({ timeout: 10_000 });
+  });
+
+  test("different park on same day is allowed", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/arroyo-park");
+
+    await expect(
+      page.getByText("You haven't stamped this park yet"),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
+    await page.getByRole("radio", { name: "Yes" }).check();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
+
+    await expect(
+      page.getByText("Stamped! This park is in your family passport."),
+    ).toBeVisible({ timeout: 10_000 });
+
+    await expect(page.getByText("Stamped 1 time")).toBeVisible();
   });
 
   test("second family cannot see first family's stamps", async ({ page }) => {

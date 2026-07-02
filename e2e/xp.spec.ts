@@ -54,20 +54,20 @@ test.describe.serial("adventure points", () => {
     });
   });
 
-  test("repeat stamp adds 5 more points for 130 total", async ({ page }) => {
+  test("second park on same day adds base stamp points", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: "Stamp again!" }).click();
+    await page.goto("/parks/arroyo-park");
+    await page.getByRole("button", { name: "Stamp this park!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
     await page.getByRole("button", { name: "Stamp it!" }).click();
-    await expect(page.getByText("Stamped 2 times")).toBeVisible({
-      timeout: 10_000,
-    });
+    await expect(
+      page.getByText("Stamped! This park is in your family passport."),
+    ).toBeVisible({ timeout: 10_000 });
     await page.waitForTimeout(500);
 
     await page.goto("/passport");
-    await expect(page.getByText("130 Adventure Points")).toBeVisible({
+    await expect(page.getByText("175 Adventure Points")).toBeVisible({
       timeout: 10_000,
     });
   });
