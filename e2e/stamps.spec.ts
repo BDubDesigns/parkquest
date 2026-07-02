@@ -60,7 +60,7 @@ test.describe.serial("stamp flow", () => {
       .getByLabel(/What do you want to remember/)
       .fill("Lara loved the waterfall overlook!");
 
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
       page.getByText("Stamped! This park is in your family passport."),
@@ -84,7 +84,7 @@ test.describe.serial("stamp flow", () => {
 
     await page.getByRole("button", { name: "Stamp again!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(page.getByText("Stamped 2 times")).toBeVisible({
       timeout: 10_000,
@@ -103,5 +103,28 @@ test.describe.serial("stamp flow", () => {
     await expect(
       page.getByText("Lara loved the waterfall overlook!"),
     ).not.toBeVisible();
+  });
+
+  test("stamp color can be changed", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/whatcom-falls-park");
+    await page.getByRole("button", { name: "Stamp again!" }).click();
+
+    const amberButton = page.getByRole("button", { name: "Amber gold" });
+    await amberButton.click();
+    await expect(amberButton).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("stamp rotation slider updates tilt value", async ({ page }) => {
+    await signIn(page, emailA);
+
+    await page.goto("/parks/whatcom-falls-park");
+    await page.getByRole("button", { name: "Stamp again!" }).click();
+
+    const slider = page.getByRole("slider", { name: "Stamp tilt" });
+    await expect(slider).toBeVisible();
+    await slider.fill("10");
+    await expect(page.getByText("10°", { exact: true })).toBeVisible();
   });
 });

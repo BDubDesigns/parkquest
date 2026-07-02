@@ -35,7 +35,7 @@ async function stampPark(page: Page, slug: string) {
   await page
     .getByLabel(/What do you want to remember/)
     .fill("Map test memory for privacy check!");
-  await page.getByRole("button", { name: "Save Stamp" }).click();
+  await page.getByRole("button", { name: "Stamp it!" }).click();
   await expect(
     page.getByText("Stamped! This park is in your family passport."),
   ).toBeVisible({ timeout: 10_000 });

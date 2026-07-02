@@ -18,9 +18,13 @@ test.describe.serial("auth flow", () => {
 
     await page.getByRole("button", { name: "Sign up" }).click();
 
-    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-      timeout: 10_000,
-    });
+    // Wait for the client-side navigation to complete. Better Auth's
+    // signUp.email() is async; router.push("/account") fires only after
+    // the API call succeeds. Without this wait, the heading check races
+    // the navigation and causes a flaky timeout.
+    await page.waitForURL("**/account", { timeout: 15_000 });
+
+    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
 
     await expect(page.getByText(email)).toBeVisible();
     await expect(page.getByText(name, { exact: true })).toBeVisible();
@@ -38,9 +42,10 @@ test.describe.serial("auth flow", () => {
 
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-      timeout: 10_000,
-    });
+    // Wait for client-side navigation to /account
+    await page.waitForURL("**/account", { timeout: 15_000 });
+
+    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
   });
 
   test("protected /account redirects to /sign-in when signed out", async ({

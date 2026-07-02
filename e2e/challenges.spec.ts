@@ -38,7 +38,7 @@ async function stampPark(page: Page, slug: string) {
   await page.goto(`/parks/${slug}`);
   await page.getByRole("button", { name: /Stamp (this park|again)!/ }).click();
   await page.getByRole("radio", { name: "Yes" }).check();
-  await page.getByRole("button", { name: "Save Stamp" }).click();
+  await page.getByRole("button", { name: "Stamp it!" }).click();
   await expect(
     page.getByText("Stamped! This park is in your family passport."),
   ).toBeVisible({ timeout: 10_000 });
