@@ -190,11 +190,14 @@ export async function setNickname(
 
   const nicknameRaw = formData.get("nickname");
   const nickname =
-    nicknameRaw && typeof nicknameRaw === "string" ? nicknameRaw.trim() : null;
+    nicknameRaw && typeof nicknameRaw === "string"
+      ? nicknameRaw.trim().slice(0, 255)
+      : null;
 
   await setFamilyParkNickname(ctx.familyGroupId, park.id, nickname);
 
   revalidatePath(`/parks/${parkSlug}`);
+  revalidatePath("/parks");
   revalidatePath("/passport");
   revalidatePath("/map");
 
