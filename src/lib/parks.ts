@@ -1,6 +1,7 @@
 import { db } from "@/db";
 
 export interface ParkInfo {
+  id: string;
   name: string;
   slug: string;
   regionName: string;
@@ -14,6 +15,16 @@ export interface ParkInfo {
 
 export async function getParks(): Promise<ParkInfo[]> {
   const rows = await db.query.parks.findMany({
+    columns: {
+      id: true,
+      name: true,
+      slug: true,
+      description: true,
+      latitude: true,
+      longitude: true,
+      sourceUrl: true,
+      officialUrl: true,
+    },
     with: {
       region: { columns: { name: true } },
       parkAmenities: {
@@ -28,6 +39,7 @@ export async function getParks(): Promise<ParkInfo[]> {
   });
 
   return rows.map((row) => ({
+    id: row.id,
     name: row.name,
     slug: row.slug,
     regionName: row.region.name,
@@ -68,6 +80,7 @@ export async function getParkBySlug(slug: string): Promise<ParkInfo | null> {
   if (!row) return null;
 
   return {
+    id: row.id,
     name: row.name,
     slug: row.slug,
     regionName: row.region.name,

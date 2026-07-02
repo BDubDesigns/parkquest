@@ -37,9 +37,14 @@ const DEFAULT_ZOOM = 13;
 interface Props {
   parks: ParkInfo[];
   stampedParkSlugs: string[] | null;
+  parkNicknames: Record<string, string | null>;
 }
 
-export default function ParkMap({ parks, stampedParkSlugs }: Props) {
+export default function ParkMap({
+  parks,
+  stampedParkSlugs,
+  parkNicknames,
+}: Props) {
   const stampedSet = stampedParkSlugs ? new Set(stampedParkSlugs) : null;
 
   return (
@@ -60,6 +65,7 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
         {parks.map((park) => {
           const isStamped = stampedSet?.has(park.slug) ?? false;
           const signedIn = stampedParkSlugs !== null;
+          const nickname = parkNicknames[park.slug] ?? null;
 
           return (
             <Marker
@@ -73,9 +79,15 @@ export default function ParkMap({ parks, stampedParkSlugs }: Props) {
                     href={`/parks/${park.slug}`}
                     className={`font-semibold ${linkPrimary}`}
                   >
-                    {park.name}
+                    {nickname ?? park.name}
                   </Link>
-                  <p className={`mt-0.5 ${mutedText}`}>{park.regionName}</p>
+                  {nickname ? (
+                    <p className={`mt-0.5 ${mutedText}`}>
+                      Official: {park.name} &middot; {park.regionName}
+                    </p>
+                  ) : (
+                    <p className={`mt-0.5 ${mutedText}`}>{park.regionName}</p>
+                  )}
                   <p className={mutedText}>
                     {park.amenities.length}{" "}
                     {park.amenities.length === 1 ? "amenity" : "amenities"}

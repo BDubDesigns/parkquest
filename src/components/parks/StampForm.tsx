@@ -248,7 +248,7 @@ export default function StampForm({
               {/* Physical stamper */}
               {!isStamping && !showImprint && (
                 <div
-                  className="stamper absolute left-1/2"
+                  className="stamper absolute left-1/2 z-10"
                   data-phase={phase}
                   role="button"
                   tabIndex={0}

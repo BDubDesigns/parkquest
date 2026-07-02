@@ -172,6 +172,32 @@ export const questDefinitions = pgTable("quest_definitions", {
     .notNull(),
 });
 
+export const familyParkPreferences = pgTable(
+  "family_park_preferences",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    familyGroupId: uuid("family_group_id")
+      .notNull()
+      .references(() => familyGroups.id, { onDelete: "cascade" }),
+    parkId: uuid("park_id")
+      .notNull()
+      .references(() => parks.id, { onDelete: "cascade" }),
+    nickname: text("nickname"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("family_park_preferences_family_group_id_park_id_idx").on(
+      table.familyGroupId,
+      table.parkId,
+    ),
+  ],
+);
+
 export const questProgress = pgTable(
   "quest_progress",
   {

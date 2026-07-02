@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
+import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import {
   ensureDailyPassportChallenges,
   completeMatchingPassportChallenges,
@@ -157,6 +158,48 @@ export async function stampPark(
 
   revalidatePath(`/parks/${parkSlug}`);
   revalidatePath("/passport");
+
+  return { error: null, success: true };
+}
+
+export interface NicknameState {
+  error: string | null;
+  success: boolean;
+}
+
+export async function setNickname(
+  parkSlug: string,
+  prevState: NicknameState,
+  formData: FormData,
+): Promise<NicknameState> {
+  const ctx = await getCurrentFamilyContext();
+  if (!ctx) {
+    return {
+      error: "You must be signed in to set a nickname.",
+      success: false,
+    };
+  }
+
+  const park = await db.query.parks.findFirst({
+    columns: { id: true },
+    where: and(eq(parks.slug, parkSlug), eq(parks.isActive, true)),
+  });
+  if (!park) {
+    return { error: "Park not found.", success: false };
+  }
+
+  const nicknameRaw = formData.get("nickname");
+  const nickname =
+    nicknameRaw && typeof nicknameRaw === "string"
+      ? nicknameRaw.trim().slice(0, 255)
+      : null;
+
+  await setFamilyParkNickname(ctx.familyGroupId, park.id, nickname);
+
+  revalidatePath(`/parks/${parkSlug}`);
+  revalidatePath("/parks");
+  revalidatePath("/passport");
+  revalidatePath("/map");
 
   return { error: null, success: true };
 }
