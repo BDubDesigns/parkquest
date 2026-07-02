@@ -22,14 +22,6 @@ const STAMP_PALETTE = [
   { value: "#78350f", label: "Warm brown" },
 ];
 
-const PLACEMENT_OPTIONS = [
-  { value: "left" as const, label: "Left" },
-  { value: "center" as const, label: "Center" },
-  { value: "right" as const, label: "Right" },
-];
-
-type Placement = (typeof PLACEMENT_OPTIONS)[number]["value"];
-
 type StampPhase =
   | "idle"
   | "stamper-active"
@@ -90,7 +82,6 @@ export default function StampForm({
   const [expanded, setExpanded] = useState(false);
   const [stampColor, setStampColor] = useState(STAMP_PALETTE[0].value);
   const [rotation, setRotation] = useState(0);
-  const [placement, setPlacement] = useState<Placement>("center");
   const [dragY, setDragY] = useState(0);
   const [phase, setPhase] = useState<StampPhase>("idle");
   const [showImprint, setShowImprint] = useState(false);
@@ -99,13 +90,6 @@ export default function StampForm({
   const [state, formAction] = useActionState(stampAction, initialState);
 
   const serialNumber = makeSerialNumber(parkSlug);
-
-  const placementJustify =
-    placement === "left"
-      ? "justify-start"
-      : placement === "right"
-        ? "justify-end"
-        : "justify-center";
 
   const isStamping =
     phase !== "idle" &&
@@ -167,8 +151,7 @@ export default function StampForm({
     setShowImprint(false);
   }
 
-  const targetLeft =
-    placement === "left" ? "15%" : placement === "right" ? "85%" : "50%";
+  const targetStyle = { left: "50%" };
   const stamperTranslateY = Math.max(-48, dragY * 0.7 - 48);
 
   return (
@@ -234,7 +217,7 @@ export default function StampForm({
                     className="stamp-target"
                     data-visible={phase !== "form-submitting"}
                     style={{
-                      left: targetLeft,
+                      left: targetStyle.left,
                       translate: "-50% -50%",
                     }}
                     aria-hidden="true"
@@ -243,9 +226,7 @@ export default function StampForm({
 
                 {/* Imprint — revealed after stamp */}
                 {showImprint && (
-                  <div
-                    className={`flex w-full items-center ${placementJustify}`}
-                  >
+                  <div className="flex w-full items-center justify-center">
                     <div
                       className="animate-imprint-reveal"
                       style={
@@ -322,30 +303,8 @@ export default function StampForm({
             </p>
           </section>
 
-          {/* Step 3: Stamp controls (placement, color, tilt) */}
+          {/* Step 3: Stamp controls (color, tilt) */}
           <div className="space-y-4">
-            <fieldset>
-              <legend className={formLabel}>Placement</legend>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {PLACEMENT_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setPlacement(option.value)}
-                    aria-pressed={placement === option.value}
-                    aria-label={`Place stamp ${option.label.toLowerCase()}`}
-                    className={`min-h-11 min-w-14 rounded-md px-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
-                      placement === option.value
-                        ? "bg-emerald-800 text-amber-200"
-                        : "bg-stone-200/60 text-stone-700 hover:bg-stone-300/60"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
             <fieldset>
               <legend className={formLabel}>Ink color</legend>
               <div className="mt-2 flex flex-wrap gap-3">

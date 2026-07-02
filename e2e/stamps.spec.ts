@@ -127,17 +127,4 @@ test.describe.serial("stamp flow", () => {
     await slider.fill("10");
     await expect(page.getByText("10°", { exact: true })).toBeVisible();
   });
-
-  test("stamp placement can be changed", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: "Stamp again!" }).click();
-
-    const leftButton = page.getByRole("button", {
-      name: "Place stamp left",
-    });
-    await leftButton.click();
-    await expect(leftButton).toHaveAttribute("aria-pressed", "true");
-  });
 });
