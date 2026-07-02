@@ -16,7 +16,11 @@ import {
 import { sql } from "drizzle-orm";
 import { parks } from "./public";
 import { user } from "./auth";
-import { familyMemberRoleEnum, questStatusEnum } from "./enums";
+import {
+  familyMemberRoleEnum,
+  questStatusEnum,
+  visitSourceEnum,
+} from "./enums";
 
 export const familyGroups = pgTable("family_groups", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -78,6 +82,9 @@ export const visits = pgTable(
     // to the family group; this field is for audit purposes only.
     // varchar (not uuid) because we don't assume Better Auth's user ID type.
     createdByUserId: varchar("created_by_user_id", { length: 255 }),
+    visitSource: visitSourceEnum("visit_source")
+      .default("live_stamp")
+      .notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

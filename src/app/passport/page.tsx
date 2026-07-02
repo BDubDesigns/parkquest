@@ -124,7 +124,10 @@ export default async function PassportPage() {
 
   const recentStamps = await db.query.visits.findMany({
     columns: { id: true, visitDate: true, rating: true, notes: true },
-    where: eq(visits.familyGroupId, ctx.familyGroupId),
+    where: and(
+      eq(visits.familyGroupId, ctx.familyGroupId),
+      eq(visits.visitSource, "live_stamp"),
+    ),
     orderBy: [desc(visits.visitDate), desc(visits.createdAt)],
     limit: 10,
     with: { park: { columns: { id: true, name: true, slug: true } } },
