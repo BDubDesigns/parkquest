@@ -160,6 +160,6 @@ test.describe.serial("stamp flow", () => {
       page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible({ timeout: 10_000 });
 
-    await expect(page.getByText("Stamped 4 times")).toBeVisible();
+    await expect(page.getByText("Stamped 1 time")).toBeVisible();
   });
 });

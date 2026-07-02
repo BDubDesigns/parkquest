@@ -51,7 +51,7 @@ export default function StampHistory({
   const displayVisits = visits.slice(0, 5);
 
   const heading = stampedToday
-    ? "Today\u2019s stamp is already in your passport."
+    ? "Today's stamp is already in your passport."
     : "Stamped! This park is in your family passport.";
 
   return (

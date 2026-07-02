@@ -64,7 +64,7 @@ test.describe.serial("passport progress", () => {
     await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
-      page.getByText("Stamped! This park is in your family passport."),
+      page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible({ timeout: 10_000 });
 
     await page.goto("/passport");
@@ -84,19 +84,24 @@ test.describe.serial("passport progress", () => {
     ).toBeVisible();
   });
 
-  test("repeat stamp does not double-count unique progress", async ({
+  test("same-day duplicate shows locked state and does not affect progress", async ({
     page,
   }) => {
     await signIn(page, emailA);
 
     await page.goto("/parks/whatcom-falls-park");
-    await page.getByRole("button", { name: "Stamp again!" }).click();
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
-      page.getByText("Stamped! This park is in your family passport."),
-    ).toBeVisible({ timeout: 10_000 });
+      page.getByText("Today's stamp is already in your passport."),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText("Come back tomorrow for a fresh stamp."),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: "Stamp again!" }),
+    ).not.toBeVisible();
 
     await page.goto("/passport");
 
