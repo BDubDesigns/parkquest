@@ -4,6 +4,7 @@ import { visits } from "@/db/private";
 import { parks } from "@/db/public";
 import { getParks } from "@/lib/parks";
 import { getCurrentFamilyContext } from "@/lib/family";
+import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import MapWrapper from "@/components/map/MapWrapper";
 import { bodyText, mutedText } from "@/components/ui/styles";
 
@@ -25,8 +26,22 @@ export default async function MapPage() {
 
   const ctx = await getCurrentFamilyContext();
   let stampedParkSlugs: string[] | null = null;
+  const parkNicknames: Record<string, string | null> = {};
 
   if (ctx) {
+    const parkRows = await db.query.parks.findMany({
+      columns: { id: true, slug: true },
+      where: eq(parks.isActive, true),
+    });
+    const parkIds = parkRows.map((p) => p.id);
+    const nicknames = await getFamilyParkNicknames(ctx.familyGroupId, parkIds);
+
+    for (const p of parkRows) {
+      if (nicknames[p.id]) {
+        parkNicknames[p.slug] = nicknames[p.id];
+      }
+    }
+
     const rows = await db
       .select({ slug: parks.slug })
       .from(visits)
@@ -36,5 +51,11 @@ export default async function MapPage() {
     stampedParkSlugs = rows.map((r) => r.slug);
   }
 
-  return <MapWrapper parks={parkList} stampedParkSlugs={stampedParkSlugs} />;
+  return (
+    <MapWrapper
+      parks={parkList}
+      stampedParkSlugs={stampedParkSlugs}
+      parkNicknames={parkNicknames}
+    />
+  );
 }

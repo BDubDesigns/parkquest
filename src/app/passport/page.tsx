@@ -11,6 +11,7 @@ import {
   xpEvents,
 } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
+import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import { ensureDailyPassportChallenges } from "@/lib/challenges";
 import {
   bodyText,
@@ -40,6 +41,24 @@ function Stars({ count }: { count: number }) {
       {"\u2605".repeat(count)}
       {"\u2606".repeat(5 - count)}
     </span>
+  );
+}
+
+function ParkNameWithNickname({
+  name,
+  nickname,
+  slug,
+  linkClass,
+}: {
+  name: string;
+  nickname: string | null;
+  slug: string;
+  linkClass: string;
+}) {
+  return (
+    <Link href={`/parks/${slug}`} className={linkClass}>
+      {nickname ?? name}
+    </Link>
   );
 }
 
@@ -94,6 +113,9 @@ export default async function PassportPage() {
     stampedParkIds.has(p.id),
   ).length;
 
+  const allParkIds = regionParks.map((p) => p.id);
+  const nicknames = await getFamilyParkNicknames(ctx.familyGroupId, allParkIds);
+
   const stamped = regionParks.filter((p) => stampedParkIds.has(p.id));
   const unstamped = regionParks.filter((p) => !stampedParkIds.has(p.id));
 
@@ -105,7 +127,7 @@ export default async function PassportPage() {
     where: eq(visits.familyGroupId, ctx.familyGroupId),
     orderBy: [desc(visits.visitDate), desc(visits.createdAt)],
     limit: 10,
-    with: { park: { columns: { name: true, slug: true } } },
+    with: { park: { columns: { id: true, name: true, slug: true } } },
   });
 
   const xpResult = await db
@@ -303,34 +325,44 @@ export default async function PassportPage() {
         <section className={`mt-8 ${cardSecondary}`}>
           <h2 className={eyebrow}>Recently stamped</h2>
           <ol className="mt-3">
-            {recentStamps.map((stamp) => (
-              <li
-                key={stamp.id}
-                className={`border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
-              >
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <Link
-                    href={`/parks/${stamp.park.slug}`}
-                    className={`font-medium ${linkPrimary}`}
-                  >
-                    {stamp.park.name}
-                  </Link>
-                  <span className={mutedText}>
-                    &mdash; {formatDate(stamp.visitDate)}
-                  </span>
-                  {stamp.rating && (
-                    <span>
-                      <Stars count={stamp.rating} />
+            {recentStamps.map((stamp) => {
+              const n = nicknames[stamp.park.id] ?? null;
+              return (
+                <li
+                  key={stamp.id}
+                  className={`border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
+                >
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <div>
+                      <ParkNameWithNickname
+                        name={stamp.park.name}
+                        nickname={n}
+                        slug={stamp.park.slug}
+                        linkClass={`font-medium ${linkPrimary}`}
+                      />
+                      {n && (
+                        <p className={`text-xs ${mutedText}`}>
+                          Official: {stamp.park.name}
+                        </p>
+                      )}
+                    </div>
+                    <span className={mutedText}>
+                      &mdash; {formatDate(stamp.visitDate)}
                     </span>
+                    {stamp.rating && (
+                      <span>
+                        <Stars count={stamp.rating} />
+                      </span>
+                    )}
+                  </div>
+                  {stamp.notes && (
+                    <p className="mt-1 text-stone-300/80 italic">
+                      &ldquo;{stamp.notes}&rdquo;
+                    </p>
                   )}
-                </div>
-                {stamp.notes && (
-                  <p className="mt-1 text-stone-300/80 italic">
-                    &ldquo;{stamp.notes}&rdquo;
-                  </p>
-                )}
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ol>
         </section>
       )}
@@ -339,16 +371,27 @@ export default async function PassportPage() {
         <section className={`mt-8 ${cardSecondary}`}>
           <h2 className={eyebrow}>Stamped parks ({stamped.length})</h2>
           <ul className="mt-3 space-y-1.5">
-            {stamped.map((p) => (
-              <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-amber-300">
-                  ✓
-                </span>{" "}
-                <Link href={`/parks/${p.slug}`} className={linkPrimary}>
-                  {p.name}
-                </Link>
-              </li>
-            ))}
+            {stamped.map((p) => {
+              const n = nicknames[p.id] ?? null;
+              return (
+                <li key={p.slug} className="text-sm">
+                  <span aria-hidden="true" className="text-amber-300">
+                    ✓
+                  </span>{" "}
+                  <ParkNameWithNickname
+                    name={p.name}
+                    nickname={n}
+                    slug={p.slug}
+                    linkClass={linkPrimary}
+                  />
+                  {n && (
+                    <p className={`ml-5 text-xs ${mutedText}`}>
+                      Official: {p.name}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -359,16 +402,27 @@ export default async function PassportPage() {
             Still waiting for a stamp ({unstamped.length})
           </h2>
           <ul className="mt-3 space-y-1.5">
-            {unstamped.map((p) => (
-              <li key={p.slug} className="text-sm">
-                <span aria-hidden="true" className="text-stone-500/60">
-                  ○
-                </span>{" "}
-                <Link href={`/parks/${p.slug}`} className={linkMuted}>
-                  {p.name}
-                </Link>
-              </li>
-            ))}
+            {unstamped.map((p) => {
+              const n = nicknames[p.id] ?? null;
+              return (
+                <li key={p.slug} className="text-sm">
+                  <span aria-hidden="true" className="text-stone-500/60">
+                    ○
+                  </span>{" "}
+                  <ParkNameWithNickname
+                    name={p.name}
+                    nickname={n}
+                    slug={p.slug}
+                    linkClass={linkMuted}
+                  />
+                  {n && (
+                    <p className={`ml-5 text-xs ${mutedText}`}>
+                      Official: {p.name}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

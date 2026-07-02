@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getParkBySlug } from "@/lib/parks";
+import { getParkBySlug, getParkIdBySlug } from "@/lib/parks";
+import { getCurrentFamilyContext } from "@/lib/family";
+import { getFamilyParkNickname } from "@/lib/park-nicknames";
 import AmenityBadge from "@/components/parks/AmenityBadge";
+import NicknameForm from "@/components/parks/NicknameForm";
 import StampSection from "@/components/parks/StampSection";
 import {
   card,
@@ -34,6 +37,15 @@ export default async function ParkDetailPage({ params }: Props) {
 
   if (!park) notFound();
 
+  const ctx = await getCurrentFamilyContext();
+  let nickname: string | null = null;
+  if (ctx) {
+    const parkId = await getParkIdBySlug(slug);
+    if (parkId) {
+      nickname = await getFamilyParkNickname(ctx.familyGroupId, parkId);
+    }
+  }
+
   return (
     <div>
       <Link href="/parks" className={`text-sm ${linkText}`}>
@@ -41,10 +53,21 @@ export default async function ParkDetailPage({ params }: Props) {
       </Link>
 
       <article className={`mt-5 sm:mt-6 ${card}`}>
-        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          {park.name}
-        </h1>
-        <p className={`mt-1 text-sm ${mutedText}`}>{park.regionName}</p>
+        {nickname ? (
+          <div>
+            <p className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              {nickname}
+            </p>
+            <p className={`mt-1 text-sm ${mutedText}`}>Official: {park.name}</p>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              {park.name}
+            </h1>
+            <p className={`mt-1 text-sm ${mutedText}`}>{park.regionName}</p>
+          </>
+        )}
 
         {park.description && (
           <p className="mt-4 leading-relaxed text-stone-300/80">
@@ -97,6 +120,14 @@ export default async function ParkDetailPage({ params }: Props) {
           </section>
         )}
       </article>
+
+      {ctx && (
+        <NicknameForm
+          parkSlug={slug}
+          parkName={park.name}
+          currentNickname={nickname}
+        />
+      )}
 
       <StampSection parkSlug={slug} />
     </div>

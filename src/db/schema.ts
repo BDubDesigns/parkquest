@@ -5,6 +5,7 @@ import {
   earnedBadges,
   familyGroups,
   familyMembers,
+  familyParkPreferences,
   questDefinitions,
   questProgress,
   visits,
@@ -30,6 +31,7 @@ export const parksRelations = relations(parks, ({ one, many }) => ({
   }),
   parkAmenities: many(parkAmenities),
   visits: many(visits),
+  familyPreferences: many(familyParkPreferences),
 }));
 
 export const amenitiesRelations = relations(amenities, ({ many }) => ({
@@ -55,6 +57,7 @@ export const familyGroupsRelations = relations(familyGroups, ({ many }) => ({
   xpEvents: many(xpEvents),
   earnedBadges: many(earnedBadges),
   questProgress: many(questProgress),
+  parkPreferences: many(familyParkPreferences),
 }));
 
 export const familyMembersRelations = relations(familyMembers, ({ one }) => ({
@@ -67,6 +70,20 @@ export const familyMembersRelations = relations(familyMembers, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const familyParkPreferencesRelations = relations(
+  familyParkPreferences,
+  ({ one }) => ({
+    familyGroup: one(familyGroups, {
+      fields: [familyParkPreferences.familyGroupId],
+      references: [familyGroups.id],
+    }),
+    park: one(parks, {
+      fields: [familyParkPreferences.parkId],
+      references: [parks.id],
+    }),
+  }),
+);
 
 export const visitsRelations = relations(visits, ({ one, many }) => ({
   familyGroup: one(familyGroups, {
