@@ -61,7 +61,7 @@ test.describe.serial("passport progress", () => {
     await page
       .getByLabel(/What do you want to remember/)
       .fill("Beautiful waterfall!");
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
       page.getByText("Stamped! This park is in your family passport."),
@@ -92,7 +92,7 @@ test.describe.serial("passport progress", () => {
     await page.goto("/parks/whatcom-falls-park");
     await page.getByRole("button", { name: "Stamp again!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
       page.getByText("Stamped! This park is in your family passport."),

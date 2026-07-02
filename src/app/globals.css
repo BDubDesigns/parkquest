@@ -28,3 +28,29 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
 .leaflet-popup-close-button {
   color: #a7f3d0 !important;
 }
+
+/* Passport stamp landing animation */
+@keyframes stamp-land {
+  0% {
+    transform: scale(0.92) translateY(-10px);
+    opacity: 0.85;
+  }
+  45% {
+    transform: scale(1.14) translateY(2px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-stamp-land {
+  animation: stamp-land 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp-land {
+    animation: none;
+  }
+}

@@ -43,7 +43,7 @@ test.describe.serial("adventure points", () => {
     await page
       .getByLabel(/What do you want to remember/)
       .fill("Lara loved the waterfall overlook!");
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
     await expect(
       page.getByText("Stamped! This park is in your family passport."),
     ).toBeVisible({ timeout: 10_000 });
@@ -60,7 +60,7 @@ test.describe.serial("adventure points", () => {
     await page.goto("/parks/whatcom-falls-park");
     await page.getByRole("button", { name: "Stamp again!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
     await expect(page.getByText("Stamped 2 times")).toBeVisible({
       timeout: 10_000,
     });

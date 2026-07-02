@@ -60,7 +60,7 @@ test.describe.serial("stamp flow", () => {
       .getByLabel(/What do you want to remember/)
       .fill("Lara loved the waterfall overlook!");
 
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(
       page.getByText("Stamped! This park is in your family passport."),
@@ -84,7 +84,7 @@ test.describe.serial("stamp flow", () => {
 
     await page.getByRole("button", { name: "Stamp again!" }).click();
     await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Save Stamp" }).click();
+    await page.getByRole("button", { name: "Stamp it!" }).click();
 
     await expect(page.getByText("Stamped 2 times")).toBeVisible({
       timeout: 10_000,

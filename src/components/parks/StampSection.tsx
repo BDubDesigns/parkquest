@@ -3,7 +3,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { visits } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
-import { getParkIdBySlug } from "@/lib/parks";
+import { getParkBySlug, getParkIdBySlug } from "@/lib/parks";
 import { card, eyebrow, linkText, mutedText } from "@/components/ui/styles";
 import StampForm from "./StampForm";
 import StampHistory from "./StampHistory";
@@ -33,8 +33,9 @@ export default async function StampSection({ parkSlug }: Props) {
   }
 
   const parkId = await getParkIdBySlug(parkSlug);
+  const park = await getParkBySlug(parkSlug);
 
-  if (!parkId) {
+  if (!parkId || !park) {
     return (
       <section className={`mt-6 sm:mt-8 ${card}`}>
         <h2 className={eyebrow}>Park Passport</h2>
@@ -68,7 +69,7 @@ export default async function StampSection({ parkSlug }: Props) {
           You haven&apos;t stamped this park yet.
         </p>
         <div className="mt-3">
-          <StampForm parkSlug={parkSlug} />
+          <StampForm parkSlug={parkSlug} parkName={park.name} />
         </div>
       </section>
     );
@@ -79,6 +80,7 @@ export default async function StampSection({ parkSlug }: Props) {
       visits={visitRows}
       visitCount={visitRows.length}
       parkSlug={parkSlug}
+      parkName={park.name}
     />
   );
 }

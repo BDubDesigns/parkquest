@@ -17,6 +17,7 @@ interface Props {
   visits: VisitRow[];
   visitCount: number;
   parkSlug: string;
+  parkName: string;
 }
 
 function formatDate(dateStr: string): string {
@@ -39,7 +40,12 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
+export default function StampHistory({
+  visits,
+  visitCount,
+  parkSlug,
+  parkName,
+}: Props) {
   const displayVisits = visits.slice(0, 5);
 
   return (
@@ -79,7 +85,7 @@ export default function StampHistory({ visits, visitCount, parkSlug }: Props) {
       )}
 
       <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
-        <StampForm parkSlug={parkSlug} alreadyStamped />
+        <StampForm parkSlug={parkSlug} parkName={parkName} alreadyStamped />
       </div>
     </section>
   );
