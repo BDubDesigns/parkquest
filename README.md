@@ -50,7 +50,7 @@ ParkQuest follows a two-track domain model: a **public park atlas** and **privat
 ### Private track (family-group scoped)
 
 - `family_groups`, `family_members`, `visits`, `xp_events`, `badge_definitions`, `earned_badges`, `quest_definitions`, and `quest_progress` tables store family data.
-- Every private row is scoped to a `familyGroupId`. Queries always filter by the authenticated family — cross-family data leakage is impossible at the query level.
+- Every private row is scoped to a `familyGroupId`. Queries are written to filter by the authenticated family, so one family should not be able to access another family's private data.
 - Routes: `/passport`, `/account`.
 
 ### Server-owned game logic
