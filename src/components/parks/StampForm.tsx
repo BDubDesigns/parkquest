@@ -1,13 +1,12 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState, useRef, useState } from "react";
 import { stampPark, type StampState } from "@/app/parks/[slug]/actions";
 import {
   ctaGhost,
   ctaPrimary,
   ctaSecondary,
-  eyebrow,
+  dividerSubtle,
   formInput,
   formLabel,
 } from "@/components/ui/styles";
@@ -22,6 +21,25 @@ const STAMP_PALETTE = [
   { value: "#1d4ed8", label: "Lake blue" },
   { value: "#78350f", label: "Warm brown" },
 ];
+
+const PLACEMENT_OPTIONS = [
+  { value: "left" as const, label: "Left" },
+  { value: "center" as const, label: "Center" },
+  { value: "right" as const, label: "Right" },
+];
+
+type Placement = (typeof PLACEMENT_OPTIONS)[number]["value"];
+
+type StampPhase =
+  | "idle"
+  | "stamper-active"
+  | "stamper-dragging"
+  | "stamper-pressed"
+  | "imprint-revealed"
+  | "form-submitting";
+
+const STAMP_THRESHOLD = 80;
+const MAX_DRAG_Y = 150;
 
 function formatStampDate(date: Date): string {
   return date.toLocaleDateString("en-US", {
@@ -51,21 +69,6 @@ function StampIcon({ className }: { className?: string }) {
   );
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 ${ctaPrimary} disabled:opacity-50`}
-    >
-      <StampIcon className="size-5" />
-      {pending ? "Stamping..." : "Stamp it!"}
-    </button>
-  );
-}
-
 interface Props {
   parkSlug: string;
   parkName: string;
@@ -77,19 +80,99 @@ export default function StampForm({
   parkName,
   alreadyStamped,
 }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const isStampingRef = useRef(false);
+  const startYRef = useRef(0);
+  const reducedMotionRef = useRef(
+    typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
   const [expanded, setExpanded] = useState(false);
   const [stampColor, setStampColor] = useState(STAMP_PALETTE[0].value);
   const [rotation, setRotation] = useState(0);
-  const [stampKey, setStampKey] = useState(0);
+  const [placement, setPlacement] = useState<Placement>("center");
+  const [dragY, setDragY] = useState(0);
+  const [phase, setPhase] = useState<StampPhase>("idle");
+  const [showImprint, setShowImprint] = useState(false);
   const [stampDate] = useState(() => formatStampDate(new Date()));
   const stampAction = stampPark.bind(null, parkSlug);
   const [state, formAction] = useActionState(stampAction, initialState);
 
   const serialNumber = makeSerialNumber(parkSlug);
 
-  function handleSubmit() {
-    setStampKey((k) => k + 1);
+  const placementJustify =
+    placement === "left"
+      ? "justify-start"
+      : placement === "right"
+        ? "justify-end"
+        : "justify-center";
+
+  const isStamping =
+    phase !== "idle" &&
+    phase !== "stamper-active" &&
+    phase !== "stamper-dragging";
+
+  function completeStamp() {
+    if (isStampingRef.current) return;
+    if (!formRef.current?.reportValidity()) return;
+
+    isStampingRef.current = true;
+    setPhase("stamper-pressed");
+    const reducedMotion = reducedMotionRef.current;
+
+    window.setTimeout(
+      () => {
+        setShowImprint(true);
+        setPhase("imprint-revealed");
+
+        window.setTimeout(
+          () => {
+            setPhase("form-submitting");
+            formRef.current?.requestSubmit();
+          },
+          reducedMotion ? 50 : 450,
+        );
+      },
+      reducedMotion ? 0 : 160,
+    );
   }
+
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (isStamping) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    startYRef.current = e.clientY;
+    setPhase("stamper-active");
+  }
+
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (phase !== "stamper-active" && phase !== "stamper-dragging") return;
+    const dy = Math.max(0, Math.min(MAX_DRAG_Y, e.clientY - startYRef.current));
+    setDragY(dy);
+    if (dy > 4) setPhase("stamper-dragging");
+  }
+
+  function handlePointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (phase === "stamper-dragging" && dragY > STAMP_THRESHOLD) {
+      completeStamp();
+    } else {
+      setPhase("idle");
+      setDragY(0);
+    }
+  }
+
+  function handleCancel() {
+    setExpanded(false);
+    setPhase("idle");
+    setDragY(0);
+    setShowImprint(false);
+    isStampingRef.current = false;
+  }
+
+  const targetLeft =
+    placement === "left" ? "15%" : placement === "right" ? "85%" : "50%";
+  const stamperTranslateY = Math.max(-48, dragY * 0.7 - 48);
 
   return (
     <div>
@@ -108,88 +191,14 @@ export default function StampForm({
       </button>
 
       {expanded && (
-        <form
-          action={formAction}
-          onSubmit={handleSubmit}
-          className="mt-4 space-y-4"
-        >
+        <form ref={formRef} action={formAction} className="mt-4 space-y-5">
           {state.error && (
             <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
               {state.error}
             </p>
           )}
 
-          <div className="space-y-4">
-            <div className="text-center">
-              <span className={eyebrow}>Stamp Preview</span>
-              <div className="mt-3 flex justify-center">
-                <div key={stampKey} className="animate-stamp-land">
-                  <ParkQuestStamp
-                    topText="ParkQuest"
-                    bottomText="Family Park Passport"
-                    centerText={parkName}
-                    date={stampDate}
-                    serialNumber={serialNumber}
-                    color={stampColor}
-                    rotation={rotation}
-                    size={240}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <fieldset>
-              <legend className={formLabel}>Ink color</legend>
-              <div className="mt-2 flex flex-wrap gap-3">
-                {STAMP_PALETTE.map((color) => (
-                  <button
-                    key={color.value}
-                    type="button"
-                    onClick={() => setStampColor(color.value)}
-                    aria-label={color.label}
-                    aria-pressed={stampColor === color.value}
-                    className={`size-11 rounded-full border-2 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70 ${
-                      stampColor === color.value
-                        ? "scale-110 border-white"
-                        : "border-transparent hover:scale-105"
-                    }`}
-                    style={{ backgroundColor: color.value }}
-                  />
-                ))}
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend className={formLabel}>Tilt</legend>
-              <div className="mt-2 flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setRotation((r) => Math.max(-15, r - 5))}
-                  disabled={rotation <= -15}
-                  aria-label="Rotate stamp left 5 degrees"
-                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
-                >
-                  −
-                </button>
-                <output
-                  className="min-w-[3ch] text-center text-sm font-semibold text-emerald-100"
-                  aria-live="polite"
-                >
-                  {rotation}°
-                </output>
-                <button
-                  type="button"
-                  onClick={() => setRotation((r) => Math.min(15, r + 5))}
-                  disabled={rotation >= 15}
-                  aria-label="Rotate stamp right 5 degrees"
-                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
-                >
-                  +
-                </button>
-              </div>
-            </fieldset>
-          </div>
-
+          {/* Step 1: Safety question (required before stamping) */}
           <fieldset>
             <legend className={formLabel}>
               Did you feel safe for the entirety of your visit?
@@ -218,6 +227,191 @@ export default function StampForm({
             </div>
           </fieldset>
 
+          {/* Step 2: Passport stamp stage */}
+          <section aria-label="Stamp your passport">
+            <div className="passport-page relative overflow-hidden rounded-lg border border-stone-200">
+              <div className="relative flex min-h-[320px] flex-col items-center justify-center px-4 py-8 sm:min-h-[360px]">
+                {/* Target guide */}
+                {!showImprint && (
+                  <div
+                    className="stamp-target"
+                    data-visible={phase !== "form-submitting"}
+                    style={{
+                      left: targetLeft,
+                      translate: "-50% -50%",
+                    }}
+                    aria-hidden="true"
+                  />
+                )}
+
+                {/* Imprint — revealed after stamp */}
+                {showImprint && (
+                  <div
+                    className={`flex w-full items-center ${placementJustify}`}
+                  >
+                    <div
+                      className="animate-imprint-reveal"
+                      style={
+                        {
+                          "--rotation": `${rotation}deg`,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <ParkQuestStamp
+                        topText="ParkQuest"
+                        bottomText="Family Park Passport"
+                        centerText={parkName}
+                        date={stampDate}
+                        serialNumber={serialNumber}
+                        color={stampColor}
+                        rotation={rotation}
+                        size={200}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Impact ring (thud overlay) */}
+                {phase === "stamper-pressed" && (
+                  <div className="stamp-impact-ring" aria-hidden="true" />
+                )}
+
+                {/* Physical stamper */}
+                {!isStamping && !showImprint && (
+                  <div
+                    className="stamper"
+                    data-phase={phase}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Rubber stamper — drag down to stamp your passport"
+                    style={{
+                      top: "0px",
+                      transform: `translateY(${stamperTranslateY}px) rotate(${rotation}deg)`,
+                      transition:
+                        phase === "stamper-dragging"
+                          ? "filter 120ms ease-out"
+                          : "transform 200ms ease-out, filter 150ms ease-out",
+                    }}
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onPointerCancel={handlePointerUp}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        completeStamp();
+                      }
+                    }}
+                  >
+                    <div className="stamper-handle" />
+                    <div className="stamper-neck" />
+                    <div className="stamper-base">
+                      <div
+                        className="stamper-ink-ring"
+                        style={{ borderColor: stampColor }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <p className="mt-2 text-center text-xs text-stone-400/70">
+              {phase === "stamper-dragging"
+                ? "Keep pulling down..."
+                : phase === "stamper-active"
+                  ? "Now drag down to stamp!"
+                  : "Drag the stamper down or use the button below"}
+            </p>
+          </section>
+
+          {/* Step 3: Stamp controls (placement, color, tilt) */}
+          <div className="space-y-4">
+            <fieldset>
+              <legend className={formLabel}>Placement</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {PLACEMENT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setPlacement(option.value)}
+                    aria-pressed={placement === option.value}
+                    aria-label={`Place stamp ${option.label.toLowerCase()}`}
+                    className={`min-h-11 min-w-14 rounded-md px-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
+                      placement === option.value
+                        ? "bg-emerald-800 text-amber-200"
+                        : "bg-stone-200/60 text-stone-700 hover:bg-stone-300/60"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className={formLabel}>Ink color</legend>
+              <div className="mt-2 flex flex-wrap gap-3">
+                {STAMP_PALETTE.map((color) => (
+                  <button
+                    key={color.value}
+                    type="button"
+                    onClick={() => setStampColor(color.value)}
+                    aria-label={color.label}
+                    aria-pressed={stampColor === color.value}
+                    className={`size-11 rounded-full border-2 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 ${
+                      stampColor === color.value
+                        ? "scale-110 border-stone-800"
+                        : "border-transparent hover:scale-105"
+                    }`}
+                    style={{ backgroundColor: color.value }}
+                  />
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className={formLabel}>Tilt your stamp</legend>
+              <div className="mt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRotation((r) => Math.max(-15, r - 1))}
+                  disabled={rotation <= -15}
+                  aria-label="Rotate stamp left 1 degree"
+                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
+                >
+                  −
+                </button>
+                <input
+                  type="range"
+                  min="-15"
+                  max="15"
+                  step="1"
+                  value={rotation}
+                  onChange={(e) => setRotation(Number(e.target.value))}
+                  aria-label="Stamp tilt"
+                  className="stamp-slider h-2 flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => setRotation((r) => Math.min(15, r + 1))}
+                  disabled={rotation >= 15}
+                  aria-label="Rotate stamp right 1 degree"
+                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
+                >
+                  +
+                </button>
+                <output
+                  className="min-w-[3.5ch] text-center text-sm font-semibold text-emerald-100"
+                  aria-live="polite"
+                >
+                  {rotation}°
+                </output>
+              </div>
+            </fieldset>
+          </div>
+
+          {/* Step 4: Optional rating and memory */}
           <label className="flex flex-col gap-1 text-sm">
             <span className={formLabel}>Rating (optional)</span>
             <select
@@ -250,15 +444,40 @@ export default function StampForm({
             </span>
           </label>
 
-          <div className="flex gap-3">
-            <SubmitButton />
-            <button
-              type="button"
-              onClick={() => setExpanded(false)}
-              className={`min-h-11 ${ctaGhost}`}
-            >
-              Cancel
-            </button>
+          {/* Step 5: Stamp action */}
+          <hr className={dividerSubtle} />
+          <div className="space-y-3">
+            <p className={formLabel}>Ready to stamp?</p>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={completeStamp}
+                disabled={isStamping}
+                className={`inline-flex min-h-11 items-center gap-2 ${ctaPrimary} disabled:opacity-50`}
+              >
+                <StampIcon className="size-5" />
+                {phase === "form-submitting"
+                  ? "Saving..."
+                  : isStamping
+                    ? "Stamping..."
+                    : "Stamp it!"}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className={`min-h-11 ${ctaGhost}`}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          {/* Live region for screen readers */}
+          <div aria-live="polite" className="sr-only">
+            {phase === "stamper-pressed" && "Stamp pressed."}
+            {phase === "imprint-revealed" &&
+              "Passport stamped. Saving your visit."}
+            {phase === "form-submitting" && "Saving your visit."}
           </div>
         </form>
       )}

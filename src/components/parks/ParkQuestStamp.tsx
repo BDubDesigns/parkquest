@@ -68,6 +68,14 @@ export default function ParkQuestStamp({
         ? size * 0.052
         : size * 0.064;
 
+  const centerTextProps =
+    centerText.length > 16
+      ? ({
+          textLength: innerRadius * 1.55,
+          lengthAdjust: "spacingAndGlyphs",
+        } as const)
+      : undefined;
+
   return (
     <svg
       width={size}
@@ -88,14 +96,14 @@ export default function ParkQuestStamp({
         >
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.05"
-            numOctaves="2"
+            baseFrequency="0.04"
+            numOctaves="3"
             result="noise"
           />
           <feDisplacementMap
             in="SourceGraphic"
             in2="noise"
-            scale={size * 0.012}
+            scale={size * 0.01}
             xChannelSelector="R"
             yChannelSelector="G"
           />
@@ -124,126 +132,120 @@ export default function ParkQuestStamp({
         </filter>
       </defs>
 
-      {/* Paper backing and soft shadow */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={outerRadius + 2}
-        fill="#000"
+      {/* Ink group: rough-edged border, rings, and text */}
+      <g fill={color} stroke={color} filter={`url(#${roughEdgeFilterId})`}>
+        {/* Outer scalloped border */}
+        <path
+          d={scallopPath}
+          fill="none"
+          strokeWidth={size * 0.012}
+          strokeOpacity="0.92"
+        />
+
+        {/* Inner ring */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={innerRadius - 8}
+          fill="none"
+          strokeWidth={size * 0.008}
+          strokeOpacity="0.8"
+        />
+
+        {/* Curved text paths */}
+        <path id={topTextPathId} d={topPathD} fill="none" stroke="none" />
+        <path id={bottomTextPathId} d={bottomPathD} fill="none" stroke="none" />
+
+        <text
+          fill={color}
+          stroke="none"
+          fontSize={size * 0.05}
+          fontWeight="700"
+          letterSpacing={size * 0.01}
+        >
+          <textPath
+            href={`#${topTextPathId}`}
+            startOffset="50%"
+            textAnchor="middle"
+          >
+            {topText.toUpperCase()}
+          </textPath>
+        </text>
+
+        <text
+          fill={color}
+          stroke="none"
+          fontSize={size * 0.036}
+          fontWeight="600"
+          letterSpacing={size * 0.007}
+        >
+          <textPath
+            href={`#${bottomTextPathId}`}
+            startOffset="50%"
+            textAnchor="middle"
+          >
+            {bottomText.toUpperCase()}
+          </textPath>
+        </text>
+
+        {/* Center content */}
+        <text
+          x={cx}
+          y={cy - size * 0.04}
+          textAnchor="middle"
+          fill={color}
+          stroke="none"
+          fontSize={centerFontSize}
+          fontWeight="800"
+          letterSpacing="-0.5"
+          {...centerTextProps}
+        >
+          {centerText}
+        </text>
+
+        <line
+          x1={cx - innerRadius * 0.5}
+          y1={cy + size * 0.01}
+          x2={cx + innerRadius * 0.5}
+          y2={cy + size * 0.01}
+          strokeWidth={size * 0.005}
+          strokeOpacity="0.75"
+        />
+
+        <text
+          x={cx}
+          y={cy + size * 0.06}
+          textAnchor="middle"
+          fill={color}
+          stroke="none"
+          fontSize={size * 0.04}
+          fontWeight="600"
+        >
+          {date}
+        </text>
+
+        <text
+          x={cx}
+          y={cy + size * 0.1}
+          textAnchor="middle"
+          fill={color}
+          stroke="none"
+          fontSize={size * 0.032}
+          fontFamily="monospace"
+          letterSpacing="1"
+        >
+          {serialNumber}
+        </text>
+      </g>
+
+      {/* Grunge speckle overlay */}
+      <path
+        d={scallopPath}
+        fill={color}
         fillOpacity="0.12"
-        filter="blur(3px)"
-      />
-      <circle cx={cx} cy={cy} r={outerRadius} fill="#fef3c7" />
-
-      {/* Main ink shape with distressed edge */}
-      <path
-        d={scallopPath}
-        fill={color}
-        fillOpacity="0.92"
-        stroke={color}
-        strokeWidth={size * 0.008}
-        filter={`url(#${roughEdgeFilterId})`}
-      />
-
-      {/* Ink grain overlay */}
-      <path
-        d={scallopPath}
-        fill={color}
-        fillOpacity="0.18"
         filter={`url(#${noiseFilterId})`}
         style={{ mixBlendMode: "multiply" }}
       />
-
-      {/* Inner ring */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={innerRadius - 10}
-        fill="none"
-        stroke="#fef3c7"
-        strokeWidth={size * 0.007}
-        strokeOpacity="0.55"
-      />
-
-      {/* Curved text paths */}
-      <path id={topTextPathId} d={topPathD} fill="none" />
-      <path id={bottomTextPathId} d={bottomPathD} fill="none" />
-
-      <text
-        fill="#fef3c7"
-        fontSize={size * 0.05}
-        fontWeight="700"
-        letterSpacing={size * 0.01}
-      >
-        <textPath
-          href={`#${topTextPathId}`}
-          startOffset="50%"
-          textAnchor="middle"
-        >
-          {topText.toUpperCase()}
-        </textPath>
-      </text>
-
-      <text
-        fill="#fef3c7"
-        fontSize={size * 0.036}
-        fontWeight="600"
-        letterSpacing={size * 0.007}
-      >
-        <textPath
-          href={`#${bottomTextPathId}`}
-          startOffset="50%"
-          textAnchor="middle"
-        >
-          {bottomText.toUpperCase()}
-        </textPath>
-      </text>
-
-      {/* Center content */}
-      <text
-        x={cx}
-        y={cy - size * 0.04}
-        textAnchor="middle"
-        fill="#fef3c7"
-        fontSize={centerFontSize}
-        fontWeight="800"
-        letterSpacing="-0.5"
-      >
-        {centerText}
-      </text>
-
-      <line
-        x1={cx - innerRadius * 0.5}
-        y1={cy + size * 0.01}
-        x2={cx + innerRadius * 0.5}
-        y2={cy + size * 0.01}
-        stroke="#fef3c7"
-        strokeWidth={size * 0.005}
-        strokeOpacity="0.6"
-      />
-
-      <text
-        x={cx}
-        y={cy + size * 0.06}
-        textAnchor="middle"
-        fill="#fef3c7"
-        fontSize={size * 0.04}
-        fontWeight="600"
-      >
-        {date}
-      </text>
-
-      <text
-        x={cx}
-        y={cy + size * 0.1}
-        textAnchor="middle"
-        fill="#fef3c7"
-        fontSize={size * 0.032}
-        fontFamily="monospace"
-        letterSpacing="1"
-      >
-        {serialNumber}
-      </text>
     </svg>
   );
 }
