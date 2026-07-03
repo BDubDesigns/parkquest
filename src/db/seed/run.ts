@@ -19,6 +19,20 @@ const db = drizzle({
 }) as import("drizzle-orm/node-postgres").NodePgDatabase<typeof schema>;
 
 async function main() {
+  if (
+    process.env.NODE_ENV === "production" &&
+    !process.env.ALLOW_PRODUCTION_SEED
+  ) {
+    console.error(
+      "ABORTING: NODE_ENV is production and ALLOW_PRODUCTION_SEED is not set.\n" +
+        "This script seeds public atlas data (regions, parks, amenities).\n" +
+        "If you are certain you want to run it in production, set:\n" +
+        "  ALLOW_PRODUCTION_SEED=1\n" +
+        "Make sure the production database has already had migrations applied.",
+    );
+    process.exit(1);
+  }
+
   console.log("Starting seed...\n");
 
   // Step 1: Amenities + regions + sticker definitions (shared across all regions)

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import MobileNav from "@/components/navigation/MobileNav";
+import Footer from "@/components/Footer";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
@@ -48,6 +49,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-emerald-950 pb-[calc(4rem+env(safe-area-inset-bottom))] text-white md:pb-0">
         <div className="flex-1">{children}</div>
+        <Footer />
         <MobileNav />
       </body>
     </html>
