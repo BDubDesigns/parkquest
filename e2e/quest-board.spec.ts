@@ -130,6 +130,27 @@ test.describe.serial("quest board lifecycle", () => {
       page.getByRole("button", { name: "Refresh Quest Board" }),
     ).not.toBeVisible();
   });
+
+  test("stamp before visiting /passport completes challenges retroactively", async ({
+    page,
+  }) => {
+    const emailD = `test-qb-retro-${Date.now()}-d@example.com`;
+    await signUp(page, "Diana", emailD);
+
+    await stampPark(page, "whatcom-falls-park");
+
+    await page.goto("/passport");
+
+    const section = getQuestBoardSection(page);
+    await expect(section.locator("li")).toHaveCount(4);
+
+    await expect(section.getByText("Park Passport Stamp")).toBeVisible();
+    await expect(section.getByText("Park Scout")).toBeVisible();
+    await expect(section.getByText("Tiny Mountaineer")).toBeVisible();
+    await expect(section.getByText("Playground Mission")).toBeVisible();
+
+    await expect(page.getByText("125 Adventure Points")).toBeVisible();
+  });
 });
 
 test.describe.serial("family isolation for quest boards", () => {
@@ -254,26 +275,22 @@ test.describe.serial("date-boundary: prior-day board", () => {
     await signUp(page, "Diana", emailD);
   });
 
-  test("initial board created on first passport visit", async ({ page }) => {
-    await signIn(page, emailD);
-    await page.goto("/passport");
-
-    const section = getQuestBoardSection(page);
-    await expect(section).toBeVisible({ timeout: 10_000 });
-    await expect(section.locator("li")).toHaveCount(4);
-  });
-
   test("set board dates to yesterday, verify persistence across app-day boundary", async ({
     page,
   }) => {
     await signIn(page, emailD);
+    // First passport visit creates the initial board
+    await page.goto("/passport");
+    const section = getQuestBoardSection(page);
+    await expect(section).toBeVisible({ timeout: 10_000 });
+    await expect(section.locator("li")).toHaveCount(4);
+
     const familyGroupId = await getFamilyGroupId(emailD);
     await setBoardToYesterday(familyGroupId);
 
     await page.goto("/passport");
 
     // Board should still show 4 quests (incomplete) — no midnight replacement
-    const section = getQuestBoardSection(page);
     await expect(section).toBeVisible({ timeout: 10_000 });
     await expect(section.locator("li")).toHaveCount(4);
 
@@ -307,20 +324,15 @@ test.describe.serial("date-boundary: next-day refresh", () => {
     await signUp(page, "Elena", emailE);
   });
 
-  test("fresh board with incomplete quests", async ({ page }) => {
-    await signIn(page, emailE);
-    await page.goto("/passport");
-
-    const section = getQuestBoardSection(page);
-    await expect(section).toBeVisible({ timeout: 10_000 });
-    await expect(section.locator("li")).toHaveCount(4);
-  });
-
   test("refresh creates board with manualRefreshDate = today", async ({
     page,
   }) => {
     await signIn(page, emailE);
+    // First passport visit creates the initial board
     await page.goto("/passport");
+    const section = getQuestBoardSection(page);
+    await expect(section).toBeVisible({ timeout: 10_000 });
+    await expect(section.locator("li")).toHaveCount(4);
 
     // Incomplete quests -> warning dialog
     await page.getByRole("button", { name: "Refresh Quest Board" }).click();

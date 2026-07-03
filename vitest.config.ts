@@ -7,6 +7,11 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     exclude: ["**/node_modules/**", "**/e2e/**"],
+    // Integration tests use the real database. Running them in parallel
+    // with other test files can cause contention on the shared Postgres.
+    // fileParallelism: false keeps the suite predictable.
+    fileParallelism: false,
+    setupFiles: ["./vitest.setup.ts"],
   },
   resolve: {
     alias: {

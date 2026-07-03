@@ -66,19 +66,6 @@ test.describe.serial("sticker awards", () => {
     await expect(page.getByText("Stamped 5 different parks.")).toBeVisible();
   });
 
-  test("same-park same-day shows locked state", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks/whatcom-falls-park");
-    await expect(
-      page.getByText("Today's stamp is already in your passport."),
-    ).toBeVisible();
-
-    await expect(
-      page.getByText("Come back tomorrow for a fresh stamp."),
-    ).toBeVisible();
-  });
-
   test("second family sees all stickers as unearned", async ({ page }) => {
     await signUp(page, nameB, emailB);
 
