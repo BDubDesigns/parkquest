@@ -7,10 +7,8 @@ import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
 import { parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { setFamilyParkNickname } from "@/lib/park-nicknames";
-import {
-  ensureDailyPassportChallenges,
-  completeMatchingPassportChallenges,
-} from "@/lib/challenges";
+import { completeMatchingPassportChallenges } from "@/lib/challenges";
+import { ensureActiveBoard } from "@/lib/quest-board";
 export interface StampState {
   error: string | null;
   info: string | null;
@@ -203,10 +201,7 @@ export async function stampPark(
           .onConflictDoNothing();
       }
 
-      await ensureDailyPassportChallenges(tx, {
-        familyGroupId: ctx.familyGroupId,
-        today,
-      });
+      await ensureActiveBoard(tx, ctx.familyGroupId);
 
       await completeMatchingPassportChallenges(tx, {
         familyGroupId: ctx.familyGroupId,

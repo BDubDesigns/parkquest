@@ -1,32 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
+import { signIn, signUp } from "./helpers/auth";
 
 const emailA = `test-stickers-${Date.now()}-a@example.com`;
 const emailB = `test-stickers-${Date.now()}-b@example.com`;
-const password = "testpassword123";
 const nameA = "Alice";
 const nameB = "Bob";
-
-async function signUp(page: Page, name: string, email: string) {
-  await page.goto("/sign-up");
-  await page.getByLabel("Name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign up" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
-async function signIn(page: Page, email: string) {
-  await page.context().clearCookies();
-  await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
 
 async function stampPark(page: Page, slug: string) {
   await page.goto(`/parks/${slug}`);
@@ -50,10 +28,12 @@ test.describe.serial("sticker awards", () => {
 
     await page.goto("/passport");
     await expect(page.getByText("Stickers (1 / 3)")).toBeVisible();
-    await expect(page.getByText("Earned")).toBeVisible();
-    await expect(page.getByText("Still to earn")).toBeVisible();
+    await expect(page.getByText("Earned", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Still to earn", { exact: true }),
+    ).toBeVisible();
 
-    const earned = page.getByText("Earned").locator("..");
+    const earned = page.getByText("Earned", { exact: true }).locator("..");
     await expect(earned.getByText("First Stamp")).toBeVisible();
     await expect(earned.getByText("Stamped your first park.")).toBeVisible();
 
@@ -104,10 +84,14 @@ test.describe.serial("sticker awards", () => {
 
     await page.goto("/passport");
     await expect(page.getByText("Stickers (0 / 3)")).toBeVisible();
-    await expect(page.getByText("Earned")).not.toBeVisible();
-    await expect(page.getByText("Still to earn")).toBeVisible();
+    await expect(page.getByText("Earned", { exact: true })).not.toBeVisible();
+    await expect(
+      page.getByText("Still to earn", { exact: true }),
+    ).toBeVisible();
 
-    const toEarn = page.getByText("Still to earn").locator("..");
+    const toEarn = page
+      .getByText("Still to earn", { exact: true })
+      .locator("..");
     await expect(toEarn.getByText("First Stamp")).toBeVisible();
     await expect(toEarn.getByText("Five Parks")).toBeVisible();
     await expect(toEarn.getByText("Return Explorer")).toBeVisible();

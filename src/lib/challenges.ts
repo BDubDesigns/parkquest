@@ -3,36 +3,7 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type * as schema from "@/db/schema";
 import { questDefinitions, questProgress, xpEvents } from "@/db/private";
 import { amenities, parkAmenities } from "@/db/public";
-
-/**
- * Ensure daily challenge quest_progress rows exist for (= family, today).
- * Idempotent via unique index + onConflictDoNothing.
- * MVP assigns all seeded daily challenges each UTC day.
- */
-export async function ensureDailyPassportChallenges(
-  tx: NodePgDatabase<typeof schema>,
-  params: { familyGroupId: string; today: string },
-): Promise<void> {
-  const { familyGroupId, today } = params;
-
-  const dailyDefs = await tx
-    .select()
-    .from(questDefinitions)
-    .where(eq(questDefinitions.isDaily, true));
-
-  if (dailyDefs.length > 0) {
-    await tx
-      .insert(questProgress)
-      .values(
-        dailyDefs.map((def) => ({
-          familyGroupId,
-          questDefinitionId: def.id,
-          assignedDate: today,
-        })),
-      )
-      .onConflictDoNothing();
-  }
-}
+import { getActiveBoard } from "@/lib/quest-board";
 
 export interface ChallengeParams {
   familyGroupId: string;
@@ -42,19 +13,14 @@ export interface ChallengeParams {
   visitId: string;
 }
 
-/**
- * Called inside the stampPark transaction after the visit and stamp XP
- * are inserted. Evaluates each assigned daily challenge for the family
- * and awards XP when the visit meets its criteria.
- *
- * Only updates quest_progress rows with status = 'assigned'.
- * Only inserts xp_events if the UPDATE actually changed a row.
- */
 export async function completeMatchingPassportChallenges(
   tx: NodePgDatabase<typeof schema>,
   params: ChallengeParams,
 ): Promise<void> {
-  const { familyGroupId, parkId, isFirstStampOfPark, today, visitId } = params;
+  const { familyGroupId, parkId, isFirstStampOfPark, visitId } = params;
+
+  const activeBoard = await getActiveBoard(tx, familyGroupId);
+  if (!activeBoard) return;
 
   const assigned = await tx
     .select({
@@ -71,8 +37,8 @@ export async function completeMatchingPassportChallenges(
     )
     .where(
       and(
+        eq(questProgress.questBoardId, activeBoard.id),
         eq(questProgress.familyGroupId, familyGroupId),
-        eq(questProgress.assignedDate, today),
         eq(questProgress.status, "assigned"),
       ),
     );
@@ -149,7 +115,7 @@ export async function completeMatchingPassportChallenges(
       await tx.insert(xpEvents).values({
         familyGroupId,
         amount: ch.xpReward,
-        reason: `Daily Quest: ${ch.slug}`,
+        reason: `Quest: ${ch.slug}`,
         sourceVisitId: visitId,
       });
     }

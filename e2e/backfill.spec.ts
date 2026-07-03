@@ -1,29 +1,8 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { signIn, signUp } from "./helpers/auth";
 
 const emailOwner = `test-backfill-${Date.now()}-owner@example.com`;
 const emailOtherFamily = `test-backfill-${Date.now()}-other@example.com`;
-const password = "testpassword123";
-
-async function signUp(page: Page, name: string, email: string) {
-  await page.goto("/sign-up");
-  await page.getByLabel("Name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign up" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
-async function signIn(page: Page, email: string) {
-  await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
 
 test("signed-out user cannot see backfill option", async ({ page }) => {
   await page.goto("/parks/whatcom-falls-park");
@@ -67,7 +46,7 @@ test.describe.serial("backfill flow", () => {
 
     await expect(
       page.getByText("We came here a lot before ParkQuest!"),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10_000 });
   });
 
   test("backfill option is not shown after visit exists", async ({ page }) => {

@@ -27,3 +27,5 @@ export const visitSourceEnum = pgEnum("visit_source", [
   "live_stamp",
   "backfill",
 ]);
+
+export const boardStatusEnum = pgEnum("board_status", ["active", "replaced"]);
