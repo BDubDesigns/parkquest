@@ -20,6 +20,7 @@ import {
   familyMemberRoleEnum,
   questStatusEnum,
   visitSourceEnum,
+  boardStatusEnum,
 } from "./enums";
 
 export const familyGroups = pgTable("family_groups", {
@@ -210,6 +211,34 @@ export const familyParkPreferences = pgTable(
   ],
 );
 
+export const questBoards = pgTable(
+  "quest_boards",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    familyGroupId: uuid("family_group_id")
+      .notNull()
+      .references(() => familyGroups.id, { onDelete: "cascade" }),
+    status: boardStatusEnum("status").default("active").notNull(),
+    createdAppDate: date("created_app_date").notNull(),
+    manualRefreshDate: date("manual_refresh_date"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("quest_boards_family_group_id_idx").on(table.familyGroupId),
+    uniqueIndex("quest_boards_one_active_per_family_idx")
+      .on(table.familyGroupId)
+      .where(sql`${table.status} = 'active'`),
+    uniqueIndex("quest_boards_one_manual_refresh_per_family_date_idx")
+      .on(table.familyGroupId, table.manualRefreshDate)
+      .where(sql`${table.manualRefreshDate} IS NOT NULL`),
+  ],
+);
+
 export const questProgress = pgTable(
   "quest_progress",
   {
@@ -220,17 +249,20 @@ export const questProgress = pgTable(
     questDefinitionId: uuid("quest_definition_id")
       .notNull()
       .references(() => questDefinitions.id),
+    questBoardId: uuid("quest_board_id")
+      .notNull()
+      .references(() => questBoards.id, { onDelete: "cascade" }),
     assignedDate: date("assigned_date").notNull(),
     status: questStatusEnum("status").default("assigned").notNull(),
     completedAt: timestamp("completed_at", { withTimezone: true }),
   },
   (table) => [
     uniqueIndex(
-      "quest_progress_family_group_id_quest_definition_id_assigned_date_idx",
-    ).on(table.familyGroupId, table.questDefinitionId, table.assignedDate),
-    index("quest_progress_family_group_id_assigned_date_idx").on(
+      "quest_progress_family_group_id_quest_definition_id_board_idx",
+    ).on(table.familyGroupId, table.questDefinitionId, table.questBoardId),
+    index("quest_progress_family_group_id_board_id_idx").on(
       table.familyGroupId,
-      table.assignedDate,
+      table.questBoardId,
     ),
   ],
 );

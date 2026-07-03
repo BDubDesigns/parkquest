@@ -1,37 +1,17 @@
 import { test, expect, type Page } from "@playwright/test";
+import { signIn, signUp } from "./helpers/auth";
 
 const emailA = `test-challenges-${Date.now()}-a@example.com`;
 const emailB = `test-challenges-${Date.now()}-b@example.com`;
 const emailC = `test-challenges-${Date.now()}-c@example.com`;
-const password = "testpassword123";
 const nameA = "Alice";
 const nameB = "Bob";
 const nameC = "Charlie";
 
 function getChallengeSection(page: Page) {
-  return page.getByText("Today's Quests").locator("..");
-}
-
-async function signUp(page: Page, name: string, email: string) {
-  await page.goto("/sign-up");
-  await page.getByLabel("Name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign up" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
-async function signIn(page: Page, email: string) {
-  await page.context().clearCookies();
-  await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
+  return page
+    .getByRole("heading", { name: "Quest Board" })
+    .locator("xpath=ancestor::section");
 }
 
 async function stampPark(page: Page, slug: string) {
@@ -55,11 +35,10 @@ test.describe.serial("passport challenges", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText("Today's Quests")).toBeVisible({
+    const section = getChallengeSection(page);
+    await expect(section).toBeVisible({
       timeout: 10_000,
     });
-
-    const section = getChallengeSection(page);
     const items = section.locator("li");
     await expect(items).toHaveCount(4);
 
@@ -98,11 +77,10 @@ test.describe.serial("passport challenges", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText("Today's Quests")).toBeVisible({
+    const section = getChallengeSection(page);
+    await expect(section).toBeVisible({
       timeout: 10_000,
     });
-
-    const section = getChallengeSection(page);
     await expect(section.locator("li")).toHaveCount(4);
     await expect(section.getByText("Park Passport Stamp")).toBeVisible();
 

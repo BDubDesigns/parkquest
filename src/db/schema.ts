@@ -6,6 +6,7 @@ import {
   familyGroups,
   familyMembers,
   familyParkPreferences,
+  questBoards,
   questDefinitions,
   questProgress,
   visits,
@@ -57,6 +58,7 @@ export const familyGroupsRelations = relations(familyGroups, ({ many }) => ({
   xpEvents: many(xpEvents),
   earnedBadges: many(earnedBadges),
   questProgress: many(questProgress),
+  questBoards: many(questBoards),
   parkPreferences: many(familyParkPreferences),
 }));
 
@@ -133,10 +135,22 @@ export const questDefinitionsRelations = relations(
   }),
 );
 
+export const questBoardsRelations = relations(questBoards, ({ one, many }) => ({
+  familyGroup: one(familyGroups, {
+    fields: [questBoards.familyGroupId],
+    references: [familyGroups.id],
+  }),
+  questProgress: many(questProgress),
+}));
+
 export const questProgressRelations = relations(questProgress, ({ one }) => ({
   familyGroup: one(familyGroups, {
     fields: [questProgress.familyGroupId],
     references: [familyGroups.id],
+  }),
+  questBoard: one(questBoards, {
+    fields: [questProgress.questBoardId],
+    references: [questBoards.id],
   }),
   questDefinition: one(questDefinitions, {
     fields: [questProgress.questDefinitionId],

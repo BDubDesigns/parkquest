@@ -1,8 +1,10 @@
+import { config } from "dotenv";
+config();
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
+  workers: 4,
   reporter: "html",
   use: {
     baseURL: "http://localhost:3000",

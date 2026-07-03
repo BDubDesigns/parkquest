@@ -12,7 +12,7 @@ import {
 } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNicknames } from "@/lib/park-nicknames";
-import { ensureDailyPassportChallenges } from "@/lib/challenges";
+import { ensureActiveBoard } from "@/lib/quest-board";
 import {
   bodyText,
   card,
@@ -25,6 +25,7 @@ import {
   linkPrimary,
   mutedText,
 } from "@/components/ui/styles";
+import { RefreshBoardButton } from "./RefreshBoardButton";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -143,14 +144,11 @@ export default async function PassportPage() {
     .where(eq(xpEvents.familyGroupId, ctx.familyGroupId));
   const totalAdventurePoints = xpResult[0].total;
 
+  const activeBoard = await ensureActiveBoard(db, ctx.familyGroupId);
   const today = new Date().toISOString().split("T")[0];
+  const alreadyRefreshedToday = activeBoard.manualRefreshDate === today;
 
-  await ensureDailyPassportChallenges(db, {
-    familyGroupId: ctx.familyGroupId,
-    today,
-  });
-
-  const todayChallenges = await db
+  const boardQuests = await db
     .select({
       id: questProgress.id,
       status: questProgress.status,
@@ -166,8 +164,8 @@ export default async function PassportPage() {
     )
     .where(
       and(
+        eq(questProgress.questBoardId, activeBoard.id),
         eq(questProgress.familyGroupId, ctx.familyGroupId),
-        eq(questProgress.assignedDate, today),
       ),
     )
     .orderBy(asc(questDefinitions.name));
@@ -231,11 +229,17 @@ export default async function PassportPage() {
         </p>
       </section>
 
-      {todayChallenges.length > 0 && (
+      {boardQuests.length > 0 && (
         <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrowAmber}>Today&apos;s Quests</h2>
+          <div className="flex items-center justify-between">
+            <h2 className={eyebrowAmber}>Quest Board</h2>
+            <RefreshBoardButton
+              hasIncomplete={boardQuests.some((q) => q.status === "assigned")}
+              alreadyRefreshedToday={alreadyRefreshedToday}
+            />
+          </div>
           <ul className="mt-3">
-            {todayChallenges.map((ch) => (
+            {boardQuests.map((ch) => (
               <li
                 key={ch.id}
                 className={`flex flex-col gap-0.5 border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
@@ -247,6 +251,15 @@ export default async function PassportPage() {
                         ✓
                       </span>
                       <span className="font-medium text-white">{ch.name}</span>
+                    </>
+                  ) : ch.status === "expired" ? (
+                    <>
+                      <span aria-hidden="true" className="text-stone-500/40">
+                        ✗
+                      </span>
+                      <span className="text-stone-500/60 line-through">
+                        {ch.name}
+                      </span>
                     </>
                   ) : (
                     <>

@@ -1,32 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
+import { signIn, signUp } from "./helpers/auth";
 
 const emailA = `test-map-${Date.now()}-a@example.com`;
 const emailB = `test-map-${Date.now()}-b@example.com`;
-const password = "testpassword123";
 const nameA = "Alice";
 const nameB = "Bob";
-
-async function signUp(page: Page, name: string, email: string) {
-  await page.goto("/sign-up");
-  await page.getByLabel("Name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign up" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
-async function signIn(page: Page, email: string) {
-  await page.context().clearCookies();
-  await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
 
 async function stampPark(page: Page, slug: string) {
   await page.goto(`/parks/${slug}`);

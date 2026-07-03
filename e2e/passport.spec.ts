@@ -1,31 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { signIn, signUp } from "./helpers/auth";
 
 const emailA = `test-${Date.now()}-a@example.com`;
 const emailB = `test-${Date.now()}-b@example.com`;
-const password = "testpassword123";
 const nameA = "Alice";
 const nameB = "Bob";
-
-async function signUp(page: Page, name: string, email: string) {
-  await page.goto("/sign-up");
-  await page.getByLabel("Name").fill(name);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign up" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
-
-async function signIn(page: Page, email: string) {
-  await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible({
-    timeout: 10_000,
-  });
-}
 
 test("signed-out /passport redirects to /sign-in", async ({ page }) => {
   await page.goto("/passport");
@@ -77,7 +56,10 @@ test.describe.serial("passport progress", () => {
 
     await expect(page.getByText("Visited parks (1)")).toBeVisible();
     await expect(
-      page.locator("li").filter({ hasText: "Whatcom Falls Park" }).filter({ hasText: "Stamped" }),
+      page
+        .locator("li")
+        .filter({ hasText: "Whatcom Falls Park" })
+        .filter({ hasText: "Stamped" }),
     ).toBeVisible();
 
     await expect(page.getByText("Not yet visited (45)")).toBeVisible();
@@ -110,7 +92,10 @@ test.describe.serial("passport progress", () => {
 
     await expect(page.getByText("Visited parks (1)")).toBeVisible();
     await expect(
-      page.locator("li").filter({ hasText: "Whatcom Falls Park" }).filter({ hasText: "Stamped" }),
+      page
+        .locator("li")
+        .filter({ hasText: "Whatcom Falls Park" })
+        .filter({ hasText: "Stamped" }),
     ).toBeVisible();
   });
 
