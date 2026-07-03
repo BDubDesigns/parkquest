@@ -5,6 +5,24 @@ import { questDefinitions, questProgress, xpEvents } from "@/db/private";
 import { amenities, parkAmenities } from "@/db/public";
 import { getActiveBoard } from "@/lib/quest-board";
 
+export function matchesQuestCriteria(
+  criteriaType: string,
+  criteriaSlug: string | undefined,
+  isFirstStampOfPark: boolean,
+  parkAmenitySlugs: Set<string>,
+): boolean {
+  switch (criteriaType) {
+    case "any_park":
+      return true;
+    case "new_park":
+      return isFirstStampOfPark;
+    case "amenity":
+      return criteriaSlug ? parkAmenitySlugs.has(criteriaSlug) : false;
+    default:
+      return false;
+  }
+}
+
 export interface ChallengeParams {
   familyGroupId: string;
   parkId: string;
@@ -85,21 +103,12 @@ export async function completeMatchingPassportChallenges(
     const criteria = ch.criteria as { type: string; slug?: string } | null;
     if (!criteria) continue;
 
-    let completed = false;
-
-    switch (criteria.type) {
-      case "any_park":
-        completed = true;
-        break;
-      case "new_park":
-        completed = isFirstStampOfPark;
-        break;
-      case "amenity":
-        if (criteria.slug) {
-          completed = parkAmenitySlugs.has(criteria.slug);
-        }
-        break;
-    }
+    const completed = matchesQuestCriteria(
+      criteria.type,
+      criteria.slug,
+      isFirstStampOfPark,
+      parkAmenitySlugs,
+    );
 
     if (!completed) continue;
 

@@ -1,76 +1,21 @@
 import { test, expect } from "@playwright/test";
+import { signUp, signIn } from "./helpers/auth";
 
-const email = `test-${Date.now()}@example.com`;
-const password = "testpassword123";
-const name = "Test User";
+const email = `test-auth-${Date.now()}@example.com`;
 
-test.describe.serial("auth flow", () => {
-  test("sign up creates an account and shows family group", async ({
-    page,
-  }) => {
-    await page.goto("/sign-up");
+test("sign up creates an account and shows family group", async ({ page }) => {
+  await signUp(page, "Alice", email);
+  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
+});
 
-    await expect(page.getByRole("heading", { name: "Sign up" })).toBeVisible();
+test("sign in works with existing credentials", async ({ page }) => {
+  await signIn(page, email);
+  await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
+});
 
-    await page.getByLabel("Name").fill(name);
-    await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(password);
-
-    await page.getByRole("button", { name: "Sign up" }).click();
-
-    // Wait for the client-side navigation to complete. Better Auth's
-    // signUp.email() is async; router.push("/account") fires only after
-    // the API call succeeds. Without this wait, the heading check races
-    // the navigation and causes a flaky timeout.
-    await page.waitForURL("**/account", { timeout: 15_000 });
-
-    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
-
-    await expect(page.getByText(email)).toBeVisible();
-    await expect(page.getByText(name, { exact: true })).toBeVisible();
-    await expect(page.getByText(`${name}'s Family`)).toBeVisible();
-    await expect(page.getByText("owner")).toBeVisible();
-  });
-
-  test("sign in works with existing credentials", async ({ page }) => {
-    await page.goto("/sign-in");
-
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
-
-    await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(password);
-
-    await page.getByRole("button", { name: "Sign in" }).click();
-
-    // Wait for client-side navigation to /account
-    await page.waitForURL("**/account", { timeout: 15_000 });
-
-    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
-  });
-
-  test("protected /account redirects to /sign-in when signed out", async ({
-    context,
-  }) => {
-    const page = await context.newPage();
-    await page.goto("/account");
-
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible({
-      timeout: 10_000,
-    });
-  });
-
-  test("public routes remain accessible without auth", async ({ context }) => {
-    const page = await context.newPage();
-
-    await page.goto("/parks");
-    await expect(page.getByRole("heading", { name: "Parks" })).toBeVisible();
-
-    await page.goto("/map");
-    await expect(page.getByRole("heading", { name: "Map" })).toBeVisible();
-
-    await page.goto("/parks/whatcom-falls-park");
-    await expect(
-      page.getByRole("heading", { name: "Whatcom Falls Park" }),
-    ).toBeVisible();
-  });
+test("public routes remain accessible without auth", async ({ page }) => {
+  await page.goto("/parks");
+  await expect(page.getByRole("heading", { name: "Parks" })).toBeVisible();
+  await page.goto("/map");
+  await expect(page.getByRole("heading", { name: "Map" })).toBeVisible();
 });

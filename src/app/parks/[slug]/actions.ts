@@ -9,6 +9,7 @@ import { getCurrentFamilyContext } from "@/lib/family";
 import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import { completeMatchingPassportChallenges } from "@/lib/challenges";
 import { ensureActiveBoard } from "@/lib/quest-board";
+import { calculateBaseXP } from "@/lib/rewards";
 export interface StampState {
   error: string | null;
   info: string | null;
@@ -144,11 +145,12 @@ export async function stampPark(
         visitSource: "live_stamp",
       });
 
-      if (stampsToday < 3) {
+      const xp = calculateBaseXP(isFirstStampOfPark, stampsToday);
+      if (xp) {
         await tx.insert(xpEvents).values({
           familyGroupId: ctx.familyGroupId,
-          amount: isFirstStampOfPark ? 50 : 5,
-          reason: isFirstStampOfPark ? "First park stamp" : "Repeat park stamp",
+          amount: xp.amount,
+          reason: xp.reason,
           sourceVisitId: visitId,
         });
       }
