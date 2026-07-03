@@ -5,6 +5,7 @@ import { visits } from "@/db/private";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getParkBySlug, getParkIdBySlug } from "@/lib/parks";
 import { card, eyebrow, linkText, mutedText } from "@/components/ui/styles";
+import BackfillForm from "./BackfillForm";
 import StampForm from "./StampForm";
 import StampHistory from "./StampHistory";
 
@@ -55,6 +56,7 @@ export default async function StampSection({ parkSlug }: Props) {
       rating: true,
       notes: true,
       createdAt: true,
+      visitSource: true,
     },
     where: and(
       eq(visits.familyGroupId, ctx.familyGroupId),
@@ -75,6 +77,7 @@ export default async function StampSection({ parkSlug }: Props) {
         <div className="mt-3">
           <StampForm key={parkSlug} parkSlug={parkSlug} parkName={park.name} />
         </div>
+        {ctx.role === "owner" && <BackfillForm parkSlug={parkSlug} />}
       </section>
     );
   }

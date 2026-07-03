@@ -22,3 +22,8 @@ export const questStatusEnum = pgEnum("quest_status", [
   "completed",
   "expired",
 ]);
+
+export const visitSourceEnum = pgEnum("visit_source", [
+  "live_stamp",
+  "backfill",
+]);

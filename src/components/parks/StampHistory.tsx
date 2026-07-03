@@ -11,6 +11,7 @@ interface VisitRow {
   visitDate: string;
   rating: number | null;
   notes: string | null;
+  visitSource: "live_stamp" | "backfill";
 }
 
 interface Props {
@@ -50,9 +51,16 @@ export default function StampHistory({
 }: Props) {
   const displayVisits = visits.slice(0, 5);
 
+  const liveCount = visits.filter((v) => v.visitSource === "live_stamp").length;
+  const backfillCount = visits.filter(
+    (v) => v.visitSource === "backfill",
+  ).length;
+
   const heading = stampedToday
     ? "Today's stamp is already in your passport."
-    : "Stamped! This park is in your family passport.";
+    : backfillCount > 0 && liveCount === 0
+      ? "This park is in your family history."
+      : "Stamped! This park is in your family passport.";
 
   return (
     <section className={`mt-6 sm:mt-8 ${card}`}>
@@ -60,9 +68,17 @@ export default function StampHistory({
 
       <p className="mt-2 text-sm font-medium text-white">{heading}</p>
 
-      <p className={`mt-1 text-sm ${mutedText}`}>
-        Stamped {visitCount} time{visitCount !== 1 ? "s" : ""}
-      </p>
+      {liveCount > 0 && (
+        <p className={`mt-1 text-sm ${mutedText}`}>
+          Stamped {liveCount} time{liveCount !== 1 ? "s" : ""}
+        </p>
+      )}
+      {backfillCount > 0 && (
+        <p className={`mt-1 text-sm ${mutedText}`}>
+          Previously visited {backfillCount} time
+          {backfillCount !== 1 ? "s" : ""}
+        </p>
+      )}
 
       {stampedToday && (
         <p className={`mt-2 text-sm ${mutedText}`}>
@@ -74,8 +90,14 @@ export default function StampHistory({
         <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
           {displayVisits.map((v) => (
             <li key={v.id} className="text-sm">
-              <div className="flex items-center gap-2">
-                <span className={mutedText}>{formatDate(v.visitDate)}</span>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                {v.visitSource === "backfill" ? (
+                  <span className="text-stone-400 italic">
+                    Previously visited
+                  </span>
+                ) : (
+                  <span className={mutedText}>{formatDate(v.visitDate)}</span>
+                )}
                 {v.rating && <Stars count={v.rating} />}
               </div>
               {v.notes && (
@@ -90,7 +112,7 @@ export default function StampHistory({
 
       {visitCount > 5 && (
         <p className={`mt-3 text-xs ${mutedText}`}>
-          Showing 5 most recent of {visitCount} stamps.
+          Showing 5 most recent records.
         </p>
       )}
 

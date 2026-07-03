@@ -47,9 +47,7 @@ test.describe.serial("passport progress", () => {
 
     await expect(page.getByText(/0 \/ 46/)).toBeVisible({ timeout: 10_000 });
 
-    await expect(
-      page.getByText("Still waiting for a stamp (46)"),
-    ).toBeVisible();
+    await expect(page.getByText("Not yet visited (46)")).toBeVisible();
   });
 
   test("after stamping one park, shows 1 / 46", async ({ page }) => {
@@ -69,7 +67,7 @@ test.describe.serial("passport progress", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText(/1 \/ 46.*parks stamped/)).toBeVisible({
+    await expect(page.getByText(/1 \/ 46.*parks visited/)).toBeVisible({
       timeout: 10_000,
     });
 
@@ -77,11 +75,12 @@ test.describe.serial("passport progress", () => {
       page.getByRole("link", { name: "Whatcom Falls Park" }).first(),
     ).toBeVisible();
 
-    await expect(page.getByText("Stamped parks (1)")).toBeVisible();
-
+    await expect(page.getByText("Visited parks (1)")).toBeVisible();
     await expect(
-      page.getByText("Still waiting for a stamp (45)"),
+      page.locator("li").filter({ hasText: "Whatcom Falls Park" }).filter({ hasText: "Stamped" }),
     ).toBeVisible();
+
+    await expect(page.getByText("Not yet visited (45)")).toBeVisible();
   });
 
   test("same-day duplicate shows locked state and does not affect progress", async ({
@@ -105,11 +104,14 @@ test.describe.serial("passport progress", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText(/1 \/ 46.*parks stamped/)).toBeVisible({
+    await expect(page.getByText(/1 \/ 46.*parks visited/)).toBeVisible({
       timeout: 10_000,
     });
 
-    await expect(page.getByText("Stamped parks (1)")).toBeVisible();
+    await expect(page.getByText("Visited parks (1)")).toBeVisible();
+    await expect(
+      page.locator("li").filter({ hasText: "Whatcom Falls Park" }).filter({ hasText: "Stamped" }),
+    ).toBeVisible();
   });
 
   test("second family sees 0 / 46", async ({ page }) => {
@@ -117,13 +119,11 @@ test.describe.serial("passport progress", () => {
 
     await page.goto("/passport");
 
-    await expect(page.getByText(/0 \/ 46.*parks stamped/)).toBeVisible({
+    await expect(page.getByText(/0 \/ 46.*parks visited/)).toBeVisible({
       timeout: 10_000,
     });
 
-    await expect(
-      page.getByText("Still waiting for a stamp (46)"),
-    ).toBeVisible();
+    await expect(page.getByText("Not yet visited (46)")).toBeVisible();
 
     await expect(page.getByText("Beautiful waterfall!")).not.toBeVisible();
   });
