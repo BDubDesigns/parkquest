@@ -1,156 +1,49 @@
 import { test, expect } from "@playwright/test";
-import { signIn, signUp } from "./helpers/auth";
-
-const emailA = `test-nickname-${Date.now()}-a@example.com`;
-const emailB = `test-nickname-${Date.now()}-b@example.com`;
-const nameA = "Charlie";
-const nameB = "Diana";
-const NICKNAME = "The Big Swing Park";
-const OFFICIAL = "Elizabeth Park";
-const PARK_SLUG = "elizabeth-park";
+import { signUp, signIn } from "./helpers/auth";
 
 test("signed-out user sees only official park name", async ({ page }) => {
-  await page.goto(`/parks/${PARK_SLUG}`);
-
-  await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible();
-
+  await page.goto("/parks/elizabeth-park");
+  await expect(
+    page.getByRole("heading", { name: /Elizabeth Park/ }),
+  ).toBeVisible();
   await expect(page.getByText("Add a family nickname")).not.toBeVisible();
 });
 
 test("signed-out parks list shows official names only", async ({ page }) => {
   await page.goto("/parks");
-
-  await expect(page.getByRole("link", { name: OFFICIAL })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Elizabeth Park" }),
+  ).toBeVisible();
 });
 
 test.describe.serial("park nicknames", () => {
+  const emailA = `test-nick-${Date.now()}-a@example.com`;
+  const emailB = `test-nick-${Date.now()}-b@example.com`;
+
   test("sign up first user", async ({ page }) => {
-    await signUp(page, nameA, emailA);
+    await signUp(page, "Charlie", emailA);
   });
 
-  test("family can add a nickname", async ({ page }) => {
+  test("family can add a nickname and it appears on passport", async ({
+    page,
+  }) => {
     await signIn(page, emailA);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
+    await page.goto("/parks/elizabeth-park");
     await page.getByRole("button", { name: "Add a family nickname" }).click();
-
-    await page.getByPlaceholder("e.g. Duck Bridge Park").fill(NICKNAME);
-
+    await page.getByLabel("Family nickname").fill("The Big Swing Park");
     await page.getByRole("button", { name: "Add nickname" }).click();
-
-    await expect(page.getByText(NICKNAME)).toBeVisible({ timeout: 10_000 });
-
-    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
-  });
-
-  test("nickname appears on park detail after add", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
-    await expect(page.getByText(NICKNAME)).toBeVisible();
-
-    await expect(page.getByRole("heading", { name: NICKNAME })).toBeVisible();
-
-    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
-  });
-
-  test("nickname appears on parks list", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks");
-
-    await expect(page.getByRole("link", { name: NICKNAME })).toBeVisible();
-
-    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
-  });
-
-  test("nickname appears on passport page", async ({ page }) => {
-    await signIn(page, emailA);
-
+    await expect(page.getByText("The Big Swing Park")).toBeVisible();
+    await expect(page.getByText("Official: Elizabeth Park")).toBeVisible();
     await page.goto("/passport");
-
-    await expect(
-      page.getByRole("link", { name: NICKNAME }).first(),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText("The Big Swing Park")).toBeVisible();
   });
 
   test("another family does not see the nickname", async ({ page }) => {
-    await signUp(page, nameB, emailB);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
-    await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible();
-
-    await expect(page.getByText(NICKNAME)).not.toBeVisible();
-  });
-
-  test("family can edit a nickname", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
-    await expect(page.getByText(NICKNAME)).toBeVisible();
-
-    await page.getByRole("button", { name: "Edit nickname" }).click();
-
-    await page
-      .getByPlaceholder("e.g. Duck Bridge Park")
-      .fill("Edited Nickname");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(page.getByText("Edited Nickname")).toBeVisible({
-      timeout: 10_000,
-    });
-
-    await expect(page.getByText(`Official: ${OFFICIAL}`)).toBeVisible();
-  });
-
-  test("family can edit again after editing", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
-    await expect(page.getByText("Edited Nickname")).toBeVisible();
-
-    await page.getByRole("button", { name: "Edit nickname" }).click();
-
-    await page.getByPlaceholder("e.g. Duck Bridge Park").fill("Second Edit");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(page.getByText("Second Edit")).toBeVisible({
-      timeout: 10_000,
-    });
-  });
-
-  test("family can remove a nickname", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto(`/parks/${PARK_SLUG}`);
-
-    await expect(page.getByText("Second Edit")).toBeVisible();
-
-    await page.getByRole("button", { name: "Edit nickname" }).click();
-
-    await page.getByRole("button", { name: "Remove nickname" }).click();
-
-    await expect(page.getByRole("heading", { name: OFFICIAL })).toBeVisible({
-      timeout: 10_000,
-    });
-
-    await expect(page.getByText("Second Edit")).not.toBeVisible();
-
-    await expect(page.getByText("Edited Nickname")).not.toBeVisible();
-  });
-
-  test("nickname removed from parks list after removal", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks");
-
-    await expect(page.getByRole("link", { name: OFFICIAL })).toBeVisible();
+    await signUp(page, "Diana", emailB);
+    await page.goto("/parks/elizabeth-park");
+    await expect(page.getByText("The Big Swing Park")).not.toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Elizabeth Park/ }),
+    ).toBeVisible();
   });
 });

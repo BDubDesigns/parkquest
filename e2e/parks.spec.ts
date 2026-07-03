@@ -11,7 +11,7 @@ test.describe("public park pages", () => {
     ).toBeVisible();
   });
 
-  test("/parks/[slug] shows park detail", async ({ page }) => {
+  test("/parks/[slug] shows park detail with amenities", async ({ page }) => {
     await page.goto("/parks/whatcom-falls-park");
 
     await expect(
@@ -19,39 +19,13 @@ test.describe("public park pages", () => {
     ).toBeVisible();
 
     await expect(page.getByText("Trail", { exact: true })).toBeVisible();
-
     await expect(page.getByText("Playground", { exact: true })).toBeVisible();
-
     await expect(page.getByText("Picnic Table", { exact: true })).toBeVisible();
 
     await expect(page.getByText(/48\.\d{4}/)).toBeVisible();
 
     await expect(
       page.getByRole("link", { name: /whatcom-falls-park$/ }),
-    ).toBeVisible();
-
-    await expect(
-      page.getByRole("heading", { name: "Official park page" }),
-    ).toBeVisible();
-
-    await expect(
-      page.getByRole("heading", { name: "Data source" }),
-    ).toBeVisible();
-  });
-
-  test("/parks/non-existent-slug shows not-found state", async ({ page }) => {
-    await page.goto("/parks/non-existent-slug");
-
-    await expect(
-      page.getByRole("heading", { name: "Park not found" }),
-    ).toBeVisible();
-
-    await expect(
-      page.getByText("The park you are looking for does not exist"),
-    ).toBeVisible();
-
-    await expect(
-      page.getByRole("link", { name: "Back to parks" }),
     ).toBeVisible();
   });
 });

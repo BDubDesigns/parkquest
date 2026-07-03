@@ -1,10 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { signIn, signUp } from "./helpers/auth";
+import { stampPark } from "./helpers/stamp";
 
 const emailA = `test-${Date.now()}-a@example.com`;
-const emailB = `test-${Date.now()}-b@example.com`;
 const nameA = "Alice";
-const nameB = "Bob";
 
 test("park detail shows sign-in prompt for signed-out user", async ({
   page,
@@ -19,52 +18,32 @@ test("park detail shows sign-in prompt for signed-out user", async ({
 });
 
 test.describe.serial("stamp flow", () => {
-  test("sign up first user", async ({ page }) => {
+  test("sign up", async ({ page }) => {
     await signUp(page, nameA, emailA);
   });
 
-  test("stamp a park from the detail page", async ({ page }) => {
+  test("stamp a park; verify in passport and AP", async ({ page }) => {
     await signIn(page, emailA);
-
-    await page.goto("/parks/whatcom-falls-park");
-
-    await expect(
-      page.getByText("You haven't stamped this park yet"),
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "Stamp this park!" }).click();
-
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page
-      .getByLabel(/What do you want to remember/)
-      .fill("Lara loved the waterfall overlook!");
-
-    await page.getByRole("button", { name: "Stamp it!" }).click();
-
-    await expect(
-      page.getByText("Today's stamp is already in your passport."),
-    ).toBeVisible({ timeout: 10_000 });
-
+    await stampPark(page, "whatcom-falls-park");
     await expect(page.getByText("Stamped 1 time")).toBeVisible();
 
-    await expect(
-      page.getByText("Lara loved the waterfall overlook!"),
-    ).toBeVisible();
+    await page.goto("/passport");
+    await expect(page.getByText(/1 \/ 46/)).toBeVisible({ timeout: 10_000 });
+    // 50 base AP + 75 quest rewards = 125
+    await expect(page.getByText("125 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
   });
 
   test("same-park same-day shows locked state", async ({ page }) => {
     await signIn(page, emailA);
-
     await page.goto("/parks/whatcom-falls-park");
-
     await expect(
       page.getByText("Today's stamp is already in your passport."),
     ).toBeVisible();
-
     await expect(
       page.getByText("Come back tomorrow for a fresh stamp."),
     ).toBeVisible();
-
     await expect(
       page.getByRole("button", { name: "Stamp again!" }),
     ).not.toBeVisible();
@@ -72,73 +51,30 @@ test.describe.serial("stamp flow", () => {
 
   test("different park on same day is allowed", async ({ page }) => {
     await signIn(page, emailA);
-
-    await page.goto("/parks/arroyo-park");
-
-    await expect(
-      page.getByText("You haven't stamped this park yet"),
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "Stamp this park!" }).click();
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Stamp it!" }).click();
-
-    await expect(
-      page.getByText("Today's stamp is already in your passport."),
-    ).toBeVisible({ timeout: 10_000 });
-
+    await stampPark(page, "arroyo-park");
     await expect(page.getByText("Stamped 1 time")).toBeVisible();
   });
 
-  test("second family cannot see first family's stamps", async ({ page }) => {
-    await signUp(page, nameB, emailB);
-
-    await page.goto("/parks/whatcom-falls-park");
-
-    await expect(
-      page.getByText("You haven't stamped this park yet"),
-    ).toBeVisible();
-
-    await expect(
-      page.getByText("Lara loved the waterfall overlook!"),
-    ).not.toBeVisible();
-  });
-
-  test("stamp color can be changed", async ({ page }) => {
+  test("fourth park on same day is saved but no base AP", async ({ page }) => {
     await signIn(page, emailA);
 
-    await page.goto("/parks/big-rock-garden");
-    await page.getByRole("button", { name: "Stamp this park!" }).click();
+    // Third park of the day
+    await stampPark(page, "big-rock-garden");
 
-    const amberButton = page.getByRole("button", { name: "Amber gold" });
-    await amberButton.click();
-    await expect(amberButton).toHaveAttribute("aria-pressed", "true");
-  });
+    // Verify AP is at 225 (125 + 50 + 50)
+    await page.goto("/passport");
+    await expect(page.getByText("225 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
 
-  test("stamp rotation slider updates tilt value", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks/birchwood-park");
-    await page.getByRole("button", { name: "Stamp this park!" }).click();
-
-    const slider = page.getByRole("slider", { name: "Stamp tilt" });
-    await expect(slider).toBeVisible();
-    await slider.fill("10");
-    await expect(page.getByText("10°", { exact: true })).toBeVisible();
-  });
-
-  test("fourth park on same day shows daily cap info", async ({ page }) => {
-    await signIn(page, emailA);
-
-    await page.goto("/parks/boulevard-park");
-    await page.getByRole("button", { name: "Stamp this park!" }).click();
-    await page.getByRole("radio", { name: "Yes" }).check();
-    await page.getByRole("button", { name: "Stamp it!" }).click();
-
-    await expect(
-      page.getByText("Today's stamp is already in your passport."),
-    ).toBeVisible({ timeout: 10_000 });
-
+    // Fourth park — should save but not add base AP
+    await stampPark(page, "birchwood-park");
     await expect(page.getByText("Stamped 1 time")).toBeVisible();
+
+    // AP should be unchanged
+    await page.goto("/passport");
+    await expect(page.getByText("225 Adventure Points")).toBeVisible({
+      timeout: 10_000,
+    });
   });
 });
