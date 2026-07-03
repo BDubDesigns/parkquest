@@ -90,6 +90,8 @@ test.describe.serial("backfill flow", () => {
     ).toBeVisible();
 
     await expect(page.getByText("1 / 46")).toBeVisible();
+
+    await expect(page.getByText("Previously visited")).toBeVisible();
   });
 
   test("backfill does not show in recently stamped feed", async ({ page }) => {

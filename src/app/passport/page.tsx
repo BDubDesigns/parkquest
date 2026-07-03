@@ -101,26 +101,30 @@ export default async function PassportPage() {
 
   const totalParks = regionParks.length;
 
-  const stampedRows = await db
-    .select({ parkId: visits.parkId })
+  const visitRows = await db
+    .select({ parkId: visits.parkId, visitSource: visits.visitSource })
     .from(visits)
-    .where(eq(visits.familyGroupId, ctx.familyGroupId))
-    .groupBy(visits.parkId);
+    .where(eq(visits.familyGroupId, ctx.familyGroupId));
 
-  const stampedParkIds = new Set(stampedRows.map((r) => r.parkId));
+  const visitedParkIds = new Set(visitRows.map((r) => r.parkId));
+  const liveStampedParkIds = new Set(
+    visitRows
+      .filter((r) => r.visitSource === "live_stamp")
+      .map((r) => r.parkId),
+  );
 
-  const uniqueStamped = regionParks.filter((p) =>
-    stampedParkIds.has(p.id),
+  const uniqueVisited = regionParks.filter((p) =>
+    visitedParkIds.has(p.id),
   ).length;
 
   const allParkIds = regionParks.map((p) => p.id);
   const nicknames = await getFamilyParkNicknames(ctx.familyGroupId, allParkIds);
 
-  const stamped = regionParks.filter((p) => stampedParkIds.has(p.id));
-  const unstamped = regionParks.filter((p) => !stampedParkIds.has(p.id));
+  const visited = regionParks.filter((p) => visitedParkIds.has(p.id));
+  const unstamped = regionParks.filter((p) => !visitedParkIds.has(p.id));
 
   const percent =
-    totalParks > 0 ? Math.round((uniqueStamped / totalParks) * 100) : 0;
+    totalParks > 0 ? Math.round((uniqueVisited / totalParks) * 100) : 0;
 
   const recentStamps = await db.query.visits.findMany({
     columns: { id: true, visitDate: true, rating: true, notes: true },
@@ -216,7 +220,7 @@ export default async function PassportPage() {
           />
         </div>
         <p className="mt-2 text-sm font-medium text-white">
-          {uniqueStamped} / {totalParks} {region.name} parks stamped
+          {uniqueVisited} / {totalParks} {region.name} parks visited
         </p>
 
         <p className="mt-4">
@@ -370,12 +374,13 @@ export default async function PassportPage() {
         </section>
       )}
 
-      {stamped.length > 0 && (
+      {visited.length > 0 && (
         <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrow}>Stamped parks ({stamped.length})</h2>
+          <h2 className={eyebrow}>Visited parks ({visited.length})</h2>
           <ul className="mt-3 space-y-1.5">
-            {stamped.map((p) => {
+            {visited.map((p) => {
               const n = nicknames[p.id] ?? null;
+              const hasLiveStamp = liveStampedParkIds.has(p.id);
               return (
                 <li key={p.slug} className="text-sm">
                   <span aria-hidden="true" className="text-amber-300">
@@ -387,6 +392,9 @@ export default async function PassportPage() {
                     slug={p.slug}
                     linkClass={linkPrimary}
                   />
+                  <span className={`ml-2 text-xs ${mutedText}`}>
+                    {hasLiveStamp ? "Stamped" : "Previously visited"}
+                  </span>
                   {n && (
                     <p className={`ml-5 text-xs ${mutedText}`}>
                       Official: {p.name}
@@ -401,9 +409,7 @@ export default async function PassportPage() {
 
       {unstamped.length > 0 && (
         <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrow}>
-            Still waiting for a stamp ({unstamped.length})
-          </h2>
+          <h2 className={eyebrow}>Not yet visited ({unstamped.length})</h2>
           <ul className="mt-3 space-y-1.5">
             {unstamped.map((p) => {
               const n = nicknames[p.id] ?? null;
