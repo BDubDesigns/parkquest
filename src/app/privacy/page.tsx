@@ -60,15 +60,14 @@ export default function PrivacyPage() {
       <section>
         <h2 className="mb-3 text-xl font-semibold">Contact</h2>
         <p className="leading-relaxed text-emerald-100">
-          For privacy questions, data access requests, or account deletion,
-          email{" "}
+          For account deletion or privacy requests, email{" "}
           <a
             href="mailto:privacy@parkquest.club"
             className="underline underline-offset-2 hover:text-emerald-200"
           >
             privacy@parkquest.club
           </a>
-          .
+          . During beta, deletion requests are handled manually.
         </p>
       </section>
     </main>

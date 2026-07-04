@@ -21,12 +21,12 @@ const db = drizzle({
 async function main() {
   if (
     process.env.NODE_ENV === "production" &&
-    !process.env.ALLOW_PRODUCTION_SEED
+    process.env.ALLOW_PRODUCTION_SEED !== "1"
   ) {
     console.error(
       "ABORTING: NODE_ENV is production and ALLOW_PRODUCTION_SEED is not set.\n" +
         "This script seeds public atlas data (regions, parks, amenities).\n" +
-        "If you are certain you want to run it in production, set:\n" +
+        "If you are certain you want to run it in production, set exactly:\n" +
         "  ALLOW_PRODUCTION_SEED=1\n" +
         "Make sure the production database has already had migrations applied.",
     );

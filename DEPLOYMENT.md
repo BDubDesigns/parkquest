@@ -99,14 +99,14 @@ cd /app/tools && npm run db:migrate
 docker exec <container-name> sh -c "cd /app/tools && npm run db:migrate"
 ```
 
-### 6. Seed public park data
+### 6. Seed public park atlas and shared game configuration
 
 ```bash
 # From Coolify "Execute command":
 cd /app/tools && ALLOW_PRODUCTION_SEED=1 npm run db:seed
 ```
 
-This inserts:
+This inserts public/reference data:
 
 - 1 region (`Bellingham, WA`)
 - 17 amenities
@@ -114,10 +114,11 @@ This inserts:
 - 4 daily quest definitions
 - Bellingham park records with verified amenity links
 
-> **Important:** The seed script creates only public atlas data — no test users
-> or test visits. It requires `ALLOW_PRODUCTION_SEED=1` when `NODE_ENV` is
-> `production` as a safety check. It is safe to run once on a fresh production
-> DB, and harmless to re-run (uses `onConflictDoNothing` / `onConflictDoUpdate`).
+> **Important:** The seed script creates public park atlas data and shared game
+> configuration — no test users, visits, or family progress. It requires exactly
+> `ALLOW_PRODUCTION_SEED=1` when `NODE_ENV` is `production` as a safety check.
+> It is safe to run once on a fresh production DB, and harmless to re-run (uses
+> `onConflictDoNothing` / `onConflictDoUpdate`).
 
 ### 7. Connect the domain
 
@@ -251,14 +252,18 @@ if (process.env.NODE_ENV !== "production") globalForDb.dbPool = pool;
 - **Do not expose the database publicly.** Coolify PostgreSQL resources are
   internal by default. Keep it that way unless you have a specific documented
   reason to add a public port.
+- **`docker-compose.yml` is local-development only.** Its Postgres service maps
+  a host port so local tools can connect. Production uses Coolify's private
+  internal networking instead.
 - **Enable persistent storage.** Coolify attaches a Docker volume to the
   PostgreSQL container. The data survives container restarts and redeployments.
 - **Enable backups** before real users register.
-- **Migrations** must be run once after the first deployment (the Docker image
-  does not include migration tooling). Use Coolify's "Execute command" feature
+- **Migrations** must be run manually once after the first deployment.
+  Migration tooling is included under `/app/tools/` in the image — they are
+  not auto-run on container start. Use Coolify's "Execute command" feature
   or `docker exec`. See step 5 above.
-- **Seeding** public park data requires `ALLOW_PRODUCTION_SEED=1`. See step 6
-  above.
+- **Seeding** public park atlas data and shared game configuration requires
+  `ALLOW_PRODUCTION_SEED=1`. See step 6 above.
 
 ---
 
@@ -300,13 +305,48 @@ The email forwarder should be configured before beta users are invited.
 
 ---
 
+## Beta account deletion runbook
+
+During beta, account deletion and privacy requests are handled manually by the
+operator through privacy@parkquest.club. Full self-serve/server-side deletion is
+future work.
+
+Before deleting data:
+
+- Confirm the requester controls the account email address before taking action.
+- Take or confirm a recent database backup.
+- Find the Better Auth user by email and record the user ID for the operation.
+- Find all `family_members` rows for that user.
+- Remember that `family_members.user_id` references Better Auth `user.id`
+  without cascade, so deleting the Better Auth user first will fail.
+
+Delete or transfer related private family data intentionally before deleting the
+user:
+
+- If the user is the only member/owner of a family, intentionally delete
+  family-scoped private data, including visits, visit notes/memories, family
+  park preferences/nicknames, quest boards/progress, earned rewards/stickers,
+  and any other private family-owned rows.
+- If multiple family members exist, decide whether to remove only that user's
+  membership or delete the whole family only if requested and appropriate.
+- Remove the user's `family_members` rows before deleting the Better Auth user.
+- Delete the Better Auth user only after dependent private rows are handled.
+- Verify no private data remains associated with the deleted account or deleted
+  family after the operation.
+
+Do not paste raw SQL as a blind "run this" script. Any manual deletion SQL must
+be carefully reviewed, scoped to the verified account/family IDs, and wrapped in
+a transaction before execution.
+
+---
+
 ## Related files
 
-| File                          | Purpose                                    |
-| ----------------------------- | ------------------------------------------ |
-| `Dockerfile`                  | Multi-stage build for production           |
-| `next.config.ts`              | Next.js config with `output: "standalone"` |
-| `drizzle.config.ts`           | Drizzle Kit config for migrations          |
-| `src/db/seed/run.ts`          | Seeds public park data (safe to rerun)     |
-| `src/app/api/health/route.ts` | Health check endpoint                      |
-| `.env.example`                | Environment variable template              |
+| File                          | Purpose                                     |
+| ----------------------------- | ------------------------------------------- |
+| `Dockerfile`                  | Multi-stage build for production            |
+| `next.config.ts`              | Next.js config with `output: "standalone"`  |
+| `drizzle.config.ts`           | Drizzle Kit config for migrations           |
+| `src/db/seed/run.ts`          | Seeds public/reference data (safe to rerun) |
+| `src/app/api/health/route.ts` | Health check endpoint                       |
+| `.env.example`                | Environment variable template               |

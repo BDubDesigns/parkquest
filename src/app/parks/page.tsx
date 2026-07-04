@@ -5,6 +5,8 @@ import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import ParkCard from "@/components/parks/ParkCard";
 import { card, mutedText } from "@/components/ui/styles";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Parks - Park Quest",
 };
