@@ -45,4 +45,24 @@ describe("matchesQuestCriteria", () => {
       matchesQuestCriteria("unknown_type", undefined, true, new Set()),
     ).toBe(false);
   });
+
+  it("returns true for any_park even when amenity slugs are present", () => {
+    expect(
+      matchesQuestCriteria("any_park", "not-used", false, new Set(["shelter"])),
+    ).toBe(true);
+  });
+
+  it("requires exact amenity slug matches", () => {
+    expect(
+      matchesQuestCriteria("amenity", "play", true, new Set(["playground"])),
+    ).toBe(false);
+    expect(
+      matchesQuestCriteria(
+        "amenity",
+        "playground",
+        true,
+        new Set(["playground"]),
+      ),
+    ).toBe(true);
+  });
 });
