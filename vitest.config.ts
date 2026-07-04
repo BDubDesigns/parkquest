@@ -12,6 +12,19 @@ export default defineConfig({
     // fileParallelism: false keeps the suite predictable.
     fileParallelism: false,
     setupFiles: ["./vitest.setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "**/.next/**",
+        "**/node_modules/**",
+        "**/test-results/**",
+        "**/playwright-report/**",
+        "**/e2e/**",
+        "**/*.{test,spec}.{js,jsx,ts,tsx}",
+      ],
+    },
   },
   resolve: {
     alias: {
