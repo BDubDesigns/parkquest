@@ -8,6 +8,8 @@ import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import MapWrapper from "@/components/map/MapWrapper";
 import { bodyText, mutedText } from "@/components/ui/styles";
 
+export const dynamic = "force-dynamic";
+
 export default async function MapPage() {
   const parkList = await getParks();
 

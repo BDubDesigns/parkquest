@@ -25,6 +25,22 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
+# Migration and seed tooling for Coolify "Execute command" use.
+# These files live under /app/tools and preserve the same relative paths
+# that the package.json scripts expect. They do not interfere with the
+# standalone app at /app/server.js.
+# Commands (run from the Coolify terminal):
+#   cd /app/tools && npm run db:migrate
+#   cd /app/tools && ALLOW_PRODUCTION_SEED=1 npm run db:seed
+COPY --from=builder /app/drizzle /app/tools/drizzle
+COPY --from=builder /app/drizzle.config.ts /app/tools/drizzle.config.ts
+COPY --from=builder /app/package.json /app/tools/package.json
+COPY --from=builder /app/package-lock.json /app/tools/package-lock.json
+COPY --from=builder /app/tsconfig.json /app/tools/tsconfig.json
+COPY --from=builder /app/src/db /app/tools/src/db
+COPY --from=builder /app/node_modules /app/tools/node_modules
+RUN chown -R nextjs:nodejs /app/tools
+
 USER nextjs
 
 EXPOSE 3000
