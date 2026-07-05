@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   setFamilyParkNickname: vi.fn(),
   park: { id: "park-1", name: "Test Park" },
   amenity: { id: "amenity-1" },
+  verifiedParkAmenity: null as { id: string } | null,
   selectCounts: [] as number[],
   selectRows: [] as unknown[][],
   inserted: [] as Array<{ table: unknown; values: Record<string, unknown> }>,
@@ -76,6 +77,9 @@ vi.mock("@/db", () => ({
     query: {
       parks: { findFirst: vi.fn(() => Promise.resolve(mocks.park)) },
       amenities: { findFirst: vi.fn(() => Promise.resolve(mocks.amenity)) },
+      parkAmenities: {
+        findFirst: vi.fn(() => Promise.resolve(mocks.verifiedParkAmenity)),
+      },
     },
     insert(table: unknown) {
       return {
@@ -111,6 +115,7 @@ describe("park stamp server actions", () => {
     mocks.selectCounts = [];
     mocks.selectRows = [];
     mocks.inserted = [];
+    mocks.verifiedParkAmenity = null;
   });
 
   it("requires a safety answer for live stamps before writing private rows", async () => {
@@ -262,6 +267,7 @@ describe("park stamp server actions", () => {
   });
 
   it("lets signed-in users submit remove amenity suggestions without touching verified amenities", async () => {
+    mocks.verifiedParkAmenity = { id: "park-amenity-1" };
     const form = new FormData();
     form.set("suggestionType", "remove");
     form.set("amenityId", "amenity-1");
@@ -278,6 +284,57 @@ describe("park stamp server actions", () => {
         (row) => tableName(row.table) === "amenity_suggestions",
       )[0].values.suggestionType,
     ).toBe("remove");
+    expect(
+      mocks.inserted.some((row) => tableName(row.table) === "park_amenities"),
+    ).toBe(false);
+  });
+
+  it("rejects add amenity suggestions when the amenity is already verified", async () => {
+    mocks.verifiedParkAmenity = { id: "park-amenity-1" };
+    const form = new FormData();
+    form.set("suggestionType", "add");
+    form.set("amenityId", "amenity-1");
+
+    const result = await submitAmenitySuggestion(
+      "test-park",
+      { error: null, success: false },
+      form,
+    );
+
+    expect(result).toEqual({
+      error: "That amenity is already verified for this park.",
+      success: false,
+    });
+    expect(
+      mocks.inserted.some(
+        (row) => tableName(row.table) === "amenity_suggestions",
+      ),
+    ).toBe(false);
+    expect(
+      mocks.inserted.some((row) => tableName(row.table) === "park_amenities"),
+    ).toBe(false);
+  });
+
+  it("rejects remove amenity suggestions when the amenity is not verified", async () => {
+    const form = new FormData();
+    form.set("suggestionType", "remove");
+    form.set("amenityId", "amenity-1");
+
+    const result = await submitAmenitySuggestion(
+      "test-park",
+      { error: null, success: false },
+      form,
+    );
+
+    expect(result).toEqual({
+      error: "That amenity is not currently verified for this park.",
+      success: false,
+    });
+    expect(
+      mocks.inserted.some(
+        (row) => tableName(row.table) === "amenity_suggestions",
+      ),
+    ).toBe(false);
     expect(
       mocks.inserted.some((row) => tableName(row.table) === "park_amenities"),
     ).toBe(false);

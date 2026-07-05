@@ -157,6 +157,16 @@ Better Auth provides email/password sign-up and sign-in. On sign-up, a family gr
 
 Public routes (`/`, `/parks`, `/parks/[slug]`, `/map`) are accessible without login.
 
+### Admin bootstrap
+
+After deploying and creating the first ParkQuest account, the initial admin must be granted manually by the production database owner/operator. Run this only from a trusted production database session after verifying the account email:
+
+```sql
+update "user" set is_admin = true where email = 'brandon@qcfailed.com';
+```
+
+Admin access is intentionally not self-service. Do not run this from the application UI or expose it to end users.
+
 ## Health check
 
 A deployment health endpoint is available at <http://localhost:3000/api/health>, which returns `200` with `{ "status": "ok" }`.

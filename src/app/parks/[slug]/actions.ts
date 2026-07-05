@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { and, eq, count, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
-import { amenitySuggestions, parks } from "@/db/public";
+import { amenitySuggestions, parkAmenities, parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import { completeMatchingPassportChallenges } from "@/lib/challenges";
@@ -440,6 +440,29 @@ export async function submitAmenitySuggestion(
     where: (amenities, { eq }) => eq(amenities.id, amenityId),
   });
   if (!amenity) return { error: "Amenity not found.", success: false };
+
+  const verifiedParkAmenity = await db.query.parkAmenities.findFirst({
+    columns: { id: true },
+    where: and(
+      eq(parkAmenities.parkId, park.id),
+      eq(parkAmenities.amenityId, amenity.id),
+      eq(parkAmenities.verificationStatus, "verified"),
+    ),
+  });
+
+  if (suggestionType === "add" && verifiedParkAmenity) {
+    return {
+      error: "That amenity is already verified for this park.",
+      success: false,
+    };
+  }
+
+  if (suggestionType === "remove" && !verifiedParkAmenity) {
+    return {
+      error: "That amenity is not currently verified for this park.",
+      success: false,
+    };
+  }
 
   await db.insert(amenitySuggestions).values({
     parkId: park.id,
