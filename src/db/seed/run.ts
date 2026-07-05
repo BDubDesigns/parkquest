@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
@@ -11,8 +10,11 @@ import {
 import { parks, parkAmenities } from "../schema";
 import { bellinghamParkRecords } from "./data/parks/bellingham";
 import { bellinghamParkAmenityLinks } from "./data/park-amenities/bellingham";
+import { assertSafeDatabaseUrl, getDatabaseUrl } from "../connection-url";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+assertSafeDatabaseUrl();
+
+const pool = new Pool({ connectionString: getDatabaseUrl() });
 const db = drizzle({
   client: pool,
   schema,
