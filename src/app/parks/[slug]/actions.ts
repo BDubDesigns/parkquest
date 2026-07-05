@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { and, eq, count, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { badgeDefinitions, earnedBadges, visits, xpEvents } from "@/db/private";
-import { parks } from "@/db/public";
+import { amenitySuggestions, parks } from "@/db/public";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import { completeMatchingPassportChallenges } from "@/lib/challenges";
@@ -395,5 +395,59 @@ export async function setNickname(
   revalidatePath("/passport");
   revalidatePath("/map");
 
+  return { error: null, success: true };
+}
+
+export interface AmenitySuggestionState {
+  error: string | null;
+  success: boolean;
+}
+
+export async function submitAmenitySuggestion(
+  parkSlug: string,
+  prevState: AmenitySuggestionState,
+  formData: FormData,
+): Promise<AmenitySuggestionState> {
+  void prevState;
+  const ctx = await getCurrentFamilyContext();
+  if (!ctx) {
+    return {
+      error: "You must be signed in to suggest amenity corrections.",
+      success: false,
+    };
+  }
+
+  const suggestionType = formData.get("suggestionType");
+  const amenityId = formData.get("amenityId");
+  if (suggestionType !== "add" && suggestionType !== "remove") {
+    return {
+      error: "Choose whether to add or remove an amenity.",
+      success: false,
+    };
+  }
+  if (!amenityId || typeof amenityId !== "string") {
+    return { error: "Choose an amenity to correct.", success: false };
+  }
+
+  const park = await db.query.parks.findFirst({
+    columns: { id: true },
+    where: and(eq(parks.slug, parkSlug), eq(parks.isActive, true)),
+  });
+  if (!park) return { error: "Park not found.", success: false };
+
+  const amenity = await db.query.amenities.findFirst({
+    columns: { id: true },
+    where: (amenities, { eq }) => eq(amenities.id, amenityId),
+  });
+  if (!amenity) return { error: "Amenity not found.", success: false };
+
+  await db.insert(amenitySuggestions).values({
+    parkId: park.id,
+    amenityId: amenity.id,
+    suggestionType,
+    submittedByUserId: ctx.userId,
+  });
+
+  revalidatePath(`/parks/${parkSlug}`);
   return { error: null, success: true };
 }

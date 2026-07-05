@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { amenities, parkAmenities, parks, regions } from "./public";
+import {
+  amenities,
+  amenitySuggestions,
+  parkAmenities,
+  parks,
+  regions,
+} from "./public";
 import {
   badgeDefinitions,
   earnedBadges,
@@ -31,12 +37,14 @@ export const parksRelations = relations(parks, ({ one, many }) => ({
     references: [regions.id],
   }),
   parkAmenities: many(parkAmenities),
+  amenitySuggestions: many(amenitySuggestions),
   visits: many(visits),
   familyPreferences: many(familyParkPreferences),
 }));
 
 export const amenitiesRelations = relations(amenities, ({ many }) => ({
   parkAmenities: many(parkAmenities),
+  amenitySuggestions: many(amenitySuggestions),
 }));
 
 export const parkAmenitiesRelations = relations(parkAmenities, ({ one }) => ({
@@ -49,6 +57,30 @@ export const parkAmenitiesRelations = relations(parkAmenities, ({ one }) => ({
     references: [amenities.id],
   }),
 }));
+
+export const amenitySuggestionsRelations = relations(
+  amenitySuggestions,
+  ({ one }) => ({
+    park: one(parks, {
+      fields: [amenitySuggestions.parkId],
+      references: [parks.id],
+    }),
+    amenity: one(amenities, {
+      fields: [amenitySuggestions.amenityId],
+      references: [amenities.id],
+    }),
+    submittedBy: one(user, {
+      relationName: "submittedBy",
+      fields: [amenitySuggestions.submittedByUserId],
+      references: [user.id],
+    }),
+    reviewedBy: one(user, {
+      relationName: "reviewedBy",
+      fields: [amenitySuggestions.reviewedByUserId],
+      references: [user.id],
+    }),
+  }),
+);
 
 // --- Private family progress relations ---
 
@@ -164,6 +196,12 @@ export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
   familyMemberships: many(familyMembers),
+  submittedAmenitySuggestions: many(amenitySuggestions, {
+    relationName: "submittedBy",
+  }),
+  reviewedAmenitySuggestions: many(amenitySuggestions, {
+    relationName: "reviewedBy",
+  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

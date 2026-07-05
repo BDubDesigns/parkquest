@@ -50,6 +50,13 @@
       "when": 1783120000000,
       "tag": "0006_jazzy_kat_farrell",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783210000000,
+      "tag": "0007_amenity_suggestion_queue",
+      "breakpoints": true
     }
   ]
 }

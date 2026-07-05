@@ -9,7 +9,12 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { amenityVerificationStatusEnum, regionTypeEnum } from "./enums";
+import {
+  amenitySuggestionStatusEnum,
+  amenitySuggestionTypeEnum,
+  amenityVerificationStatusEnum,
+  regionTypeEnum,
+} from "./enums";
 
 export const regions = pgTable("regions", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -89,6 +94,37 @@ export const parkAmenities = pgTable(
     uniqueIndex("park_amenities_park_id_amenity_id_idx").on(
       table.parkId,
       table.amenityId,
+    ),
+  ],
+);
+
+export const amenitySuggestions = pgTable(
+  "amenity_suggestions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    parkId: uuid("park_id")
+      .notNull()
+      .references(() => parks.id, { onDelete: "cascade" }),
+    amenityId: uuid("amenity_id")
+      .notNull()
+      .references(() => amenities.id, { onDelete: "cascade" }),
+    suggestionType: amenitySuggestionTypeEnum("suggestion_type").notNull(),
+    status: amenitySuggestionStatusEnum("status").default("pending").notNull(),
+    submittedByUserId: text("submitted_by_user_id").notNull(),
+    reviewedByUserId: text("reviewed_by_user_id"),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("amenity_suggestions_park_status_idx").on(table.parkId, table.status),
+    index("amenity_suggestions_status_created_at_idx").on(
+      table.status,
+      table.createdAt,
     ),
   ],
 );
