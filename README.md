@@ -227,3 +227,9 @@ Planned ideas — not yet implemented:
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Continuous integration
+
+GitHub Actions runs the full pull request and `main` branch verification suite with an isolated Postgres service container. The CI database uses test-only credentials and does not use Neon, production database URLs, or Codex Cloud environment secrets.
+
+Codex Cloud is useful for creating and updating pull requests, while GitHub Actions is the reliable full-suite verification layer for migrations, seed data, typechecking, linting, unit/integration tests, and coverage.
