@@ -12,6 +12,17 @@ export const amenityVerificationStatusEnum = pgEnum(
   ["unverified", "verified", "rejected"],
 );
 
+export const amenitySuggestionTypeEnum = pgEnum("amenity_suggestion_type", [
+  "add",
+  "remove",
+]);
+
+export const amenitySuggestionStatusEnum = pgEnum("amenity_suggestion_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
 export const familyMemberRoleEnum = pgEnum("family_member_role", [
   "owner",
   "member",

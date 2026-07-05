@@ -157,6 +157,31 @@ Better Auth provides email/password sign-up and sign-in. On sign-up, a family gr
 
 Public routes (`/`, `/parks`, `/parks/[slug]`, `/map`) are accessible without login.
 
+### Admin bootstrap
+
+Admin access is intentionally not self-service, is not granted during build, and is not synced automatically on app startup. After deploying, the production database owner/operator should grant the initial admin from a trusted production app/container shell:
+
+1. Create and sign into the first ParkQuest account.
+2. Set the desired admin email list in the shell environment:
+
+   ```bash
+   export PARKQUEST_ADMIN_EMAILS=brandon@qcfailed.com
+   ```
+
+3. Run the explicit sync script:
+
+   ```bash
+   npm run admin:sync
+   ```
+
+4. Verify the admin review page loads at `/admin/amenity-suggestions`.
+
+The sync script only promotes existing users whose emails match `PARKQUEST_ADMIN_EMAILS`; it does not create users and does not demote existing admins. Manual SQL should be treated as an emergency fallback only, run by the production database owner/operator after verifying the account email:
+
+```sql
+update "user" set is_admin = true where email = 'brandon@qcfailed.com';
+```
+
 ## Health check
 
 A deployment health endpoint is available at <http://localhost:3000/api/health>, which returns `200` with `{ "status": "ok" }`.

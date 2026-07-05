@@ -10,7 +10,7 @@ export interface ParkInfo {
   longitude: number;
   sourceUrl: string | null;
   officialUrl: string | null;
-  amenities: { name: string; slug: string }[];
+  amenities: { id: string; name: string; slug: string }[];
 }
 
 export async function getParks(): Promise<ParkInfo[]> {
@@ -31,7 +31,7 @@ export async function getParks(): Promise<ParkInfo[]> {
         columns: {},
         where: (pa, { eq }) => eq(pa.verificationStatus, "verified"),
         with: {
-          amenity: { columns: { name: true, slug: true } },
+          amenity: { columns: { id: true, name: true, slug: true } },
         },
       },
     },
@@ -71,7 +71,7 @@ export async function getParkBySlug(slug: string): Promise<ParkInfo | null> {
         columns: {},
         where: (pa, { eq }) => eq(pa.verificationStatus, "verified"),
         with: {
-          amenity: { columns: { name: true, slug: true } },
+          amenity: { columns: { id: true, name: true, slug: true } },
         },
       },
     },
@@ -91,4 +91,13 @@ export async function getParkBySlug(slug: string): Promise<ParkInfo | null> {
     officialUrl: row.officialUrl,
     amenities: row.parkAmenities.map((pa) => pa.amenity),
   };
+}
+
+export async function getAmenityOptions(): Promise<
+  { id: string; name: string }[]
+> {
+  return db.query.amenities.findMany({
+    columns: { id: true, name: true },
+    orderBy: (amenities, { asc }) => [asc(amenities.name)],
+  });
 }

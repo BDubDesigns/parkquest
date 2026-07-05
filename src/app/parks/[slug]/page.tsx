@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getParkBySlug, getParkIdBySlug } from "@/lib/parks";
+import { getAmenityOptions, getParkBySlug, getParkIdBySlug } from "@/lib/parks";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNickname } from "@/lib/park-nicknames";
 import AmenityBadge from "@/components/parks/AmenityBadge";
+import AmenitySuggestionForm from "@/components/parks/AmenitySuggestionForm";
 import NicknameForm from "@/components/parks/NicknameForm";
 import ParkDisplayName from "@/components/parks/ParkDisplayName";
 import StampSection from "@/components/parks/StampSection";
@@ -42,6 +43,7 @@ export default async function ParkDetailPage({ params }: Props) {
 
   const ctx = await getCurrentFamilyContext();
   let nickname: string | null = null;
+  const amenityOptions = ctx ? await getAmenityOptions() : [];
   if (ctx) {
     const parkId = await getParkIdBySlug(slug);
     if (parkId) {
@@ -114,6 +116,14 @@ export default async function ParkDetailPage({ params }: Props) {
           </section>
         )}
       </article>
+
+      {ctx && (
+        <AmenitySuggestionForm
+          parkSlug={slug}
+          amenities={amenityOptions}
+          verifiedAmenityIds={park.amenities.map((amenity) => amenity.id)}
+        />
+      )}
 
       {ctx && (
         <NicknameForm
