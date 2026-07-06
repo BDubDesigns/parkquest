@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "design:detect": "npx --yes impeccable@3.2.0 detect src/",
+    "design:detect:json": "npx --yes impeccable@3.2.0 detect --json src/",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
