@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import {
-  ctaPrimary,
-  formInput,
-  formLabel,
+  actionPrimary,
+  fieldInput,
+  fieldLabel,
   linkText,
   mutedText,
 } from "@/components/ui/styles";
@@ -36,53 +36,58 @@ export default function SignInForm() {
   }
 
   return (
-    <div className="mx-auto max-w-sm">
-      <h1 className="text-2xl font-bold tracking-tight text-white">Sign in</h1>
+    <div className="mx-auto max-w-sm rounded-surface bg-white p-5 ring-1 ring-forest-ink/12 sm:p-7">
+      <h1 className="text-2xl font-bold tracking-[-0.02em] text-forest-ink">
+        Sign in
+      </h1>
 
-      <p className={`mt-2 text-sm ${mutedText}`}>
+      <p className={`mt-2 text-sm leading-6 ${mutedText}`}>
         Welcome back to your Park Passport.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         {error && (
-          <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
+          <p
+            role="alert"
+            className="rounded-control bg-danger/8 px-3 py-2 text-sm font-medium text-danger"
+          >
             {error}
           </p>
         )}
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className={formLabel}>Email</span>
+          <span className={fieldLabel}>Email</span>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`min-h-11 text-base ${formInput}`}
+            className={fieldInput}
           />
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className={formLabel}>Password</span>
+          <span className={fieldLabel}>Password</span>
           <input
             type="password"
             required
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`min-h-11 text-base ${formInput}`}
+            className={fieldInput}
           />
         </label>
 
         <button
           type="submit"
           disabled={loading}
-          className={`mt-2 min-h-11 ${ctaPrimary} disabled:opacity-50`}
+          className={`mt-2 w-full ${actionPrimary}`}
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
-      <p className={`mt-4 text-center text-sm ${mutedText}`}>
+      <p className={`mt-5 text-center text-sm ${mutedText}`}>
         Don&apos;t have an account?{" "}
         <Link href="/sign-up" className={linkText}>
           Sign up

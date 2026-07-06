@@ -3,11 +3,11 @@
 import { useActionState, useRef, useState } from "react";
 import { setNickname, type NicknameState } from "@/app/parks/[slug]/actions";
 import {
-  ctaGhost,
-  ctaPrimary,
-  ctaSecondary,
-  formInput,
-  formLabel,
+  actionGhost,
+  actionPrimary,
+  actionSecondary,
+  fieldInput,
+  fieldLabel,
   mutedText,
 } from "@/components/ui/styles";
 
@@ -39,7 +39,7 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
       <section className="mt-6">
         <button
           onClick={() => setEditing(true)}
-          className={`min-h-11 text-sm ${currentNickname ? ctaGhost : ctaSecondary}`}
+          className={currentNickname ? actionGhost : actionSecondary}
         >
           {currentNickname ? "Edit nickname" : "Add a family nickname"}
         </button>
@@ -59,12 +59,15 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
     <section className="mt-6">
       <form action={formAction} className="space-y-3">
         {state.error && (
-          <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
+          <p
+            role="alert"
+            className="rounded-control bg-danger/8 px-3 py-2 text-sm font-medium text-danger"
+          >
             {state.error}
           </p>
         )}
         <label className="flex flex-col gap-1 text-sm">
-          <span className={formLabel}>Family nickname for {parkName}</span>
+          <span className={fieldLabel}>Family nickname for {parkName}</span>
           <input
             ref={inputRef}
             type="text"
@@ -72,7 +75,7 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
             defaultValue={currentNickname ?? ""}
             maxLength={255}
             placeholder="e.g. Duck Bridge Park"
-            className={`min-h-11 w-full ${formInput}`}
+            className={`w-full ${fieldInput}`}
             autoFocus
           />
           <span className={`text-xs ${mutedText}`}>
@@ -80,13 +83,13 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
           </span>
         </label>
         <div className="flex flex-wrap gap-3">
-          <button type="submit" className={`min-h-11 ${ctaPrimary}`}>
+          <button type="submit" className={actionPrimary}>
             {currentNickname ? "Save" : "Add nickname"}
           </button>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className={`min-h-11 ${ctaGhost}`}
+            className={actionGhost}
           >
             Cancel
           </button>
@@ -94,7 +97,7 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
             <button
               type="button"
               onClick={handleRemove}
-              className={`min-h-11 text-sm ${ctaGhost}`}
+              className={`${actionGhost} text-danger hover:bg-danger/8`}
             >
               Remove nickname
             </button>

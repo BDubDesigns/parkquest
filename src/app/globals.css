@@ -3,11 +3,38 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+
+  --color-forest-ink: #12372a;
+  --color-canopy: #1f5a42;
+  --color-trail-gold: #f3b33d;
+  --color-reward-ink: #a86100;
+  --color-stamp-red: #b84b3c;
+  --color-lake-blue: #2e7191;
+  --color-atlas-paper: #f7f6f0;
+  --color-mist: #e8eee9;
+  --color-graphite: #1e2924;
+  --color-danger: #b42318;
+
+  --radius-control: 0.625rem;
+  --radius-surface: 0.875rem;
+  --radius-collectible: 1.125rem;
 }
 
 body {
-  background: #022c22;
-  color: #ffffff;
+  background: #f7f6f0;
+  color: #1e2924;
+  font-kerning: normal;
+  font-optical-sizing: auto;
+}
+
+::selection {
+  background: #f3b33d;
+  color: #12372a;
+}
+
+:focus-visible {
+  outline-color: #2e7191;
 }
 
 img.leaflet-marker-icon.leaflet-marker-stamped {
@@ -15,18 +42,23 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
 }
 
 .leaflet-popup-content-wrapper {
-  background: #064e3b;
-  color: #ecfdf5;
-  border-radius: 1rem;
-  border: 1px solid rgba(6, 78, 59, 0.6);
+  background: #ffffff;
+  color: #1e2924;
+  border-radius: var(--radius-control);
+  box-shadow: 0 12px 28px rgb(18 55 42 / 0.22);
 }
 
 .leaflet-popup-tip {
-  background: #064e3b;
+  background: #ffffff;
 }
 
 .leaflet-popup-close-button {
-  color: #a7f3d0 !important;
+  color: #12372a !important;
+}
+
+.leaflet-popup-close-button:focus-visible {
+  outline: 3px solid #2e7191;
+  outline-offset: 2px;
 }
 
 /* ─── Physical stamper ─── */
@@ -39,7 +71,7 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
   user-select: none;
   cursor: grab;
   transition: filter 150ms ease-out;
-  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.18));
+  filter: drop-shadow(0 4px 8px rgb(18 55 42 / 0.16));
 }
 
 .stamper:active {
@@ -47,16 +79,16 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
 }
 
 .stamper[data-phase="stamper-active"] {
-  filter: drop-shadow(0 16px 20px rgb(0 0 0 / 0.28));
+  filter: drop-shadow(0 6px 8px rgb(18 55 42 / 0.22));
 }
 
 .stamper[data-phase="stamper-dragging"] {
   transition: filter 120ms ease-out;
-  filter: drop-shadow(0 8px 10px rgb(0 0 0 / 0.22));
+  filter: drop-shadow(0 4px 6px rgb(18 55 42 / 0.2));
 }
 
 .stamper[data-phase="stamper-pressed"] {
-  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.4));
+  filter: drop-shadow(0 2px 3px rgb(18 55 42 / 0.28));
 }
 
 .stamper[data-phase="form-submitting"] {
@@ -67,20 +99,20 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
   width: 52px;
   height: 28px;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #b45309 0%, #92400e 100%);
+  background: var(--color-trail-gold);
 }
 
 .stamper-neck {
   width: 18px;
   height: 10px;
-  background: #78350f;
+  background: var(--color-graphite);
 }
 
 .stamper-base {
   width: 72px;
   height: 20px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #064e3b 0%, #022c22 100%);
+  border-radius: var(--radius-control);
+  background: var(--color-forest-ink);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -90,7 +122,7 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
 .stamper-ink-ring {
   width: 60px;
   height: 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   border: 2px solid;
 }
 
@@ -99,7 +131,7 @@ img.leaflet-marker-icon.leaflet-marker-stamped {
 .stamp-impact-ring {
   position: absolute;
   inset: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   pointer-events: none;
   animation: stamp-impact 500ms ease-out forwards;
 }
@@ -112,7 +144,7 @@ input[type="range"].stamp-slider {
   width: 100%;
   height: 8px;
   border-radius: 9999px;
-  background: #064e3b;
+  background: var(--color-mist);
   outline: none;
 }
 
@@ -122,20 +154,18 @@ input[type="range"].stamp-slider::-webkit-slider-thumb {
   width: 44px;
   height: 44px;
   border-radius: 9999px;
-  background: #fbbf24;
+  background: var(--color-trail-gold);
   cursor: pointer;
-  border: 3px solid #064e3b;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--color-forest-ink);
 }
 
 input[type="range"].stamp-slider::-moz-range-thumb {
   width: 44px;
   height: 44px;
   border-radius: 9999px;
-  background: #fbbf24;
+  background: var(--color-trail-gold);
   cursor: pointer;
-  border: 3px solid #064e3b;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--color-forest-ink);
 }
 
 /* ─── Keyframe animations ─── */
@@ -164,7 +194,7 @@ input[type="range"].stamp-slider::-moz-range-thumb {
   0% {
     background: radial-gradient(
       circle,
-      rgb(251 191 36 / 0.35) 0%,
+      color-mix(in srgb, var(--color-trail-gold) 35%, transparent) 0%,
       transparent 70%
     );
     opacity: 0;
@@ -175,7 +205,7 @@ input[type="range"].stamp-slider::-moz-range-thumb {
   100% {
     background: radial-gradient(
       circle,
-      rgb(251 191 36 / 0.08) 0%,
+      color-mix(in srgb, var(--color-trail-gold) 8%, transparent) 0%,
       transparent 70%
     );
     opacity: 0;

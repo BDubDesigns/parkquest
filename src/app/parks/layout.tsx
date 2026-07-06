@@ -1,6 +1,11 @@
 import Link from "next/link";
 import UserMenu from "@/components/auth/UserMenu";
-import { linkText, pageContainer, pageShell } from "@/components/ui/styles";
+import SectionHeader from "@/components/ui/SectionHeader";
+import {
+  linkText,
+  pageContainer,
+  pageShell,
+} from "@/components/ui/styles";
 
 export default function ParksLayout({
   children,
@@ -10,25 +15,27 @@ export default function ParksLayout({
   return (
     <div className={pageShell}>
       <div className={pageContainer}>
-        <header className="mb-6 md:mb-8">
-          <nav className="hidden items-center gap-3 text-sm md:flex">
+        <header className="mb-8 border-b border-forest-ink/12 pb-6 md:mb-10">
+          <nav className="mb-5 hidden items-center gap-3 text-sm md:flex">
             <Link href="/" className={linkText}>
               Home
             </Link>
-            <span aria-hidden="true" className="text-stone-500/60">
-              &middot;
+            <span aria-hidden="true" className="text-graphite/35">
+              /
             </span>
             <Link href="/map" className={linkText}>
               Map
             </Link>
-            <span aria-hidden="true" className="text-stone-500/60">
-              &middot;
+            <span aria-hidden="true" className="text-graphite/35">
+              /
             </span>
             <UserMenu />
           </nav>
-          <h1 className="text-3xl font-bold tracking-tight text-white md:mt-2">
-            Parks
-          </h1>
+          <SectionHeader
+            as="h1"
+            title="Find your next park"
+            description="Browse public park information and verified amenities across Bellingham."
+          />
         </header>
         {children}
       </div>

@@ -2,12 +2,13 @@
 
 import { useActionState, useMemo, useState } from "react";
 import {
-  ctaGhost,
-  ctaPrimary,
-  formInput,
-  formLabel,
+  actionGhost,
+  actionPrimary,
+  fieldLabel,
+  fieldSelect,
   mutedText,
 } from "@/components/ui/styles";
+import StatusBadge from "@/components/ui/StatusBadge";
 import {
   submitAmenitySuggestion,
   type AmenitySuggestionState,
@@ -67,10 +68,10 @@ export default function AmenitySuggestionForm({
   }
 
   return (
-    <section className="mt-4 rounded-2xl border border-emerald-800/70 bg-emerald-900/35 px-4 py-3 shadow-lg shadow-emerald-950/20 sm:px-5">
+    <section className="mt-4 rounded-surface bg-mist/65 px-4 py-4 ring-1 ring-forest-ink/10 sm:px-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-emerald-100">
+          <h2 className="text-sm font-semibold text-forest-ink">
             See an amenity that needs updating?
           </h2>
           <p className={`mt-1 text-xs ${mutedText}`}>
@@ -80,7 +81,7 @@ export default function AmenitySuggestionForm({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className={`${ctaGhost} px-3 py-1.5 text-xs`}
+            className={`${actionGhost} px-3 py-1.5 text-xs`}
             aria-expanded={isExpanded}
             aria-controls="amenity-correction-panel"
             onClick={() => expandFor("add")}
@@ -89,7 +90,7 @@ export default function AmenitySuggestionForm({
           </button>
           <button
             type="button"
-            className={`${ctaGhost} px-3 py-1.5 text-xs`}
+            className={`${actionGhost} px-3 py-1.5 text-xs`}
             aria-expanded={isExpanded}
             aria-controls="amenity-correction-panel"
             onClick={() => expandFor("remove")}
@@ -102,20 +103,20 @@ export default function AmenitySuggestionForm({
       {isExpanded && (
         <div
           id="amenity-correction-panel"
-          className="mt-3 rounded-xl border border-emerald-700/50 bg-emerald-950/25 p-3"
+          className="mt-4 border-t border-forest-ink/12 pt-4"
         >
           <form
             action={action}
             className="grid gap-3 sm:grid-cols-[12rem_1fr_auto]"
           >
             <div className="grid gap-1.5">
-              <label className={formLabel} htmlFor="suggestionType">
+              <label className={fieldLabel} htmlFor="suggestionType">
                 Correction
               </label>
               <select
                 id="suggestionType"
                 name="suggestionType"
-                className={formInput}
+                className={fieldSelect}
                 value={suggestionType}
                 onChange={(event) =>
                   setSuggestionType(event.target.value as SuggestionType)
@@ -127,13 +128,13 @@ export default function AmenitySuggestionForm({
               </select>
             </div>
             <div className="grid gap-1.5">
-              <label className={formLabel} htmlFor="amenityId">
+              <label className={fieldLabel} htmlFor="amenityId">
                 Amenity
               </label>
               <select
                 id="amenityId"
                 name="amenityId"
-                className={formInput}
+                className={fieldSelect}
                 required
                 disabled={selectableAmenities.length === 0}
               >
@@ -155,28 +156,30 @@ export default function AmenitySuggestionForm({
             <div className="flex items-end">
               <button
                 type="submit"
-                className={`min-h-10 w-full ${ctaPrimary} px-5 sm:w-auto`}
+                className={`w-full ${actionPrimary} sm:w-auto`}
                 disabled={pending || selectableAmenities.length === 0}
               >
                 {pending ? "Sending..." : "Submit"}
               </button>
             </div>
           </form>
-          <p className={`mt-2 text-xs ${mutedText}`}>
+          <p className={`mt-3 text-xs leading-5 ${mutedText}`}>
             Suggestions only create a pending review and never change listed
             amenities immediately.
           </p>
           {state.error && (
-            <p className="mt-2 text-sm text-red-300">{state.error}</p>
+            <p role="alert" className="mt-2 text-sm font-medium text-danger">
+              {state.error}
+            </p>
           )}
           {state.success && (
-            <p className="mt-2 text-sm text-emerald-200">
+            <p className="mt-2 text-sm font-medium text-canopy">
               Thanks — your correction is pending admin review.
             </p>
           )}
           {userSuggestions.length > 0 && (
-            <div className="mt-4 border-t border-emerald-800/60 pt-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-emerald-200/80">
+            <div className="mt-4 border-t border-forest-ink/12 pt-3">
+              <h3 className="text-sm font-semibold text-forest-ink">
                 Your suggestions for this park
               </h3>
               <ul className="mt-2 grid gap-2">
@@ -185,14 +188,22 @@ export default function AmenitySuggestionForm({
                     key={suggestion.id}
                     className="flex flex-wrap items-center justify-between gap-2 text-sm"
                   >
-                    <span className="text-stone-200">
+                    <span className="text-graphite/80">
                       {suggestion.suggestionType === "add" ? "Add" : "Remove"}{" "}
                       {suggestion.amenityName}
                     </span>
-                    <span className="flex items-center gap-2 text-xs">
-                      <span className="capitalize text-emerald-200">
-                        {suggestion.status}
-                      </span>
+                    <span className="flex flex-wrap items-center gap-2 text-xs">
+                      <StatusBadge
+                        tone={
+                          suggestion.status === "approved"
+                            ? "success"
+                            : suggestion.status === "pending"
+                              ? "reward"
+                              : "muted"
+                        }
+                      >
+                        <span className="capitalize">{suggestion.status}</span>
+                      </StatusBadge>
                       <time
                         className={mutedText}
                         dateTime={suggestion.createdAt}

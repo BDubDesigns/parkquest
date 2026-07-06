@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import MobileNav from "@/components/navigation/MobileNav";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -12,6 +12,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
 });
 
@@ -33,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#064e3b",
+  themeColor: "#12372a",
   viewportFit: "cover",
 };
 
@@ -45,10 +50,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-emerald-950 pb-[calc(4rem+env(safe-area-inset-bottom))] text-white md:pb-0">
-        <div className="flex-1">{children}</div>
+      <body className="flex min-h-full flex-col bg-atlas-paper pb-[calc(4rem+env(safe-area-inset-bottom))] text-graphite md:pb-0">
+        <a
+          href="#main-content"
+          className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-control bg-forest-ink px-4 py-3 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
+        >
+          Skip to main content
+        </a>
+        <div id="main-content" className="flex-1">
+          {children}
+        </div>
         <Footer />
         <MobileNav />
       </body>

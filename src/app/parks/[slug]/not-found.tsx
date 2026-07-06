@@ -1,12 +1,16 @@
 import Link from "next/link";
-import { card, linkText, mutedText } from "@/components/ui/styles";
+import {
+  linkText,
+  mutedText,
+  surfacePrimary,
+} from "@/components/ui/styles";
 
 export default function ParkNotFound() {
   return (
     <div
-      className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${card}`}
+      className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${surfacePrimary}`}
     >
-      <h2 className="text-xl font-bold tracking-tight text-white">
+      <h2 className="text-xl font-bold tracking-tight text-forest-ink">
         Park not found
       </h2>
       <p className={mutedText}>

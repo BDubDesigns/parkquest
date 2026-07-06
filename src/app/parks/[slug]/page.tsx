@@ -13,12 +13,12 @@ import NicknameForm from "@/components/parks/NicknameForm";
 import ParkDisplayName from "@/components/parks/ParkDisplayName";
 import StampSection from "@/components/parks/StampSection";
 import {
-  card,
-  eyebrow,
   linkMuted,
   linkPrimary,
   linkText,
   mutedText,
+  sectionTitle,
+  surfacePrimary,
 } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
@@ -82,7 +82,7 @@ export default async function ParkDetailPage({ params }: Props) {
         &larr; Back to parks
       </Link>
 
-      <article className={`mt-5 sm:mt-6 ${card}`}>
+      <article className={`mt-5 sm:mt-6 ${surfacePrimary}`}>
         <ParkDisplayName
           officialName={park.name}
           nickname={nickname}
@@ -91,18 +91,18 @@ export default async function ParkDetailPage({ params }: Props) {
         />
 
         {park.description && (
-          <p className="mt-4 leading-relaxed text-stone-300/80">
+          <p className="mt-4 max-w-[70ch] leading-7 text-graphite/78">
             {park.description}
           </p>
         )}
 
-        <p className="mt-4 text-xs text-stone-500/60">
+        <p className="mt-4 font-mono text-xs text-graphite/55">
           {park.latitude.toFixed(4)}, {park.longitude.toFixed(4)}
         </p>
 
         {park.amenities.length > 0 && (
           <section className="mt-6">
-            <h2 className={`mb-3 ${eyebrow}`}>Amenities</h2>
+            <h2 className={`mb-3 ${sectionTitle}`}>Amenities</h2>
             <div className="flex flex-wrap gap-1.5">
               {park.amenities.map((a) => (
                 <AmenityBadge key={a.slug} name={a.name} />
@@ -113,7 +113,7 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.officialUrl && (
           <section className="mt-6">
-            <h2 className={`mb-1 ${eyebrow}`}>Official park page</h2>
+            <h2 className={`mb-1 ${sectionTitle}`}>Official park page</h2>
             <a
               href={park.officialUrl}
               target="_blank"

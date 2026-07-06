@@ -13,7 +13,7 @@ test.describe.serial("sticker awards", () => {
     await signIn(page, email);
     await stampPark(page, "whatcom-falls-park");
     await page.goto("/passport");
-    await expect(page.getByText("Stickers (1 / 3)")).toBeVisible();
+    await expect(page.getByText("1 of 3 earned")).toBeVisible();
     await expect(page.getByText("First Stamp").first()).toBeVisible();
   });
 });

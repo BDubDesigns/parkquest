@@ -3,12 +3,13 @@
 import { useActionState, useRef, useState } from "react";
 import { stampPark, type StampState } from "@/app/parks/[slug]/actions";
 import {
-  ctaGhost,
-  ctaPrimary,
-  ctaSecondary,
+  actionGhost,
+  actionPrimary,
+  actionSecondary,
   dividerSubtle,
-  formInput,
-  formLabel,
+  fieldInput,
+  fieldLabel,
+  fieldSelect,
 } from "@/components/ui/styles";
 import ParkQuestStamp from "./ParkQuestStamp";
 import PassportSurface from "./PassportSurface";
@@ -16,11 +17,11 @@ import PassportSurface from "./PassportSurface";
 const initialState: StampState = { error: null, info: null, success: false };
 
 const STAMP_PALETTE = [
-  { value: "#064e3b", label: "Emerald green" },
-  { value: "#d97706", label: "Amber gold" },
-  { value: "#be185d", label: "Berry magenta" },
-  { value: "#1d4ed8", label: "Lake blue" },
-  { value: "#78350f", label: "Warm brown" },
+  { value: "#12372a", label: "Forest ink" },
+  { value: "#b84b3c", label: "Stamp red" },
+  { value: "#2e7191", label: "Lake blue" },
+  { value: "#1f5a42", label: "Canopy green" },
+  { value: "#1e2924", label: "Graphite" },
 ];
 
 type StampPhase =
@@ -165,8 +166,12 @@ export default function StampForm({
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className={`min-h-11 text-sm font-bold transition-colors ${
-          expanded ? ctaGhost : alreadyStamped ? ctaSecondary : ctaPrimary
+        className={`text-sm font-bold transition-colors ${
+          expanded
+            ? actionGhost
+            : alreadyStamped
+              ? actionSecondary
+              : actionPrimary
         }`}
       >
         {expanded
@@ -179,39 +184,42 @@ export default function StampForm({
       {expanded && (
         <form ref={formRef} action={formAction} className="mt-4 space-y-5">
           {state.error && (
-            <p className="rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            <p
+              role="alert"
+              className="rounded-control bg-danger/8 px-3 py-2 text-sm font-medium text-danger"
+            >
               {state.error}
             </p>
           )}
           {state.info && (
-            <p className="rounded-md bg-amber-900/30 px-3 py-2 text-sm text-amber-300">
+            <p className="rounded-control bg-trail-gold/18 px-3 py-2 text-sm font-medium text-forest-ink">
               {state.info}
             </p>
           )}
 
           {/* Step 1: Safety question (required before stamping) */}
           <fieldset>
-            <legend className={formLabel}>
+            <legend className={fieldLabel}>
               Did you feel safe for the entirety of your visit?
             </legend>
             <div className="mt-2 flex gap-6">
-              <label className="flex min-h-11 items-center gap-2 text-sm text-stone-300/80">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-graphite/80">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="yes"
                   required
-                  className="size-5 accent-amber-300"
+                  className="size-5 accent-canopy"
                 />
                 Yes
               </label>
-              <label className="flex min-h-11 items-center gap-2 text-sm text-stone-300/80">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-graphite/80">
                 <input
                   type="radio"
                   name="feltSafe"
                   value="no"
                   required
-                  className="size-5 accent-amber-300"
+                  className="size-5 accent-canopy"
                 />
                 No
               </label>
@@ -251,7 +259,7 @@ export default function StampForm({
               {/* Impact ring (thud overlay) */}
               {phase === "stamper-pressed" && (
                 <div
-                  className="stamp-impact-ring pointer-events-none absolute inset-0 rounded-lg"
+                  className="stamp-impact-ring pointer-events-none absolute inset-0 rounded-surface"
                   aria-hidden="true"
                 />
               )}
@@ -295,7 +303,7 @@ export default function StampForm({
               )}
             </div>
 
-            <p className="mt-2 text-center text-xs text-stone-400/70">
+            <p className="mt-2 text-center text-xs text-graphite/65">
               {phase === "stamper-dragging"
                 ? "Keep pulling down..."
                 : phase === "stamper-active"
@@ -307,7 +315,7 @@ export default function StampForm({
           {/* Step 3: Stamp controls (color, tilt) */}
           <div className="space-y-4">
             <fieldset>
-              <legend className={formLabel}>Ink color</legend>
+              <legend className={fieldLabel}>Ink color</legend>
               <div className="mt-2 flex flex-wrap gap-3">
                 {STAMP_PALETTE.map((color) => (
                   <button
@@ -316,9 +324,9 @@ export default function StampForm({
                     onClick={() => setStampColor(color.value)}
                     aria-label={color.label}
                     aria-pressed={stampColor === color.value}
-                    className={`size-11 rounded-full border-2 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 ${
+                    className={`size-11 rounded-full border-2 transition-transform focus:outline-none focus-visible:ring-3 focus-visible:ring-lake-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                       stampColor === color.value
-                        ? "scale-110 border-stone-800"
+                        ? "scale-110 border-forest-ink"
                         : "border-transparent hover:scale-105"
                     }`}
                     style={{ backgroundColor: color.value }}
@@ -328,14 +336,14 @@ export default function StampForm({
             </fieldset>
 
             <fieldset>
-              <legend className={formLabel}>Tilt your stamp</legend>
+              <legend className={fieldLabel}>Tilt your stamp</legend>
               <div className="mt-2 flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setRotation((r) => Math.max(-15, r - 1))}
                   disabled={rotation <= -15}
                   aria-label="Rotate stamp left 1 degree"
-                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
+                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${actionGhost} disabled:opacity-40`}
                 >
                   −
                 </button>
@@ -354,12 +362,12 @@ export default function StampForm({
                   onClick={() => setRotation((r) => Math.min(15, r + 1))}
                   disabled={rotation >= 15}
                   aria-label="Rotate stamp right 1 degree"
-                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${ctaGhost} disabled:opacity-40`}
+                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-full text-lg font-bold ${actionGhost} disabled:opacity-40`}
                 >
                   +
                 </button>
                 <output
-                  className="min-w-[3.5ch] text-center text-sm font-semibold text-emerald-100"
+                  className="min-w-[3.5ch] text-center text-sm font-semibold text-forest-ink"
                   aria-live="polite"
                 >
                   {rotation}°
@@ -370,11 +378,11 @@ export default function StampForm({
 
           {/* Step 4: Optional rating and memory */}
           <label className="flex flex-col gap-1 text-sm">
-            <span className={formLabel}>Rating (optional)</span>
+            <span className={fieldLabel}>Rating (optional)</span>
             <select
               name="rating"
               defaultValue=""
-              className={`min-h-11 w-full ${formInput} sm:w-48`}
+              className={`w-full ${fieldSelect} sm:w-48`}
             >
               <option value="">No rating</option>
               <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
@@ -386,17 +394,17 @@ export default function StampForm({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            <span className={formLabel}>
+            <span className={fieldLabel}>
               What do you want to remember about this visit? (optional)
             </span>
             <textarea
               name="memory"
               maxLength={1000}
               rows={3}
-              className={formInput}
+              className={fieldInput}
               placeholder="A favorite moment, who came along, what you saw..."
             />
-            <span className="text-xs text-stone-400/70">
+            <span className="text-xs text-graphite/65">
               Up to 1000 characters. Your memories are private to your family.
             </span>
           </label>
@@ -404,13 +412,13 @@ export default function StampForm({
           {/* Step 5: Stamp action */}
           <hr className={dividerSubtle} />
           <div className="space-y-3">
-            <p className={formLabel}>Ready to stamp?</p>
+            <p className={fieldLabel}>Ready to stamp?</p>
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={completeStamp}
                 disabled={isStamping || state.success}
-                className={`inline-flex min-h-11 items-center gap-2 ${ctaPrimary} disabled:opacity-50`}
+                className={`inline-flex items-center gap-2 ${actionPrimary}`}
               >
                 <StampIcon className="size-5" />
                 {state.success
@@ -424,7 +432,7 @@ export default function StampForm({
               <button
                 type="button"
                 onClick={handleCancel}
-                className={`min-h-11 ${ctaGhost}`}
+                className={actionGhost}
               >
                 Cancel
               </button>

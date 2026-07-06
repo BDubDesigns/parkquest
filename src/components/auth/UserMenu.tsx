@@ -25,7 +25,9 @@ export default function UserMenu() {
 
   return (
     <>
-      <span className="text-sm text-stone-300/80">{session.user.name}</span>
+      <span className="text-sm font-medium text-graphite/75">
+        {session.user.name}
+      </span>
       <span aria-hidden="true" className={mutedText}>
         &middot;
       </span>

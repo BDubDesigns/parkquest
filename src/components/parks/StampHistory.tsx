@@ -1,8 +1,8 @@
 import {
-  card,
+  collectibleTitle,
   dividerSubtle,
-  eyebrow,
   mutedText,
+  surfacePrimary,
 } from "@/components/ui/styles";
 import StampForm from "./StampForm";
 
@@ -35,7 +35,7 @@ function Stars({ count }: { count: number }) {
   const filled = "\u2605".repeat(count);
   const empty = "\u2606".repeat(5 - count);
   return (
-    <span className="text-amber-500" aria-label={`${count} out of 5 stars`}>
+    <span className="text-reward-ink" aria-label={`${count} out of 5 stars`}>
       {filled}
       {empty}
     </span>
@@ -63,10 +63,10 @@ export default function StampHistory({
       : "Stamped! This park is in your family passport.";
 
   return (
-    <section className={`mt-6 sm:mt-8 ${card}`}>
-      <h2 className={eyebrow}>Park Passport</h2>
+    <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
+      <h2 className={collectibleTitle}>Park Passport</h2>
 
-      <p className="mt-2 text-sm font-medium text-white">{heading}</p>
+      <p className="mt-2 text-sm font-semibold text-forest-ink">{heading}</p>
 
       {liveCount > 0 && (
         <p className={`mt-1 text-sm ${mutedText}`}>
@@ -92,16 +92,18 @@ export default function StampHistory({
             <li key={v.id} className="text-sm">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 {v.visitSource === "backfill" ? (
-                  <span className="text-stone-400 italic">
+                  <span className="text-graphite/65 italic">
                     Previously visited
                   </span>
                 ) : (
-                  <span className={mutedText}>{formatDate(v.visitDate)}</span>
+                  <span className={mutedText}>
+                    {formatDate(v.visitDate)}
+                  </span>
                 )}
                 {v.rating && <Stars count={v.rating} />}
               </div>
               {v.notes && (
-                <p className="mt-1 text-stone-300/80 italic">
+                <p className="mt-1 text-graphite/72 italic">
                   &ldquo;{v.notes}&rdquo;
                 </p>
               )}

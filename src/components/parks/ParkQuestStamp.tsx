@@ -26,8 +26,6 @@ export default function ParkQuestStamp({
   className = "",
 }: ParkQuestStampProps) {
   const uniqueId = useId();
-  const noiseFilterId = `stamp-noise-${uniqueId}`;
-  const roughEdgeFilterId = `stamp-rough-${uniqueId}`;
   const topTextPathId = `stamp-top-${uniqueId}`;
   const bottomTextPathId = `stamp-bottom-${uniqueId}`;
 
@@ -87,53 +85,11 @@ export default function ParkQuestStamp({
       aria-label={`Passport stamp for ${centerText}`}
     >
       <defs>
-        <filter
-          id={roughEdgeFilterId}
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.04"
-            numOctaves="3"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale={size * 0.01}
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
-
-        <filter id={noiseFilterId} x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.8"
-            numOctaves="3"
-            stitchTiles="stitch"
-            result="noise"
-          />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"
-            in="noise"
-            result="coloredNoise"
-          />
-          <feComposite
-            operator="in"
-            in="coloredNoise"
-            in2="SourceGraphic"
-            result="composite"
-          />
-        </filter>
+        <path id={topTextPathId} d={topPathD} fill="none" stroke="none" />
+        <path id={bottomTextPathId} d={bottomPathD} fill="none" stroke="none" />
       </defs>
 
-      {/* Ink group: rough-edged border, rings, and text */}
-      <g fill={color} stroke={color} filter={`url(#${roughEdgeFilterId})`}>
+      <g fill={color} stroke={color}>
         {/* Outer scalloped border */}
         <path
           d={scallopPath}
@@ -151,10 +107,6 @@ export default function ParkQuestStamp({
           strokeWidth={size * 0.008}
           strokeOpacity="0.8"
         />
-
-        {/* Curved text paths */}
-        <path id={topTextPathId} d={topPathD} fill="none" stroke="none" />
-        <path id={bottomTextPathId} d={bottomPathD} fill="none" stroke="none" />
 
         <text
           fill={color}
@@ -237,15 +189,6 @@ export default function ParkQuestStamp({
           {serialNumber}
         </text>
       </g>
-
-      {/* Grunge speckle overlay */}
-      <path
-        d={scallopPath}
-        fill={color}
-        fillOpacity="0.12"
-        filter={`url(#${noiseFilterId})`}
-        style={{ mixBlendMode: "multiply" }}
-      />
     </svg>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { reviewAmenitySuggestion, type ReviewSuggestionState } from "./actions";
+import { actionGhost } from "@/components/ui/styles";
 
 const initialState: ReviewSuggestionState = { error: null, success: false };
 
@@ -25,7 +26,7 @@ export default function ReviewButtons({
         <input type="hidden" name="suggestionId" value={suggestionId} />
         <button
           disabled={approving || rejecting}
-          className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
+          className="inline-flex min-h-11 items-center rounded-control bg-canopy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-forest-ink disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-lake-blue"
         >
           Approve
         </button>
@@ -34,12 +35,16 @@ export default function ReviewButtons({
         <input type="hidden" name="suggestionId" value={suggestionId} />
         <button
           disabled={approving || rejecting}
-          className="rounded-full border border-red-400/60 px-4 py-2 text-sm font-semibold text-red-200"
+          className={`${actionGhost} text-danger hover:bg-danger/8`}
         >
           Reject
         </button>
       </form>
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm font-medium text-danger">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

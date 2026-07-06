@@ -49,17 +49,11 @@ export default function ParkMap({
 
   return (
     <>
-      <style>{`
-        img.leaflet-marker-icon.leaflet-marker-stamped {
-          filter: hue-rotate(270deg) saturate(1.5);
-        }
-      `}</style>
-
       <MapContainer
         center={BELLINGHAM_CENTER}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom={false}
-        className="h-[calc(100dvh-13rem)] min-h-88 max-h-[600px] w-full rounded-lg"
+        className="h-[calc(100dvh-13rem)] min-h-88 max-h-[600px] w-full rounded-surface ring-1 ring-forest-ink/16"
       >
         <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
         {parks.map((park) => {
@@ -86,7 +80,9 @@ export default function ParkMap({
                       Official: {park.name} &middot; {park.regionName}
                     </p>
                   ) : (
-                    <p className={`mt-0.5 ${mutedText}`}>{park.regionName}</p>
+                    <p className={`mt-0.5 ${mutedText}`}>
+                      {park.regionName}
+                    </p>
                   )}
                   <p className={mutedText}>
                     {park.amenities.length}{" "}
@@ -96,8 +92,8 @@ export default function ParkMap({
                     <p
                       className={
                         isStamped
-                          ? "mt-1 font-medium text-amber-300"
-                          : "mt-1 text-stone-500/60"
+                          ? "mt-2 font-semibold text-canopy"
+                          : "mt-2 text-graphite/65"
                       }
                     >
                       {isStamped ? "Stamped" : "Not stamped yet"}

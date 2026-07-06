@@ -4,8 +4,14 @@ import { db } from "@/db";
 import { familyMembers } from "@/db/private";
 import { eq } from "drizzle-orm";
 import SignOutButton from "@/components/auth/SignOutButton";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { createFamilyGroup } from "./actions";
-import { card, ctaPrimary, eyebrow, mutedText } from "@/components/ui/styles";
+import {
+  actionPrimary,
+  mutedText,
+  sectionTitle,
+  surfacePrimary,
+} from "@/components/ui/styles";
 
 export default async function AccountPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -21,18 +27,24 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-white">Account</h1>
+      <SectionHeader
+        as="h1"
+        title="Account"
+        description="Your profile and private family group."
+      />
 
-      <section className={`mt-6 ${card}`}>
-        <h2 className={eyebrow}>Profile</h2>
-        <dl className="mt-3 space-y-2 text-sm">
-          <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
+      <section className={`mt-7 ${surfacePrimary}`}>
+        <h2 className={sectionTitle}>Profile</h2>
+        <dl className="mt-4 divide-y divide-forest-ink/10 text-sm">
+          <div className="flex flex-col gap-1 py-3 first:pt-0 sm:flex-row sm:justify-between">
             <dt className={mutedText}>Name</dt>
-            <dd className="font-medium text-white">{session.user.name}</dd>
+            <dd className="font-semibold text-forest-ink">
+              {session.user.name}
+            </dd>
           </div>
-          <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
+          <div className="flex flex-col gap-1 py-3 last:pb-0 sm:flex-row sm:justify-between">
             <dt className={mutedText}>Email</dt>
-            <dd className="break-all font-medium text-white">
+            <dd className="break-all font-semibold text-forest-ink">
               {session.user.email}
             </dd>
           </div>
@@ -40,29 +52,31 @@ export default async function AccountPage() {
       </section>
 
       {member ? (
-        <section className={`mt-4 ${card}`}>
-          <h2 className={eyebrow}>Family Group</h2>
-          <dl className="mt-3 space-y-2 text-sm">
-            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
+        <section className={`mt-4 ${surfacePrimary}`}>
+          <h2 className={sectionTitle}>Family group</h2>
+          <dl className="mt-4 divide-y divide-forest-ink/10 text-sm">
+            <div className="flex flex-col gap-1 py-3 first:pt-0 sm:flex-row sm:justify-between">
               <dt className={mutedText}>Name</dt>
-              <dd className="font-medium text-white">
+              <dd className="font-semibold text-forest-ink">
                 {member.familyGroup.name ?? "(unnamed)"}
               </dd>
             </div>
-            <div className="flex flex-col gap-1 sm:flex-row sm:justify-between">
+            <div className="flex flex-col gap-1 py-3 last:pb-0 sm:flex-row sm:justify-between">
               <dt className={mutedText}>Role</dt>
-              <dd className="font-medium text-white">{member.role}</dd>
+              <dd className="font-semibold capitalize text-forest-ink">
+                {member.role}
+              </dd>
             </div>
           </dl>
         </section>
       ) : (
-        <section className="mt-4 rounded-2xl border border-amber-700/60 bg-amber-900/30 p-6 text-amber-200">
-          <p className="text-sm">
+        <section className="mt-4 rounded-surface bg-white p-6 ring-1 ring-danger/25">
+          <p className="text-sm leading-6 text-graphite/80">
             No family group found. This shouldn&apos;t happen &mdash; a group is
             normally created when you sign up.
           </p>
           <form action={createFamilyGroup} className="mt-3">
-            <button type="submit" className={`min-h-11 ${ctaPrimary}`}>
+            <button type="submit" className={actionPrimary}>
               Repair: Create Family Group
             </button>
           </form>

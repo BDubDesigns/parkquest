@@ -2,7 +2,13 @@ import { redirect } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { amenitySuggestions } from "@/db/public";
-import { card, eyebrow, mutedText } from "@/components/ui/styles";
+import EmptyState from "@/components/ui/EmptyState";
+import SectionHeader from "@/components/ui/SectionHeader";
+import {
+  mutedText,
+  sectionTitle,
+  surfacePrimary,
+} from "@/components/ui/styles";
 import { getCurrentAdminUserId } from "@/lib/admin";
 import ReviewButtons from "./ReviewButtons";
 
@@ -23,30 +29,33 @@ export default async function AmenitySuggestionsAdminPage() {
   });
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight text-white">
-        Amenity verification queue
-      </h1>
-      <p className={`mt-2 ${mutedText}`}>
-        Approve or reject pending amenity correction suggestions.
-      </p>
-      <section className={`mt-6 ${card}`}>
-        <h2 className={eyebrow}>Pending suggestions</h2>
+    <main className="mx-auto min-h-screen max-w-3xl px-4 py-8 sm:px-6 md:py-10">
+      <SectionHeader
+        as="h1"
+        title="Amenity verification queue"
+        description="Approve or reject pending amenity correction suggestions."
+      />
+      <section className={`mt-7 ${surfacePrimary}`}>
+        <h2 className={sectionTitle}>Pending suggestions</h2>
         {suggestions.length === 0 ? (
-          <p className={`mt-3 text-sm ${mutedText}`}>No pending suggestions.</p>
+          <div className="mt-4">
+            <EmptyState
+              title="Queue is clear"
+              description={<p>There are no pending suggestions to review.</p>}
+            />
+          </div>
         ) : (
-          <ul className="mt-4 space-y-4">
+          <ul className="mt-4 divide-y divide-forest-ink/12">
             {suggestions.map((suggestion) => (
-              <li
-                key={suggestion.id}
-                className="rounded-2xl border border-stone-800 bg-stone-950/70 p-4"
-              >
+              <li key={suggestion.id} className="py-5 first:pt-1 last:pb-1">
                 <div className="space-y-1 text-sm">
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-forest-ink">
                     {suggestion.suggestionType === "add" ? "Add" : "Remove"}{" "}
                     {suggestion.amenity.name}
                   </p>
-                  <p className={mutedText}>Park: {suggestion.park.name}</p>
+                  <p className={mutedText}>
+                    Park: {suggestion.park.name}
+                  </p>
                   <p className={mutedText}>
                     Submitted by: {suggestion.submittedBy.name} (
                     {suggestion.submittedBy.email})
@@ -60,6 +69,6 @@ export default async function AmenitySuggestionsAdminPage() {
           </ul>
         )}
       </section>
-    </div>
+    </main>
   );
 }
