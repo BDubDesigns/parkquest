@@ -53,6 +53,9 @@ web_modules/
 # Optional eslint cache
 .eslintcache
 
+# Local Codex/Impeccable hooks (machine-specific absolute paths)
+.codex/
+
 # Optional stylelint cache
 .stylelintcache
 

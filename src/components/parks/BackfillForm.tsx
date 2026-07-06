@@ -3,12 +3,13 @@
 import { useActionState, useState } from "react";
 import { backfillPark, type BackfillState } from "@/app/parks/[slug]/actions";
 import {
-  ctaGhost,
-  ctaPrimary,
-  dividerSubtle,
-  formInput,
-  formLabel,
-  mutedText,
+  actionGhost,
+  actionPrimary,
+  dividerSubtleDaylight,
+  fieldInput,
+  fieldLabel,
+  fieldSelect,
+  mutedTextDaylight,
 } from "@/components/ui/styles";
 
 const initialState: BackfillState = { error: null, success: false };
@@ -24,7 +25,7 @@ export default function BackfillForm({ parkSlug }: Props) {
 
   if (state.success) {
     return (
-      <div className="mt-4 rounded-md bg-emerald-900/30 px-3 py-2 text-sm text-emerald-300">
+      <div className="mt-4 rounded-control bg-canopy/10 px-3 py-2 text-sm font-medium text-canopy">
         Park marked as previously visited.
       </div>
     );
@@ -33,44 +34,44 @@ export default function BackfillForm({ parkSlug }: Props) {
   return (
     <div className="mt-4">
       {state.error && (
-        <p className="mb-3 rounded-md bg-red-900/30 px-3 py-2 text-sm text-red-300">
+        <p
+          role="alert"
+          className="mb-3 rounded-control bg-danger/8 px-3 py-2 text-sm font-medium text-danger"
+        >
           {state.error}
         </p>
       )}
 
       {!expanded ? (
-        <button
-          onClick={() => setExpanded(true)}
-          className={`min-h-11 text-sm ${ctaGhost}`}
-        >
+        <button onClick={() => setExpanded(true)} className={actionGhost}>
           Mark as previously visited
         </button>
       ) : (
         <form action={formAction} className="space-y-4">
-          <p className={`text-sm ${mutedText}`}>
+          <p className={`text-sm leading-6 ${mutedTextDaylight}`}>
             Record that your family visited this park before using ParkQuest.
             This will not award Adventure Points or complete quests.
           </p>
 
           <div className="space-y-3">
             <label className="flex flex-col gap-1 text-sm">
-              <span className={formLabel}>Visit date (optional)</span>
+              <span className={fieldLabel}>Visit date (optional)</span>
               <input
                 type="date"
                 name="visitDate"
-                className={`min-h-11 w-full ${formInput} sm:w-56`}
+                className={`w-full ${fieldInput} sm:w-56`}
               />
-              <span className={`text-xs ${mutedText}`}>
+              <span className={`text-xs ${mutedTextDaylight}`}>
                 If not provided, today&apos;s date will be used.
               </span>
             </label>
 
             <label className="flex flex-col gap-1 text-sm">
-              <span className={formLabel}>Rating (optional)</span>
+              <span className={fieldLabel}>Rating (optional)</span>
               <select
                 name="rating"
                 defaultValue=""
-                className={`min-h-11 w-full ${formInput} sm:w-48`}
+                className={`w-full ${fieldSelect} sm:w-48`}
               >
                 <option value="">No rating</option>
                 <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
@@ -82,32 +83,32 @@ export default function BackfillForm({ parkSlug }: Props) {
             </label>
 
             <label className="flex flex-col gap-1 text-sm">
-              <span className={formLabel}>
+              <span className={fieldLabel}>
                 Private memory or note (optional)
               </span>
               <textarea
                 name="memory"
                 maxLength={1000}
                 rows={3}
-                className={formInput}
+                className={fieldInput}
                 placeholder="A favorite moment, who came along, what you saw..."
               />
-              <span className={`text-xs ${mutedText}`}>
+              <span className={`text-xs ${mutedTextDaylight}`}>
                 Up to 1000 characters. Private to your family.
               </span>
             </label>
           </div>
 
-          <hr className={dividerSubtle} />
+          <hr className={dividerSubtleDaylight} />
 
           <div className="flex flex-wrap gap-3">
-            <button type="submit" className={`min-h-11 ${ctaPrimary}`}>
+            <button type="submit" className={actionPrimary}>
               Mark as previously visited
             </button>
             <button
               type="button"
               onClick={() => setExpanded(false)}
-              className={`min-h-11 ${ctaGhost}`}
+              className={actionGhost}
             >
               Cancel
             </button>

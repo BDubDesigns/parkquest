@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
-import { linkText } from "@/components/ui/styles";
+import { linkTextDaylight } from "@/components/ui/styles";
 
 export default function SignOutButton() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function SignOutButton() {
           },
         })
       }
-      className={`inline-flex min-h-11 items-center text-sm ${linkText}`}
+      className={`inline-flex min-h-11 items-center text-sm ${linkTextDaylight}`}
     >
       Sign out
     </button>

@@ -4,7 +4,9 @@ test.describe("public park pages", () => {
   test("/parks lists seeded parks", async ({ page }) => {
     await page.goto("/parks");
 
-    await expect(page.getByRole("heading", { name: "Parks" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Find your next park" }),
+    ).toBeVisible();
 
     await expect(
       page.getByRole("link", { name: "Whatcom Falls Park" }),

@@ -68,7 +68,7 @@ export default function MobileNav() {
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-[1000] border-t border-emerald-800 bg-emerald-950/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(2,44,34,0.6)] backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-forest-ink/20 bg-forest-ink pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {items.map((item) => {
@@ -82,10 +82,10 @@ export default function MobileNav() {
               <Link
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[0.6875rem] font-medium transition-colors ${
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-xs font-semibold transition-colors focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-white ${
                   isActive
-                    ? "text-amber-300"
-                    : "text-stone-400/70 hover:text-stone-200"
+                    ? "bg-trail-gold text-forest-ink"
+                    : "text-white/78 hover:bg-white/8 hover:text-white"
                 }`}
               >
                 <svg

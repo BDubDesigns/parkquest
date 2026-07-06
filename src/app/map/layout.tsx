@@ -1,30 +1,37 @@
 import Link from "next/link";
 import UserMenu from "@/components/auth/UserMenu";
-import { linkText, pageContainerWide, pageShell } from "@/components/ui/styles";
+import SectionHeader from "@/components/ui/SectionHeader";
+import {
+  linkTextDaylight,
+  pageContainerWideDaylight,
+  pageShellDaylight,
+} from "@/components/ui/styles";
 
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={pageShell}>
-      <div className={pageContainerWide}>
-        <header className="mb-4 md:mb-6">
-          <nav className="hidden items-center gap-3 text-sm md:flex">
-            <Link href="/" className={linkText}>
+    <div className={pageShellDaylight}>
+      <div className={pageContainerWideDaylight}>
+        <header className="mb-6 border-b border-forest-ink/12 pb-5 md:mb-8">
+          <nav className="mb-5 hidden items-center gap-3 text-sm md:flex">
+            <Link href="/" className={linkTextDaylight}>
               Home
             </Link>
-            <span aria-hidden="true" className="text-stone-500/60">
-              &middot;
+            <span aria-hidden="true" className="text-graphite/35">
+              /
             </span>
-            <Link href="/parks" className={linkText}>
+            <Link href="/parks" className={linkTextDaylight}>
               Parks
             </Link>
-            <span aria-hidden="true" className="text-stone-500/60">
-              &middot;
+            <span aria-hidden="true" className="text-graphite/35">
+              /
             </span>
             <UserMenu />
           </nav>
-          <h1 className="text-2xl font-bold tracking-tight text-white md:mt-2 md:text-3xl">
-            Map
-          </h1>
+          <SectionHeader
+            as="h1"
+            title="Explore the park map"
+            description="Choose a park by location and see which places are already part of your family passport."
+          />
         </header>
         {children}
       </div>

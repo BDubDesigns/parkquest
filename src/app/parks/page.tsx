@@ -3,7 +3,8 @@ import { getParks } from "@/lib/parks";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import ParkCard from "@/components/parks/ParkCard";
-import { card, mutedText } from "@/components/ui/styles";
+import EmptyState from "@/components/ui/EmptyState";
+import { mutedTextDaylight } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
 
@@ -16,18 +17,20 @@ export default async function ParksPage() {
 
   if (parks.length === 0) {
     return (
-      <div
-        className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${card}`}
-      >
-        <h2 className="text-xl font-semibold text-white">No parks found</h2>
-        <p className={`max-w-md ${mutedText}`}>
-          If you are running this locally, your database may not be seeded yet.
-          Run the following commands and then reload this page:
-        </p>
-        <pre className="rounded-2xl bg-emerald-900/60 px-4 py-3 text-left text-sm text-emerald-200 ring-1 ring-emerald-800">
-          <code>{`npm run db:migrate\nnpm run db:seed`}</code>
-        </pre>
-      </div>
+      <EmptyState
+        title="No parks found"
+        description={
+          <p>
+            If you are running this locally, your database may not be seeded
+            yet. Run the following commands and then reload this page:
+          </p>
+        }
+        detail={
+          <pre className="overflow-x-auto rounded-control bg-forest-ink px-4 py-3 text-left text-sm text-white">
+            <code>{`npm run db:migrate\nnpm run db:seed`}</code>
+          </pre>
+        }
+      />
     );
   }
 
@@ -42,15 +45,12 @@ export default async function ParksPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <p className="text-stone-300/80">
-          Browse public park information and verified amenities.
-        </p>
-        <p className={`mt-1 text-sm ${mutedText}`}>
+      <div className="mb-5 flex items-center justify-between gap-4 border-b border-forest-ink/12 pb-4">
+        <p className={`text-sm ${mutedTextDaylight}`}>
           {parks.length} parks in {parks[0].regionName}
         </p>
       </div>
-      <div className="grid gap-4">
+      <div className="divide-y divide-forest-ink/12 border-b border-forest-ink/12">
         {parks.map((park) => (
           <ParkCard
             key={park.slug}

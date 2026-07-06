@@ -4,7 +4,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Link from "next/link";
 import type { ParkInfo } from "@/lib/parks";
-import { linkPrimary, mutedText } from "@/components/ui/styles";
+import { linkPrimaryDaylight, mutedTextDaylight } from "@/components/ui/styles";
 
 const defaultIcon = new L.Icon({
   iconUrl: "/leaflet/marker-icon.png",
@@ -49,17 +49,11 @@ export default function ParkMap({
 
   return (
     <>
-      <style>{`
-        img.leaflet-marker-icon.leaflet-marker-stamped {
-          filter: hue-rotate(270deg) saturate(1.5);
-        }
-      `}</style>
-
       <MapContainer
         center={BELLINGHAM_CENTER}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom={false}
-        className="h-[calc(100dvh-13rem)] min-h-88 max-h-[600px] w-full rounded-lg"
+        className="h-[calc(100dvh-13rem)] min-h-88 max-h-[600px] w-full rounded-surface ring-1 ring-forest-ink/16"
       >
         <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
         {parks.map((park) => {
@@ -77,18 +71,20 @@ export default function ParkMap({
                 <div className="text-sm">
                   <Link
                     href={`/parks/${park.slug}`}
-                    className={`font-semibold ${linkPrimary}`}
+                    className={`font-semibold ${linkPrimaryDaylight}`}
                   >
                     {nickname ?? park.name}
                   </Link>
                   {nickname ? (
-                    <p className={`mt-0.5 ${mutedText}`}>
+                    <p className={`mt-0.5 ${mutedTextDaylight}`}>
                       Official: {park.name} &middot; {park.regionName}
                     </p>
                   ) : (
-                    <p className={`mt-0.5 ${mutedText}`}>{park.regionName}</p>
+                    <p className={`mt-0.5 ${mutedTextDaylight}`}>
+                      {park.regionName}
+                    </p>
                   )}
-                  <p className={mutedText}>
+                  <p className={mutedTextDaylight}>
                     {park.amenities.length}{" "}
                     {park.amenities.length === 1 ? "amenity" : "amenities"}
                   </p>
@@ -96,8 +92,8 @@ export default function ParkMap({
                     <p
                       className={
                         isStamped
-                          ? "mt-1 font-medium text-amber-300"
-                          : "mt-1 text-stone-500/60"
+                          ? "mt-2 font-semibold text-canopy"
+                          : "mt-2 text-graphite/65"
                       }
                     >
                       {isStamped ? "Stamped" : "Not stamped yet"}

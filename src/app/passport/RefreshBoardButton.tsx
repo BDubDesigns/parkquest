@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { refreshBoard } from "./actions";
+import { actionGhost, actionPrimary } from "@/components/ui/styles";
 
 interface Props {
   hasIncomplete: boolean;
@@ -27,7 +28,9 @@ export function RefreshBoardButton({
   }, [pending, state.success]);
 
   if (alreadyRefreshedToday) {
-    return <p className="text-xs text-stone-400">Refreshed today</p>;
+    return (
+      <p className="text-xs font-medium text-graphite/65">Refreshed today</p>
+    );
   }
 
   const handleRefreshClick = () => {
@@ -49,7 +52,7 @@ export function RefreshBoardButton({
           type="button"
           onClick={handleRefreshClick}
           disabled={pending}
-          className="rounded-md bg-amber-700/50 px-3 py-1 text-xs font-medium text-amber-200 transition-colors hover:bg-amber-700/70 disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-control px-3 py-2 text-xs font-semibold text-forest-ink underline decoration-canopy/35 underline-offset-4 transition-colors hover:bg-white/70 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-lake-blue"
         >
           {pending ? "Refreshing..." : "Refresh Quest Board"}
         </button>
@@ -57,7 +60,7 @@ export function RefreshBoardButton({
 
       <dialog
         ref={dialogRef}
-        className="mx-auto mt-[20vh] max-w-sm rounded-xl border border-amber-700/60 bg-stone-900 p-6 text-stone-200 shadow-2xl backdrop:bg-black/60"
+        className="mx-auto mt-[20vh] max-w-sm rounded-surface border-0 bg-white p-6 text-graphite shadow-[0_12px_28px_rgba(18,55,42,0.22)] backdrop:bg-forest-ink/55"
         onClick={(e) => {
           if (e.target === dialogRef.current) dialogRef.current?.close();
         }}
@@ -71,7 +74,7 @@ export function RefreshBoardButton({
             type="button"
             onClick={handleConfirm}
             disabled={pending}
-            className="rounded-md bg-amber-700/60 px-4 py-2 text-sm font-medium text-amber-100 transition-colors hover:bg-amber-700/80 disabled:opacity-50"
+            className={actionPrimary}
           >
             {pending ? "Refreshing..." : "Replace unfinished quests"}
           </button>
@@ -79,7 +82,7 @@ export function RefreshBoardButton({
             type="button"
             onClick={() => dialogRef.current?.close()}
             disabled={pending}
-            className="rounded-md border border-stone-600 px-4 py-2 text-sm font-medium text-stone-300 transition-colors hover:bg-stone-800 disabled:opacity-50"
+            className={actionGhost}
           >
             Cancel
           </button>
@@ -87,7 +90,9 @@ export function RefreshBoardButton({
       </dialog>
 
       {state.error && (
-        <p className="mt-2 text-xs text-red-400">{state.error}</p>
+        <p role="alert" className="mt-2 text-xs font-medium text-danger">
+          {state.error}
+        </p>
       )}
     </>
   );

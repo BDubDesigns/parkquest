@@ -1,19 +1,17 @@
 import Link from "next/link";
 import { tagline } from "@/lib/tagline";
+import { actionPrimary, actionSecondary } from "@/components/ui/styles";
 
 const steps = [
   {
-    number: "01",
     title: "Find a park",
     description: "Browse Bellingham parks or pick your next stop from the map.",
   },
   {
-    number: "02",
     title: "Visit and stamp it",
     description: "Add each family outing to your private Park Passport.",
   },
   {
-    number: "03",
     title: "Keep the adventure going",
     description: "Earn Adventure Points, stickers, and Daily Quest rewards.",
   },
@@ -21,83 +19,82 @@ const steps = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-emerald-950 text-white">
+    <main className="min-h-screen bg-atlas-paper text-graphite">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-5 sm:px-8">
-        <header className="flex items-center justify-between py-5 sm:py-7">
+        <header className="flex items-center justify-between border-b border-forest-ink/12 py-5 sm:py-6">
           <Link
             href="/"
-            className="text-lg font-bold tracking-tight text-emerald-50"
+            className="font-display text-xl font-semibold tracking-[-0.02em] text-forest-ink focus-visible:rounded-sm focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-lake-blue"
           >
             ParkQuest
           </Link>
-          <nav aria-label="Main navigation" className="flex gap-4 text-sm">
+          <nav
+            aria-label="Main navigation"
+            className="flex items-center gap-1 text-sm font-semibold"
+          >
             <Link
               href="/parks"
-              className="text-emerald-100 transition-colors hover:text-white"
+              className="inline-flex min-h-11 items-center rounded-control px-3 text-forest-ink transition-colors hover:bg-mist focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-lake-blue"
             >
               Parks
             </Link>
             <Link
               href="/map"
-              className="text-emerald-100 transition-colors hover:text-white"
+              className="inline-flex min-h-11 items-center rounded-control px-3 text-forest-ink transition-colors hover:bg-mist focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-lake-blue"
             >
               Map
             </Link>
           </nav>
         </header>
 
-        <section className="grid flex-1 items-center gap-12 py-16 sm:py-24 lg:grid-cols-[1.2fr_0.8fr] lg:py-28">
+        <section className="grid flex-1 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
           <div>
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-emerald-300">
-              Family Park Passport
+            <p className="mb-4 max-w-max rounded-full bg-mist px-3 py-1.5 text-sm font-semibold text-canopy">
+              A family park passport for Bellingham
             </p>
-            <h1 className="max-w-3xl text-5xl font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-              ParkQuest
+            <h1 className="max-w-3xl font-display text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-balance text-forest-ink sm:text-6xl lg:text-7xl">
+              Every park can become part of your family story.
             </h1>
-            <p className="mt-4 max-w-2xl text-2xl font-medium tracking-tight text-emerald-100 sm:text-3xl">
+            <p className="mt-5 max-w-2xl text-xl font-semibold tracking-[-0.015em] text-canopy sm:text-2xl">
               {tagline}
             </p>
-            <p className="mt-6 max-w-xl text-base leading-7 text-emerald-100/80 sm:text-lg">
+            <p className="mt-5 max-w-[62ch] text-base leading-7 text-pretty text-graphite/78 sm:text-lg">
               Discover Bellingham parks together, stamp every family visit, and
               turn days outside into a collection of Adventure Points, stickers,
               and Daily Quests.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href="/parks"
-                className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-300 px-6 py-3 text-sm font-bold text-emerald-950 transition-colors hover:bg-amber-200"
-              >
+              <Link href="/parks" className={actionPrimary}>
                 Explore Parks
               </Link>
-              <Link
-                href="/map"
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-emerald-400/60 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-900"
-              >
+              <Link href="/map" className={actionSecondary}>
                 Open Map
               </Link>
               <Link
                 href="/passport"
-                className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-sm font-bold text-emerald-100 underline decoration-emerald-500 underline-offset-4 transition-colors hover:text-white"
+                className="inline-flex min-h-12 items-center justify-center rounded-control px-4 py-3 text-sm font-semibold text-forest-ink underline decoration-canopy/45 underline-offset-4 transition-colors hover:text-canopy focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-lake-blue"
               >
                 View Family Passport
               </Link>
             </div>
           </div>
 
-          <aside className="rounded-3xl border border-emerald-700/70 bg-emerald-900/70 p-6 shadow-2xl shadow-emerald-950/40 sm:p-8">
-            <div className="flex items-center justify-between gap-4 border-b border-emerald-700/70 pb-5">
+          <aside className="rounded-collectible bg-forest-ink p-6 text-white sm:p-8">
+            <div className="flex items-center justify-between gap-4 border-b border-white/18 pb-5">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">
-                  Your next outing
+                <p className="text-sm font-semibold text-white/72">
+                  Your next outing can be
                 </p>
-                <p className="mt-1 text-xl font-bold">A park-sized adventure</p>
+                <p className="mt-1 font-display text-2xl font-semibold tracking-[-0.015em]">
+                  A park-sized adventure
+                </p>
               </div>
               <span className="text-4xl" aria-hidden="true">
                 🌲
               </span>
             </div>
-            <ul className="mt-5 space-y-4 text-sm text-emerald-100">
+            <ul className="mt-5 space-y-4 text-sm leading-6 text-white/82">
               <li className="flex items-center gap-3">
                 <span aria-hidden="true">📍</span>
                 Explore parks across Bellingham
@@ -116,28 +113,21 @@ export default function Home() {
 
         <section
           aria-labelledby="how-it-works"
-          className="border-t border-emerald-800 py-16 sm:py-20"
+          className="border-t border-forest-ink/12 py-14 sm:py-18"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
-            How it works
-          </p>
           <h2
             id="how-it-works"
-            className="mt-2 max-w-xl text-3xl font-bold tracking-tight sm:text-4xl"
+            className="max-w-xl font-display text-3xl font-semibold tracking-[-0.02em] text-balance text-forest-ink sm:text-4xl"
           >
             Make memories, one park at a time.
           </h2>
-          <ol className="mt-9 grid gap-4 md:grid-cols-3">
+          <ol className="mt-9 divide-y divide-forest-ink/14 border-y border-forest-ink/14 md:grid md:grid-cols-3 md:divide-x md:divide-y-0">
             {steps.map((step) => (
-              <li
-                key={step.number}
-                className="rounded-2xl bg-emerald-900/60 p-6 ring-1 ring-emerald-800"
-              >
-                <span className="text-xs font-bold tracking-widest text-amber-300">
-                  {step.number}
-                </span>
-                <h3 className="mt-3 text-lg font-bold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-emerald-100/75">
+              <li key={step.title} className="py-6 md:px-6 md:first:pl-0">
+                <h3 className="text-lg font-bold text-forest-ink">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-graphite/72">
                   {step.description}
                 </p>
               </li>
@@ -145,19 +135,15 @@ export default function Home() {
           </ol>
         </section>
 
-        <section className="border-t border-emerald-800 py-12 text-center sm:py-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
+        <section className="border-t border-forest-ink/12 py-12 text-center sm:py-16">
+          <h2 className="font-display text-2xl font-semibold text-forest-ink">
             Built for Bellingham families
-          </p>
-          <p className="mx-auto mt-3 max-w-2xl text-lg leading-8 text-emerald-100/80">
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-lg leading-8 text-graphite/74">
             Start close to home. Find a familiar favorite or discover a park
             your family has never explored.
           </p>
         </section>
-
-        <footer className="border-t border-emerald-800 py-6 text-center text-xs text-emerald-200/60">
-          ParkQuest · Turn every park into an adventure.
-        </footer>
       </div>
     </main>
   );

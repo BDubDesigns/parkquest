@@ -1,4 +1,4 @@
-import { mutedText } from "@/components/ui/styles";
+import { mutedTextDaylight } from "@/components/ui/styles";
 
 interface Props {
   officialName: string;
@@ -19,14 +19,16 @@ export default function ParkDisplayName({
 
   return (
     <div className={className}>
-      <Tag className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+      <Tag className="text-2xl font-bold tracking-[-0.02em] text-balance text-forest-ink sm:text-3xl">
         {primary}
       </Tag>
       {nickname ? (
-        <p className={`mt-1 text-sm ${mutedText}`}>Official: {officialName}</p>
+        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>
+          Official: {officialName}
+        </p>
       ) : null}
       {regionName ? (
-        <p className={`mt-1 text-sm ${mutedText}`}>{regionName}</p>
+        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>{regionName}</p>
       ) : null}
     </div>
   );

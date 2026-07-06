@@ -2,7 +2,11 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { linkText, pageContainer, pageShell } from "@/components/ui/styles";
+import {
+  linkTextDaylight,
+  pageContainerDaylight,
+  pageShellDaylight,
+} from "@/components/ui/styles";
 
 export default async function AccountLayout({
   children,
@@ -16,17 +20,17 @@ export default async function AccountLayout({
   }
 
   return (
-    <div className={pageShell}>
-      <div className={pageContainer}>
-        <header className="mb-8 hidden md:block">
+    <div className={pageShellDaylight}>
+      <div className={pageContainerDaylight}>
+        <header className="mb-8 hidden border-b border-forest-ink/12 pb-5 md:block">
           <nav className="flex gap-3 text-sm">
-            <Link href="/" className={linkText}>
+            <Link href="/" className={linkTextDaylight}>
               Home
             </Link>
-            <span aria-hidden="true" className="text-stone-500/60">
-              &middot;
+            <span aria-hidden="true" className="text-graphite/35">
+              /
             </span>
-            <Link href="/parks" className={linkText}>
+            <Link href="/parks" className={linkTextDaylight}>
               Parks
             </Link>
           </nav>

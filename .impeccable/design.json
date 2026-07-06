@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-06T08:36:49-07:00",
+  "title": "Design System: ParkQuest",
+  "extensions": {
+    "colorMeta": {
+      "forest-ink": {
+        "role": "primary",
+        "displayName": "Forest Ink",
+        "canonical": "#12372A",
+        "tonalRamp": [
+          "#071A12",
+          "#12372A",
+          "#25533F",
+          "#3E7059",
+          "#62907A",
+          "#8CB09E",
+          "#BBD1C6",
+          "#E7F0EB"
+        ]
+      },
+      "canopy": {
+        "role": "primary",
+        "displayName": "Canopy Green",
+        "canonical": "#1F5A42",
+        "tonalRamp": [
+          "#0A2117",
+          "#123C2A",
+          "#1F5A42",
+          "#37765C",
+          "#5B9478",
+          "#85B39A",
+          "#B5D2C2",
+          "#E5F0EA"
+        ]
+      },
+      "trail-gold": {
+        "role": "primary",
+        "displayName": "Trail Gold",
+        "canonical": "#F3B33D",
+        "tonalRamp": [
+          "#2D1A00",
+          "#5B3703",
+          "#8C5B0B",
+          "#BC7F18",
+          "#E4A42E",
+          "#F3C66E",
+          "#F8DEA5",
+          "#FCF3D8"
+        ]
+      },
+      "reward-ink": {
+        "role": "primary",
+        "displayName": "Reward Ink",
+        "canonical": "#A86100",
+        "tonalRamp": [
+          "#2D1800",
+          "#563000",
+          "#7E4900",
+          "#A86100",
+          "#C88532",
+          "#DDA965",
+          "#EECF9E",
+          "#FAEDD8"
+        ]
+      },
+      "stamp-red": {
+        "role": "secondary",
+        "displayName": "Stamp Red",
+        "canonical": "#B84B3C",
+        "tonalRamp": [
+          "#2B0B08",
+          "#551A14",
+          "#7F2C23",
+          "#A73F33",
+          "#C66558",
+          "#DB9187",
+          "#EBC0BA",
+          "#F8E9E6"
+        ]
+      },
+      "lake-blue": {
+        "role": "secondary",
+        "displayName": "Lake Blue",
+        "canonical": "#2E7191",
+        "tonalRamp": [
+          "#071D29",
+          "#10394E",
+          "#205873",
+          "#2E7191",
+          "#5591AB",
+          "#82B1C4",
+          "#B5D2DE",
+          "#E6F0F4"
+        ]
+      },
+      "atlas-paper": {
+        "role": "neutral",
+        "displayName": "Atlas Paper",
+        "canonical": "#F7F6F0",
+        "tonalRamp": [
+          "#252522",
+          "#454541",
+          "#686762",
+          "#8D8C86",
+          "#B3B1AB",
+          "#D3D2CC",
+          "#E8E7E1",
+          "#F7F6F0"
+        ]
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#E8EEE9",
+        "tonalRamp": [
+          "#1D2520",
+          "#38433C",
+          "#56645B",
+          "#77867C",
+          "#9AA99F",
+          "#BCC9C0",
+          "#D5DFD8",
+          "#EEF3EF"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#1E2924",
+        "tonalRamp": [
+          "#0A100D",
+          "#1E2924",
+          "#3B4741",
+          "#5B6862",
+          "#7E8A84",
+          "#A5AEA9",
+          "#CDD3CF",
+          "#F0F3F1"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#494949",
+          "#6D6D6D",
+          "#929292",
+          "#B8B8B8",
+          "#D6D6D6",
+          "#ECECEC",
+          "#FFFFFF"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "Danger",
+        "canonical": "#B42318",
+        "tonalRamp": [
+          "#2B0503",
+          "#570B07",
+          "#82140E",
+          "#B42318",
+          "#CE534A",
+          "#E1847D",
+          "#EEB7B3",
+          "#F9E7E5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Journal Display",
+        "purpose": "Homepage statements, passport chapter titles, and exceptional reward moments only."
+      },
+      "headline": {
+        "displayName": "Page Headline",
+        "purpose": "Page-level task headings and major atlas sections."
+      },
+      "title": {
+        "displayName": "Content Title",
+        "purpose": "Park names, grouped content titles, dialogs, and collectible names."
+      },
+      "body": {
+        "displayName": "Product Body",
+        "purpose": "Descriptions, instructions, form help, and reading content."
+      },
+      "label": {
+        "displayName": "Product Label",
+        "purpose": "Buttons, navigation, field labels, filter controls, and concise metadata."
+      }
+    },
+    "shadows": [
+      {
+        "name": "interactive-lift",
+        "value": "0 4px 8px rgba(18, 55, 42, 0.14)",
+        "purpose": "Hover or pressed-response support for tappable park and collectible surfaces."
+      },
+      {
+        "name": "overlay",
+        "value": "0 12px 28px rgba(18, 55, 42, 0.22)",
+        "purpose": "Menus, dialogs, and map overlays above live content."
+      },
+      {
+        "name": "stamp-contact",
+        "value": "0 2px 3px rgba(30, 41, 36, 0.24)",
+        "purpose": "Brief physical contact feedback during stamping."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "150ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Hover, focus, and selection feedback."
+      },
+      {
+        "name": "state-standard",
+        "value": "220ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Routine component state changes."
+      },
+      {
+        "name": "collectible-impact",
+        "value": "500ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Stamp impact and unlock feedback only."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single most useful next action in an action region.",
+      "html": "<button class=\"ds-button-primary\">Explore parks</button>",
+      "css": ".ds-button-primary { min-height: 48px; padding: 12px 18px; border: 0; border-radius: 10px; background: #F3B33D; color: #12372A; font: 650 14px/1.3 Arial, sans-serif; cursor: pointer; transition: transform 150ms cubic-bezier(0.22,1,0.36,1), background 150ms ease-out; } .ds-button-primary:hover { background: #F6C35F; transform: translateY(-1px); } .ds-button-primary:active { transform: translateY(0); } .ds-button-primary:focus-visible { outline: 3px solid #2E7191; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A clear alternative action without competing with Trail Gold.",
+      "html": "<button class=\"ds-button-secondary\">Open map</button>",
+      "css": ".ds-button-secondary { min-height: 48px; padding: 11px 17px; border: 1px solid #12372A; border-radius: 10px; background: #F7F6F0; color: #12372A; font: 650 14px/1.3 Arial, sans-serif; cursor: pointer; transition: background 150ms ease-out, transform 150ms cubic-bezier(0.22,1,0.36,1); } .ds-button-secondary:hover { background: #E8EEE9; transform: translateY(-1px); } .ds-button-secondary:active { transform: translateY(0); } .ds-button-secondary:focus-visible { outline: 3px solid #2E7191; outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A daylight-readable field with an explicit label and focus state.",
+      "html": "<label class=\"ds-field\"><span>Family email</span><input type=\"email\" placeholder=\"you@example.com\"></label>",
+      "css": ".ds-field { display: grid; gap: 7px; color: #1E2924; font: 650 14px/1.3 Arial, sans-serif; } .ds-field input { min-height: 48px; padding: 12px 14px; border: 1px solid #6F8278; border-radius: 10px; background: #FFFFFF; color: #1E2924; font: 400 16px/1.5 Arial, sans-serif; } .ds-field input::placeholder { color: #56645B; } .ds-field input:focus-visible { border-color: #12372A; outline: 3px solid #F3B33D; outline-offset: 2px; }"
+    },
+    {
+      "name": "Amenity Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "A compact factual label; interactive filters add a visible selected mark.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\"><span aria-hidden=\"true\">✓</span> Playground</button>",
+      "css": ".ds-chip { min-height: 36px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 0; border-radius: 999px; background: #1F5A42; color: #FFFFFF; font: 650 13px/1.2 Arial, sans-serif; cursor: pointer; } .ds-chip:hover { background: #174936; } .ds-chip:focus-visible { outline: 3px solid #F3B33D; outline-offset: 2px; }"
+    },
+    {
+      "name": "Park List Item",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A scannable park result that prioritizes the outing decision over coordinates.",
+      "html": "<a class=\"ds-park\" href=\"#\"><div><strong>Whatcom Falls Park</strong><p>Forest trails, picnic areas, and a stone bridge.</p></div><span class=\"ds-park-arrow\" aria-hidden=\"true\">→</span></a>",
+      "css": ".ds-park { display: flex; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 1px solid #C6D2CA; color: #1E2924; text-decoration: none; font-family: Arial, sans-serif; } .ds-park strong { font-size: 18px; line-height: 1.25; } .ds-park p { max-width: 58ch; margin: 6px 0 0; color: #495850; font-size: 14px; line-height: 1.5; } .ds-park-arrow { color: #B84B3C; font-size: 24px; transition: transform 150ms cubic-bezier(0.22,1,0.36,1); } .ds-park:hover .ds-park-arrow { transform: translateX(3px); } .ds-park:focus-visible { outline: 3px solid #2E7191; outline-offset: 4px; border-radius: 6px; }"
+    },
+    {
+      "name": "Earned Sticker",
+      "kind": "custom",
+      "refersTo": "collectible",
+      "description": "An earned object with silhouette, detail, name, and requirement—not color alone.",
+      "html": "<article class=\"ds-sticker\"><div class=\"ds-sticker-mark\" aria-hidden=\"true\">★</div><div><strong>Trail Starter</strong><p>Visit your first park</p><span>Earned</span></div></article>",
+      "css": ".ds-sticker { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: #F7F6F0; color: #1E2924; font-family: Arial, sans-serif; } .ds-sticker-mark { width: 64px; height: 64px; display: grid; place-items: center; clip-path: polygon(50% 0,61% 32%,95% 24%,70% 50%,95% 76%,61% 68%,50% 100%,39% 68%,5% 76%,30% 50%,5% 24%,39% 32%); background: #F3B33D; color: #12372A; font-size: 24px; } .ds-sticker strong { display: block; font-size: 17px; line-height: 1.25; } .ds-sticker p { margin: 3px 0 7px; color: #495850; font-size: 14px; } .ds-sticker span { color: #1F5A42; font-size: 13px; font-weight: 650; }"
+    },
+    {
+      "name": "Mobile Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "A stable labeled destination bar with shape and color indicating the active route.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a href=\"#\">Parks</a><a href=\"#\">Map</a><a class=\"ds-nav-active\" href=\"#\" aria-current=\"page\">Passport</a><a href=\"#\">Account</a></nav>",
+      "css": ".ds-nav { display: flex; justify-content: space-around; gap: 4px; padding: 8px; border-top: 1px solid #365B4A; background: #12372A; font-family: Arial, sans-serif; } .ds-nav a { min-height: 48px; display: grid; place-items: center; padding: 8px 10px; border-radius: 10px; color: #D9E5DE; text-decoration: none; font-size: 12px; font-weight: 650; } .ds-nav a:hover { background: #1B4938; color: #FFFFFF; } .ds-nav .ds-nav-active { background: #F3B33D; color: #12372A; } .ds-nav a:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 1px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trail Journal",
+    "overview": "ParkQuest should feel like a well-used field guide brought on a family outing: practical enough to trust at a glance, personal enough to keep, and full of evidence that someone has been somewhere. The public atlas is calm and daylight-readable. The private passport adds the satisfying material language of stamps, stickers, trail markers, and collected discoveries.\n\nThis is a target foundation, not a preservation order for the current dark emerald interface. Existing shared classes in src/components/ui/styles.ts are migration evidence, not immutable rules. Future work should move toward clearer hierarchy, lighter information surfaces, stronger state design, and collectibles that have genuine visual identity rather than appearing as text lists.",
+    "keyCharacteristics": [
+      "Daylight-legible atlas surfaces grounded by deep forest navigation.",
+      "Tactile, confident controls with unmistakable states and large touch targets.",
+      "Calm information hierarchy for parks, maps, forms, and privacy-sensitive content.",
+      "Collectibles with distinct silhouettes, color families, rarity, and earned-state ceremony.",
+      "Warmth from trail gold, stamp ink, language, and artifacts—not an all-purpose beige wash."
+    ],
+    "rules": [
+      {
+        "name": "The Two-Tempo Rule",
+        "body": "Browsing is quiet and efficient; earning is vivid and memorable. Never apply collectible intensity to routine settings, forms, or park facts.",
+        "section": "overview"
+      },
+      {
+        "name": "The Artifact Color Rule",
+        "body": "Stamp Red and Lake Blue belong to meaningful artifacts or semantic states. If either can be removed without changing meaning, remove it.",
+        "section": "colors"
+      },
+      {
+        "name": "The One-Gold Rule",
+        "body": "Trail Gold identifies the single most useful next action or earned result within a region. Multiple competing gold controls destroy priority.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Rule",
+        "body": "All body text, placeholders, controls, and state labels must meet WCAG 2.2 AA. Never rely on opacity guesses for readable text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Product Voice Rule",
+        "body": "Geist owns every control, form label, navigation item, and data value. Fraunces never appears in a button, table, input, or dense list.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Label Rule",
+        "body": "Uppercase tracking is reserved for literal stamp text, serial marks, and compact map legends. It is forbidden as a repeated section-heading scaffold.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Until-Lifted Rule",
+        "body": "Resting content surfaces use tone or a 1px boundary. Shadows communicate interaction or overlay hierarchy, never generic premium styling.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Earned Object Rule",
+        "body": "An earned collectible must look materially different from a locked preview through silhouette, detail, label, and state—not saturation alone.",
+        "section": "components"
+      },
+      {
+        "name": "The No-Fake-Craft Rule",
+        "body": "No paper-grain gradients, sketch filters, roughened SVG edges, or faux-handmade noise. Character comes from typography, composition, illustration quality, and the actual record of an outing.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do optimize every primary flow for outdoor mobile use with 44px minimum targets and strong daylight contrast.",
+      "Do preserve calm, clear hierarchy for public park facts and privacy-sensitive family content.",
+      "Do reserve Trail Gold for the next meaningful action or a genuinely earned result.",
+      "Do give stamps, stickers, and quests distinct visual grammars and meaningful locked, progress, and earned states.",
+      "Do use semantic structure, visible focus, reduced-motion alternatives, and color-independent state cues to meet WCAG 2.2 AA.",
+      "Do migrate shared patterns through src/components/ui/styles.ts or future extracted primitives rather than scattering replacement class strings."
+    ],
+    "donts": [
+      "Don't use generic glassmorphism, excessive gradients, glowing effects, or decorative visual noise.",
+      "Don't use raw black debug-style surfaces or introduce unrelated palettes.",
+      "Don't make ParkQuest feel like a competitive social network, a children's cartoon, or a dense municipal data portal.",
+      "Don't use cream, parchment, faux-aged paper, paper grain, topographic filler, or rough SVG filters as shortcuts to an outdoors identity.",
+      "Don't repeat tiny uppercase tracked eyebrows or numbered markers as general section scaffolding.",
+      "Don't combine a 1px border with a wide soft shadow on the same resting card.",
+      "Don't use cards when a list, section, map annotation, or collection shelf expresses the relationship more clearly.",
+      "Don't hide content behind animation or ship motion without a reduced-motion behavior."
+    ]
+  }
+}

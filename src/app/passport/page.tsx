@@ -14,17 +14,17 @@ import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import { ensureActiveBoard } from "@/lib/quest-board";
 import {
-  bodyText,
-  card,
-  cardSecondary,
-  dividerSubtle,
-  eyebrow,
-  eyebrowAmber,
-  heading,
-  linkMuted,
-  linkPrimary,
-  mutedText,
+  collectibleTitle,
+  dividerSubtleDaylight,
+  linkMutedDaylight,
+  linkPrimaryDaylight,
+  mutedTextDaylight,
+  sectionTitle,
+  surfacePrimary,
+  surfaceSecondary,
 } from "@/components/ui/styles";
+import SectionHeader from "@/components/ui/SectionHeader";
+import StatusBadge from "@/components/ui/StatusBadge";
 import { RefreshBoardButton } from "./RefreshBoardButton";
 
 function formatDate(dateStr: string): string {
@@ -38,7 +38,7 @@ function formatDate(dateStr: string): string {
 
 function Stars({ count }: { count: number }) {
   return (
-    <span className="text-amber-500" aria-label={`${count} out of 5 stars`}>
+    <span className="text-reward-ink" aria-label={`${count} out of 5 stars`}>
       {"\u2605".repeat(count)}
       {"\u2606".repeat(5 - count)}
     </span>
@@ -68,13 +68,13 @@ export default async function PassportPage() {
 
   if (!ctx) {
     return (
-      <section className="rounded-2xl border border-amber-700/60 bg-amber-900/30 p-6 text-amber-200">
+      <section className="rounded-surface bg-white p-6 text-graphite ring-1 ring-forest-ink/12">
         <p className="text-sm">
           No family group found. Create one to start your park passport.
         </p>
         <Link
           href="/account"
-          className="mt-3 inline-block text-sm font-medium text-amber-100 underline decoration-amber-500 underline-offset-2 hover:text-white"
+          className={`mt-3 inline-block text-sm ${linkPrimaryDaylight}`}
         >
           Go to Account
         </Link>
@@ -88,7 +88,7 @@ export default async function PassportPage() {
 
   if (!region) {
     return (
-      <p className={`text-sm ${mutedText}`}>
+      <p className={`text-sm ${mutedTextDaylight}`}>
         No region data available. Run the seed to populate parks.
       </p>
     );
@@ -201,38 +201,45 @@ export default async function PassportPage() {
 
   return (
     <div>
-      <h1 className={`text-2xl sm:text-3xl ${heading}`}>
-        {ctx.familyGroupName ?? "Family"} Park Passport
-      </h1>
+      <SectionHeader
+        as="h1"
+        journal
+        title={`${ctx.familyGroupName ?? "Family"} Park Passport`}
+        description="Your Park Passport is private to your family. Other families cannot see your stamps, memories, Adventure Points, or stickers."
+      />
 
-      <p className={`mt-2 max-w-prose text-sm ${bodyText}`}>
-        Your Park Passport is private to your family. Other families cannot see
-        your stamps, memories, Adventure Points, or stickers.
-      </p>
-
-      <section className={`mt-6 ${card}`}>
-        <div className="h-3 w-full rounded-full bg-emerald-800">
+      <section className={`mt-6 ${surfacePrimary}`}>
+        <div
+          className="h-3 w-full overflow-hidden rounded-full bg-mist"
+          role="progressbar"
+          aria-label={`${region.name} parks visited`}
+          aria-valuemin={0}
+          aria-valuemax={totalParks}
+          aria-valuenow={uniqueVisited}
+        >
           <div
-            className="h-3 rounded-full bg-amber-300 transition-[width]"
+            className="h-3 rounded-full bg-canopy transition-[width] duration-300 ease-out"
             style={{ width: `${percent}%` }}
           />
         </div>
-        <p className="mt-2 text-sm font-medium text-white">
+        <p className="mt-3 text-sm font-semibold text-forest-ink">
           {uniqueVisited} / {totalParks} {region.name} parks visited
         </p>
 
-        <p className="mt-4">
-          <span className="text-lg font-bold text-amber-300">
+        <p className="mt-5 flex flex-wrap items-baseline gap-2 border-t border-forest-ink/10 pt-4">
+          <span className="font-display text-2xl font-semibold text-forest-ink">
             {totalAdventurePoints.toLocaleString()}
-          </span>{" "}
-          <span className="text-sm text-stone-300/80">Adventure Points</span>
+          </span>
+          <span className="text-sm font-semibold text-graphite/70">
+            Adventure Points
+          </span>
         </p>
       </section>
 
       {boardQuests.length > 0 && (
-        <section className={`mt-8 ${cardSecondary}`}>
-          <div className="flex items-center justify-between">
-            <h2 className={eyebrowAmber}>Quest Board</h2>
+        <section className={`mt-8 ${surfaceSecondary}`}>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className={collectibleTitle}>Quest Board</h2>
             <RefreshBoardButton
               hasIncomplete={boardQuests.some((q) => q.status === "assigned")}
               alreadyRefreshedToday={alreadyRefreshedToday}
@@ -242,39 +249,41 @@ export default async function PassportPage() {
             {boardQuests.map((ch) => (
               <li
                 key={ch.id}
-                className={`flex flex-col gap-0.5 border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
+                className={`flex flex-col gap-0.5 border-b ${dividerSubtleDaylight} py-2 text-sm last:border-b-0`}
               >
                 <div className="flex items-center gap-2">
                   {ch.status === "completed" ? (
-                    <>
-                      <span aria-hidden="true" className="text-amber-300">
-                        ✓
-                      </span>
-                      <span className="font-medium text-white">{ch.name}</span>
-                    </>
+                    <StatusBadge tone="success" mark="✓">
+                      Completed
+                    </StatusBadge>
                   ) : ch.status === "expired" ? (
                     <>
-                      <span aria-hidden="true" className="text-stone-500/40">
+                      <span aria-hidden="true" className="text-graphite/45">
                         ✗
                       </span>
-                      <span className="text-stone-500/60 line-through">
+                      <span className="text-graphite/58 line-through">
                         {ch.name}
                       </span>
                     </>
                   ) : (
                     <>
-                      <span aria-hidden="true" className="text-stone-500/60">
+                      <span aria-hidden="true" className="text-canopy">
                         ○
                       </span>
-                      <span className={mutedText}>{ch.name}</span>
+                      <span className={mutedTextDaylight}>{ch.name}</span>
                     </>
                   )}
-                  <span className="ml-auto text-xs font-medium text-amber-300/80">
+                  {ch.status === "completed" && (
+                    <span className="font-medium text-forest-ink">
+                      {ch.name}
+                    </span>
+                  )}
+                  <span className="ml-auto text-xs font-semibold text-forest-ink">
                     {ch.xpReward} Adventure Points
                   </span>
                 </div>
                 {ch.description && (
-                  <p className={`ml-5 text-xs ${mutedText}`}>
+                  <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
                     {ch.description}
                   </p>
                 )}
@@ -284,30 +293,32 @@ export default async function PassportPage() {
         </section>
       )}
 
-      <section className={`mt-8 ${cardSecondary}`}>
-        <h2 className={eyebrowAmber}>
-          Stickers{" "}
-          <span className="text-white">
-            ({earnedStickers.length} / {allDefinitions.length})
-          </span>
-        </h2>
+      <section className={`mt-8 ${surfaceSecondary}`}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className={collectibleTitle}>Stickers</h2>
+          <StatusBadge tone="reward">
+            {earnedStickers.length} of {allDefinitions.length} earned
+          </StatusBadge>
+        </div>
 
         {earnedStickers.length > 0 && (
           <div className="mt-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-amber-300/80">
-              Earned
-            </p>
-            <ul className="mt-1 space-y-1">
+            <p className="text-sm font-bold text-forest-ink">In your journal</p>
+            <ul className="mt-2 grid gap-2 sm:grid-cols-2">
               {earnedStickers.map((s) => (
-                <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-amber-300">
-                    ✓
-                  </span>{" "}
-                  <span className="font-medium text-white">{s.name}</span>
+                <li
+                  key={s.slug}
+                  className="rounded-collectible bg-white p-3 text-sm ring-1 ring-canopy/16"
+                >
+                  <span className="font-display font-semibold text-forest-ink">
+                    {s.name}
+                  </span>
                   {s.description && (
-                    <span className={`ml-2 ${mutedText}`}>
-                      &mdash; {s.description}
-                    </span>
+                    <p
+                      className={`mt-1 text-xs leading-5 ${mutedTextDaylight}`}
+                    >
+                      {s.description}
+                    </p>
                   )}
                 </li>
               ))}
@@ -317,22 +328,24 @@ export default async function PassportPage() {
 
         {unearnedStickers.length > 0 && (
           <div className={earnedStickers.length > 0 ? "mt-4" : "mt-3"}>
-            <p
-              className={`text-xs font-medium uppercase tracking-wide ${mutedText}`}
-            >
-              Still to earn
+            <p className={`text-sm font-bold ${mutedTextDaylight}`}>
+              Still to discover
             </p>
-            <ul className="mt-1 space-y-1">
+            <ul className="mt-2 grid gap-2 sm:grid-cols-2">
               {unearnedStickers.map((s) => (
-                <li key={s.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-stone-500/60">
-                    ○
-                  </span>{" "}
-                  <span className={mutedText}>{s.name}</span>
+                <li
+                  key={s.slug}
+                  className="rounded-collectible border border-dashed border-forest-ink/22 p-3 text-sm"
+                >
+                  <span className={`font-semibold ${mutedTextDaylight}`}>
+                    {s.name}
+                  </span>
                   {s.description && (
-                    <span className={`ml-2 ${mutedText}`}>
-                      &mdash; {s.description}
-                    </span>
+                    <p
+                      className={`mt-1 text-xs leading-5 ${mutedTextDaylight}`}
+                    >
+                      {s.description}
+                    </p>
                   )}
                 </li>
               ))}
@@ -342,15 +355,15 @@ export default async function PassportPage() {
       </section>
 
       {recentStamps.length > 0 && (
-        <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrow}>Recently stamped</h2>
+        <section className={`mt-8 ${surfaceSecondary}`}>
+          <h2 className={sectionTitle}>Recently stamped</h2>
           <ol className="mt-3">
             {recentStamps.map((stamp) => {
               const n = nicknames[stamp.park.id] ?? null;
               return (
                 <li
                   key={stamp.id}
-                  className={`border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
+                  className={`border-b ${dividerSubtleDaylight} py-2 text-sm last:border-b-0`}
                 >
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <div>
@@ -358,15 +371,15 @@ export default async function PassportPage() {
                         name={stamp.park.name}
                         nickname={n}
                         slug={stamp.park.slug}
-                        linkClass={`font-medium ${linkPrimary}`}
+                        linkClass={`font-medium ${linkPrimaryDaylight}`}
                       />
                       {n && (
-                        <p className={`text-xs ${mutedText}`}>
+                        <p className={`text-xs ${mutedTextDaylight}`}>
                           Official: {stamp.park.name}
                         </p>
                       )}
                     </div>
-                    <span className={mutedText}>
+                    <span className={mutedTextDaylight}>
                       &mdash; {formatDate(stamp.visitDate)}
                     </span>
                     {stamp.rating && (
@@ -376,7 +389,7 @@ export default async function PassportPage() {
                     )}
                   </div>
                   {stamp.notes && (
-                    <p className="mt-1 text-stone-300/80 italic">
+                    <p className="mt-1 text-graphite/72 italic">
                       &ldquo;{stamp.notes}&rdquo;
                     </p>
                   )}
@@ -388,28 +401,28 @@ export default async function PassportPage() {
       )}
 
       {visited.length > 0 && (
-        <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrow}>Visited parks ({visited.length})</h2>
+        <section className={`mt-8 ${surfaceSecondary}`}>
+          <h2 className={sectionTitle}>Visited parks ({visited.length})</h2>
           <ul className="mt-3 space-y-1.5">
             {visited.map((p) => {
               const n = nicknames[p.id] ?? null;
               const hasLiveStamp = liveStampedParkIds.has(p.id);
               return (
                 <li key={p.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-amber-300">
-                    ✓
-                  </span>{" "}
+                  <StatusBadge tone="success" mark="✓">
+                    Visited
+                  </StatusBadge>{" "}
                   <ParkNameWithNickname
                     name={p.name}
                     nickname={n}
                     slug={p.slug}
-                    linkClass={linkPrimary}
+                    linkClass={linkPrimaryDaylight}
                   />
-                  <span className={`ml-2 text-xs ${mutedText}`}>
+                  <span className={`ml-2 text-xs ${mutedTextDaylight}`}>
                     {hasLiveStamp ? "Stamped" : "Previously visited"}
                   </span>
                   {n && (
-                    <p className={`ml-5 text-xs ${mutedText}`}>
+                    <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
                       Official: {p.name}
                     </p>
                   )}
@@ -421,24 +434,24 @@ export default async function PassportPage() {
       )}
 
       {unstamped.length > 0 && (
-        <section className={`mt-8 ${cardSecondary}`}>
-          <h2 className={eyebrow}>Not yet visited ({unstamped.length})</h2>
+        <section className={`mt-8 ${surfaceSecondary}`}>
+          <h2 className={sectionTitle}>Not yet visited ({unstamped.length})</h2>
           <ul className="mt-3 space-y-1.5">
             {unstamped.map((p) => {
               const n = nicknames[p.id] ?? null;
               return (
                 <li key={p.slug} className="text-sm">
-                  <span aria-hidden="true" className="text-stone-500/60">
+                  <span aria-hidden="true" className="text-graphite/50">
                     ○
                   </span>{" "}
                   <ParkNameWithNickname
                     name={p.name}
                     nickname={n}
                     slug={p.slug}
-                    linkClass={linkMuted}
+                    linkClass={linkMutedDaylight}
                   />
                   {n && (
-                    <p className={`ml-5 text-xs ${mutedText}`}>
+                    <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
                       Official: {p.name}
                     </p>
                   )}

@@ -1,8 +1,8 @@
 import {
-  card,
-  dividerSubtle,
-  eyebrow,
-  mutedText,
+  collectibleTitle,
+  dividerSubtleDaylight,
+  mutedTextDaylight,
+  surfacePrimary,
 } from "@/components/ui/styles";
 import StampForm from "./StampForm";
 
@@ -35,7 +35,7 @@ function Stars({ count }: { count: number }) {
   const filled = "\u2605".repeat(count);
   const empty = "\u2606".repeat(5 - count);
   return (
-    <span className="text-amber-500" aria-label={`${count} out of 5 stars`}>
+    <span className="text-reward-ink" aria-label={`${count} out of 5 stars`}>
       {filled}
       {empty}
     </span>
@@ -63,45 +63,47 @@ export default function StampHistory({
       : "Stamped! This park is in your family passport.";
 
   return (
-    <section className={`mt-6 sm:mt-8 ${card}`}>
-      <h2 className={eyebrow}>Park Passport</h2>
+    <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
+      <h2 className={collectibleTitle}>Park Passport</h2>
 
-      <p className="mt-2 text-sm font-medium text-white">{heading}</p>
+      <p className="mt-2 text-sm font-semibold text-forest-ink">{heading}</p>
 
       {liveCount > 0 && (
-        <p className={`mt-1 text-sm ${mutedText}`}>
+        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>
           Stamped {liveCount} time{liveCount !== 1 ? "s" : ""}
         </p>
       )}
       {backfillCount > 0 && (
-        <p className={`mt-1 text-sm ${mutedText}`}>
+        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>
           Previously visited {backfillCount} time
           {backfillCount !== 1 ? "s" : ""}
         </p>
       )}
 
       {stampedToday && (
-        <p className={`mt-2 text-sm ${mutedText}`}>
+        <p className={`mt-2 text-sm ${mutedTextDaylight}`}>
           Come back tomorrow for a fresh stamp.
         </p>
       )}
 
       {displayVisits.length > 0 && (
-        <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
+        <ol className={`mt-4 space-y-3 border-t ${dividerSubtleDaylight} pt-4`}>
           {displayVisits.map((v) => (
             <li key={v.id} className="text-sm">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 {v.visitSource === "backfill" ? (
-                  <span className="text-stone-400 italic">
+                  <span className="text-graphite/65 italic">
                     Previously visited
                   </span>
                 ) : (
-                  <span className={mutedText}>{formatDate(v.visitDate)}</span>
+                  <span className={mutedTextDaylight}>
+                    {formatDate(v.visitDate)}
+                  </span>
                 )}
                 {v.rating && <Stars count={v.rating} />}
               </div>
               {v.notes && (
-                <p className="mt-1 text-stone-300/80 italic">
+                <p className="mt-1 text-graphite/72 italic">
                   &ldquo;{v.notes}&rdquo;
                 </p>
               )}
@@ -111,13 +113,13 @@ export default function StampHistory({
       )}
 
       {visitCount > 5 && (
-        <p className={`mt-3 text-xs ${mutedText}`}>
+        <p className={`mt-3 text-xs ${mutedTextDaylight}`}>
           Showing 5 most recent records.
         </p>
       )}
 
       {!stampedToday && (
-        <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
+        <div className={`mt-4 border-t ${dividerSubtleDaylight} pt-4`}>
           <StampForm
             key={`${parkSlug}-${visitCount}`}
             parkSlug={parkSlug}

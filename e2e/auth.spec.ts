@@ -15,7 +15,11 @@ test("sign in works with existing credentials", async ({ page }) => {
 
 test("public routes remain accessible without auth", async ({ page }) => {
   await page.goto("/parks");
-  await expect(page.getByRole("heading", { name: "Parks" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Find your next park" }),
+  ).toBeVisible();
   await page.goto("/map");
-  await expect(page.getByRole("heading", { name: "Map" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Explore the park map" }),
+  ).toBeVisible();
 });

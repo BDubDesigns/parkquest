@@ -1,6 +1,10 @@
 "use client";
 
-import { card, ctaPrimary, mutedText } from "@/components/ui/styles";
+import {
+  actionPrimary,
+  mutedTextDaylight,
+  surfacePrimary,
+} from "@/components/ui/styles";
 
 export default function ParksError({
   reset,
@@ -10,13 +14,15 @@ export default function ParksError({
 }) {
   return (
     <div
-      className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${card}`}
+      className={`flex flex-col items-center gap-4 px-6 py-16 text-center ${surfacePrimary}`}
     >
-      <h2 className="text-xl font-bold tracking-tight text-white">
+      <h2 className="text-xl font-bold tracking-tight text-forest-ink">
         Something went wrong
       </h2>
-      <p className={mutedText}>Could not load parks. Please try again.</p>
-      <button onClick={reset} className={`min-h-11 ${ctaPrimary}`}>
+      <p className={mutedTextDaylight}>
+        Could not load parks. Please try again.
+      </p>
+      <button onClick={reset} className={actionPrimary}>
         Try again
       </button>
     </div>
