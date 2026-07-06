@@ -25,6 +25,7 @@ function renderForm(verifiedAmenityIds = ["playground"]) {
         parkSlug="test-park"
         amenities={amenities}
         verifiedAmenityIds={verifiedAmenityIds}
+        userSuggestions={[]}
       />,
     );
   });
@@ -93,5 +94,38 @@ describe("AmenitySuggestionForm", () => {
     act(() => removeButton?.click());
 
     expect(optionLabels()).toEqual(["Playground", "Picnic tables"]);
+  });
+
+  it("shows the user's prior suggestions only after expansion", () => {
+    act(() => {
+      root.render(
+        <AmenitySuggestionForm
+          parkSlug="test-park"
+          amenities={amenities}
+          verifiedAmenityIds={["playground"]}
+          userSuggestions={[
+            {
+              id: "suggestion-1",
+              amenityName: "Restrooms",
+              suggestionType: "add",
+              status: "pending",
+              createdAt: "2026-07-06T12:00:00.000Z",
+            },
+          ]}
+        />,
+      );
+    });
+
+    expect(container.textContent).not.toContain(
+      "Your suggestions for this park",
+    );
+    const addButton = Array.from(container.querySelectorAll("button")).find(
+      (button) => button.textContent === "Add missing amenity",
+    );
+    act(() => addButton?.click());
+
+    expect(container.textContent).toContain("Your suggestions for this park");
+    expect(container.textContent).toContain("Add Restrooms");
+    expect(container.textContent).toContain("pending");
   });
 });

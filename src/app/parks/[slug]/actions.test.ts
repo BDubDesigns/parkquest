@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   park: { id: "park-1", name: "Test Park" },
   amenity: { id: "amenity-1" },
   verifiedParkAmenity: null as { id: string } | null,
+  existingPendingSuggestion: null as { id: string } | null,
   selectCounts: [] as number[],
   selectRows: [] as unknown[][],
   inserted: [] as Array<{ table: unknown; values: Record<string, unknown> }>,
@@ -80,6 +81,11 @@ vi.mock("@/db", () => ({
       parkAmenities: {
         findFirst: vi.fn(() => Promise.resolve(mocks.verifiedParkAmenity)),
       },
+      amenitySuggestions: {
+        findFirst: vi.fn(() =>
+          Promise.resolve(mocks.existingPendingSuggestion),
+        ),
+      },
     },
     insert(table: unknown) {
       return {
@@ -116,6 +122,7 @@ describe("park stamp server actions", () => {
     mocks.selectRows = [];
     mocks.inserted = [];
     mocks.verifiedParkAmenity = null;
+    mocks.existingPendingSuggestion = null;
   });
 
   it("requires a safety answer for live stamps before writing private rows", async () => {
@@ -286,6 +293,29 @@ describe("park stamp server actions", () => {
     ).toBe("remove");
     expect(
       mocks.inserted.some((row) => tableName(row.table) === "park_amenities"),
+    ).toBe(false);
+  });
+
+  it("rejects an identical pending suggestion from the same user", async () => {
+    mocks.existingPendingSuggestion = { id: "suggestion-1" };
+    const form = new FormData();
+    form.set("suggestionType", "add");
+    form.set("amenityId", "amenity-1");
+
+    const result = await submitAmenitySuggestion(
+      "test-park",
+      { error: null, success: false },
+      form,
+    );
+
+    expect(result).toEqual({
+      error: "You already have this correction pending review.",
+      success: false,
+    });
+    expect(
+      mocks.inserted.some(
+        (row) => tableName(row.table) === "amenity_suggestions",
+      ),
     ).toBe(false);
   });
 

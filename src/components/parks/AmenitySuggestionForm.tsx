@@ -22,6 +22,13 @@ interface Props {
   parkSlug: string;
   amenities: AmenityOption[];
   verifiedAmenityIds: string[];
+  userSuggestions: Array<{
+    id: string;
+    amenityName: string;
+    suggestionType: SuggestionType;
+    status: "pending" | "approved" | "rejected";
+    createdAt: string;
+  }>;
 }
 
 type SuggestionType = "add" | "remove";
@@ -32,6 +39,7 @@ export default function AmenitySuggestionForm({
   parkSlug,
   amenities,
   verifiedAmenityIds,
+  userSuggestions,
 }: Props) {
   const [state, action, pending] = useActionState(
     submitAmenitySuggestion.bind(null, parkSlug),
@@ -165,6 +173,40 @@ export default function AmenitySuggestionForm({
             <p className="mt-2 text-sm text-emerald-200">
               Thanks — your correction is pending admin review.
             </p>
+          )}
+          {userSuggestions.length > 0 && (
+            <div className="mt-4 border-t border-emerald-800/60 pt-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-emerald-200/80">
+                Your suggestions for this park
+              </h3>
+              <ul className="mt-2 grid gap-2">
+                {userSuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.id}
+                    className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                  >
+                    <span className="text-stone-200">
+                      {suggestion.suggestionType === "add" ? "Add" : "Remove"}{" "}
+                      {suggestion.amenityName}
+                    </span>
+                    <span className="flex items-center gap-2 text-xs">
+                      <span className="capitalize text-emerald-200">
+                        {suggestion.status}
+                      </span>
+                      <time
+                        className={mutedText}
+                        dateTime={suggestion.createdAt}
+                      >
+                        {new Intl.DateTimeFormat("en-US", {
+                          dateStyle: "medium",
+                          timeZone: "UTC",
+                        }).format(new Date(suggestion.createdAt))}
+                      </time>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

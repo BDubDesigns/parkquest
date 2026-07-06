@@ -464,6 +464,26 @@ export async function submitAmenitySuggestion(
     };
   }
 
+  const existingPendingSuggestion = await db.query.amenitySuggestions.findFirst(
+    {
+      columns: { id: true },
+      where: and(
+        eq(amenitySuggestions.parkId, park.id),
+        eq(amenitySuggestions.amenityId, amenity.id),
+        eq(amenitySuggestions.suggestionType, suggestionType),
+        eq(amenitySuggestions.submittedByUserId, ctx.userId),
+        eq(amenitySuggestions.status, "pending"),
+      ),
+    },
+  );
+
+  if (existingPendingSuggestion) {
+    return {
+      error: "You already have this correction pending review.",
+      success: false,
+    };
+  }
+
   await db.insert(amenitySuggestions).values({
     parkId: park.id,
     amenityId: amenity.id,

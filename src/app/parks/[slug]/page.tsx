@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { amenitySuggestions } from "@/db/public";
 import { getAmenityOptions, getParkBySlug, getParkIdBySlug } from "@/lib/parks";
 import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNickname } from "@/lib/park-nicknames";
@@ -43,11 +46,33 @@ export default async function ParkDetailPage({ params }: Props) {
 
   const ctx = await getCurrentFamilyContext();
   let nickname: string | null = null;
+  let userAmenitySuggestions: Array<{
+    id: string;
+    amenityName: string;
+    suggestionType: "add" | "remove";
+    status: "pending" | "approved" | "rejected";
+    createdAt: string;
+  }> = [];
   const amenityOptions = ctx ? await getAmenityOptions() : [];
   if (ctx) {
     const parkId = await getParkIdBySlug(slug);
     if (parkId) {
       nickname = await getFamilyParkNickname(ctx.familyGroupId, parkId);
+      const suggestionRows = await db.query.amenitySuggestions.findMany({
+        where: and(
+          eq(amenitySuggestions.parkId, parkId),
+          eq(amenitySuggestions.submittedByUserId, ctx.userId),
+        ),
+        with: { amenity: { columns: { name: true } } },
+        orderBy: [desc(amenitySuggestions.createdAt)],
+      });
+      userAmenitySuggestions = suggestionRows.map((suggestion) => ({
+        id: suggestion.id,
+        amenityName: suggestion.amenity.name,
+        suggestionType: suggestion.suggestionType,
+        status: suggestion.status,
+        createdAt: suggestion.createdAt.toISOString(),
+      }));
     }
   }
 
@@ -122,6 +147,7 @@ export default async function ParkDetailPage({ params }: Props) {
           parkSlug={slug}
           amenities={amenityOptions}
           verifiedAmenityIds={park.amenities.map((amenity) => amenity.id)}
+          userSuggestions={userAmenitySuggestions}
         />
       )}
 
