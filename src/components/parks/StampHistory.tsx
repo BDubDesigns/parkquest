@@ -1,7 +1,7 @@
 import {
   collectibleTitle,
-  dividerSubtleDaylight,
-  mutedTextDaylight,
+  dividerSubtle,
+  mutedText,
   surfacePrimary,
 } from "@/components/ui/styles";
 import StampForm from "./StampForm";
@@ -69,25 +69,25 @@ export default function StampHistory({
       <p className="mt-2 text-sm font-semibold text-forest-ink">{heading}</p>
 
       {liveCount > 0 && (
-        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-1 text-sm ${mutedText}`}>
           Stamped {liveCount} time{liveCount !== 1 ? "s" : ""}
         </p>
       )}
       {backfillCount > 0 && (
-        <p className={`mt-1 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-1 text-sm ${mutedText}`}>
           Previously visited {backfillCount} time
           {backfillCount !== 1 ? "s" : ""}
         </p>
       )}
 
       {stampedToday && (
-        <p className={`mt-2 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           Come back tomorrow for a fresh stamp.
         </p>
       )}
 
       {displayVisits.length > 0 && (
-        <ol className={`mt-4 space-y-3 border-t ${dividerSubtleDaylight} pt-4`}>
+        <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
           {displayVisits.map((v) => (
             <li key={v.id} className="text-sm">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -96,7 +96,7 @@ export default function StampHistory({
                     Previously visited
                   </span>
                 ) : (
-                  <span className={mutedTextDaylight}>
+                  <span className={mutedText}>
                     {formatDate(v.visitDate)}
                   </span>
                 )}
@@ -113,13 +113,13 @@ export default function StampHistory({
       )}
 
       {visitCount > 5 && (
-        <p className={`mt-3 text-xs ${mutedTextDaylight}`}>
+        <p className={`mt-3 text-xs ${mutedText}`}>
           Showing 5 most recent records.
         </p>
       )}
 
       {!stampedToday && (
-        <div className={`mt-4 border-t ${dividerSubtleDaylight} pt-4`}>
+        <div className={`mt-4 border-t ${dividerSubtle} pt-4`}>
           <StampForm
             key={`${parkSlug}-${visitCount}`}
             parkSlug={parkSlug}

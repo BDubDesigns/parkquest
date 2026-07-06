@@ -5,11 +5,11 @@ import { backfillPark, type BackfillState } from "@/app/parks/[slug]/actions";
 import {
   actionGhost,
   actionPrimary,
-  dividerSubtleDaylight,
+  dividerSubtle,
   fieldInput,
   fieldLabel,
   fieldSelect,
-  mutedTextDaylight,
+  mutedText,
 } from "@/components/ui/styles";
 
 const initialState: BackfillState = { error: null, success: false };
@@ -48,7 +48,7 @@ export default function BackfillForm({ parkSlug }: Props) {
         </button>
       ) : (
         <form action={formAction} className="space-y-4">
-          <p className={`text-sm leading-6 ${mutedTextDaylight}`}>
+          <p className={`text-sm leading-6 ${mutedText}`}>
             Record that your family visited this park before using ParkQuest.
             This will not award Adventure Points or complete quests.
           </p>
@@ -61,7 +61,7 @@ export default function BackfillForm({ parkSlug }: Props) {
                 name="visitDate"
                 className={`w-full ${fieldInput} sm:w-56`}
               />
-              <span className={`text-xs ${mutedTextDaylight}`}>
+              <span className={`text-xs ${mutedText}`}>
                 If not provided, today&apos;s date will be used.
               </span>
             </label>
@@ -93,13 +93,13 @@ export default function BackfillForm({ parkSlug }: Props) {
                 className={fieldInput}
                 placeholder="A favorite moment, who came along, what you saw..."
               />
-              <span className={`text-xs ${mutedTextDaylight}`}>
+              <span className={`text-xs ${mutedText}`}>
                 Up to 1000 characters. Private to your family.
               </span>
             </label>
           </div>
 
-          <hr className={dividerSubtleDaylight} />
+          <hr className={dividerSubtle} />
 
           <div className="flex flex-wrap gap-3">
             <button type="submit" className={actionPrimary}>

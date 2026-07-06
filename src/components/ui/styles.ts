@@ -5,11 +5,24 @@
  * stable while unlisted routes migrate through focused issues.
  */
 
+// ─── Role-based palette tokens ─────────────────────────────────
+// Change these when the design palette shifts; all composed recipes
+// and consumers update automatically.
+export const colorPage = "bg-atlas-paper";
+export const colorSurface = "bg-white";
+export const colorSurfaceMuted = "bg-mist/70";
+export const colorInk = "text-forest-ink";
+export const colorInkMuted = "text-graphite/68";
+export const colorAction = "bg-trail-gold";
+export const colorReward = "text-reward-ink";
+export const colorInformation = "text-lake-blue";
+export const colorDanger = "text-danger";
+
 // ─── Trail Journal foundation ──────────────────────────────────
-export const pageShellDaylight = "min-h-screen bg-atlas-paper text-graphite";
-export const pageContainerDaylight =
+export const pageShell = "min-h-screen bg-atlas-paper text-graphite";
+export const pageContainer =
   "mx-auto w-full max-w-3xl px-4 py-7 sm:px-6 md:py-10";
-export const pageContainerWideDaylight =
+export const pageContainerWide =
   "mx-auto w-full max-w-6xl px-3 py-4 sm:px-5 md:py-8";
 
 export const surfacePrimary =
@@ -20,15 +33,15 @@ export const surfaceSecondary =
 export const sectionTitle = "text-lg font-bold tracking-tight text-forest-ink";
 export const collectibleTitle =
   "font-display text-xl font-semibold tracking-[-0.015em] text-forest-ink";
-export const headingDaylight =
+export const heading =
   "font-bold tracking-[-0.02em] text-forest-ink text-balance";
-export const bodyTextDaylight = "leading-7 text-graphite/80 text-pretty";
-export const mutedTextDaylight = "text-graphite/68";
+export const bodyText = "leading-7 text-graphite/80 text-pretty";
+export const mutedText = "text-graphite/68";
 
-export const linkPrimaryDaylight =
+export const linkPrimary =
   "font-medium text-forest-ink underline decoration-canopy/45 decoration-1 underline-offset-4 transition-colors hover:text-canopy hover:decoration-canopy focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lake-blue";
-export const linkTextDaylight = linkPrimaryDaylight;
-export const linkMutedDaylight =
+export const linkText = linkPrimary;
+export const linkMuted =
   "text-graphite/72 underline decoration-graphite/30 underline-offset-4 transition-colors hover:text-forest-ink hover:decoration-canopy focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lake-blue";
 
 export const actionPrimary =
@@ -43,8 +56,8 @@ export const fieldInput =
 export const fieldSelect = fieldInput;
 export const fieldLabel = "text-sm font-semibold text-forest-ink";
 
-export const dividerDaylight = "border-forest-ink/18";
-export const dividerSubtleDaylight = "border-forest-ink/12";
+export const divider = "border-forest-ink/18";
+export const dividerSubtle = "border-forest-ink/12";
 
 export const statusSuccess =
   "inline-flex items-center gap-1.5 rounded-full bg-canopy px-2.5 py-1 text-xs font-semibold text-white";
@@ -52,4 +65,4 @@ export const statusReward =
   "inline-flex items-center gap-1.5 rounded-full bg-trail-gold px-2.5 py-1 text-xs font-semibold text-forest-ink";
 export const statusMuted =
   "inline-flex items-center gap-1.5 rounded-full bg-graphite/8 px-2.5 py-1 text-xs font-semibold text-graphite/75";
-export const skeletonDaylight = "animate-pulse rounded-md bg-forest-ink/10";
+export const skeleton = "animate-pulse rounded-md bg-forest-ink/10";

@@ -3,9 +3,9 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
-  linkTextDaylight,
-  pageContainerDaylight,
-  pageShellDaylight,
+  linkText,
+  pageContainer,
+  pageShell,
 } from "@/components/ui/styles";
 
 export default async function AccountLayout({
@@ -20,17 +20,17 @@ export default async function AccountLayout({
   }
 
   return (
-    <div className={pageShellDaylight}>
-      <div className={pageContainerDaylight}>
+    <div className={pageShell}>
+      <div className={pageContainer}>
         <header className="mb-8 hidden border-b border-forest-ink/12 pb-5 md:block">
           <nav className="flex gap-3 text-sm">
-            <Link href="/" className={linkTextDaylight}>
+            <Link href="/" className={linkText}>
               Home
             </Link>
             <span aria-hidden="true" className="text-graphite/35">
               /
             </span>
-            <Link href="/parks" className={linkTextDaylight}>
+            <Link href="/parks" className={linkText}>
               Parks
             </Link>
           </nav>

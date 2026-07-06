@@ -8,7 +8,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { createFamilyGroup } from "./actions";
 import {
   actionPrimary,
-  mutedTextDaylight,
+  mutedText,
   sectionTitle,
   surfacePrimary,
 } from "@/components/ui/styles";
@@ -37,13 +37,13 @@ export default async function AccountPage() {
         <h2 className={sectionTitle}>Profile</h2>
         <dl className="mt-4 divide-y divide-forest-ink/10 text-sm">
           <div className="flex flex-col gap-1 py-3 first:pt-0 sm:flex-row sm:justify-between">
-            <dt className={mutedTextDaylight}>Name</dt>
+            <dt className={mutedText}>Name</dt>
             <dd className="font-semibold text-forest-ink">
               {session.user.name}
             </dd>
           </div>
           <div className="flex flex-col gap-1 py-3 last:pb-0 sm:flex-row sm:justify-between">
-            <dt className={mutedTextDaylight}>Email</dt>
+            <dt className={mutedText}>Email</dt>
             <dd className="break-all font-semibold text-forest-ink">
               {session.user.email}
             </dd>
@@ -56,13 +56,13 @@ export default async function AccountPage() {
           <h2 className={sectionTitle}>Family group</h2>
           <dl className="mt-4 divide-y divide-forest-ink/10 text-sm">
             <div className="flex flex-col gap-1 py-3 first:pt-0 sm:flex-row sm:justify-between">
-              <dt className={mutedTextDaylight}>Name</dt>
+              <dt className={mutedText}>Name</dt>
               <dd className="font-semibold text-forest-ink">
                 {member.familyGroup.name ?? "(unnamed)"}
               </dd>
             </div>
             <div className="flex flex-col gap-1 py-3 last:pb-0 sm:flex-row sm:justify-between">
-              <dt className={mutedTextDaylight}>Role</dt>
+              <dt className={mutedText}>Role</dt>
               <dd className="font-semibold capitalize text-forest-ink">
                 {member.role}
               </dd>

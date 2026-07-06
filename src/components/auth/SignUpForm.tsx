@@ -8,8 +8,8 @@ import {
   actionPrimary,
   fieldInput,
   fieldLabel,
-  linkTextDaylight,
-  mutedTextDaylight,
+  linkText,
+  mutedText,
 } from "@/components/ui/styles";
 
 export default function SignUpForm() {
@@ -46,7 +46,7 @@ export default function SignUpForm() {
         Sign up
       </h1>
 
-      <p className={`mt-2 text-sm leading-6 ${mutedTextDaylight}`}>
+      <p className={`mt-2 text-sm leading-6 ${mutedText}`}>
         Create your Park Passport and start tracking the parks you visit
         together. Every adventure earns its own story.
       </p>
@@ -93,7 +93,7 @@ export default function SignUpForm() {
             onChange={(e) => setPassword(e.target.value)}
             className={fieldInput}
           />
-          <span className={`text-xs ${mutedTextDaylight}`}>
+          <span className={`text-xs ${mutedText}`}>
             Minimum 8 characters
           </span>
         </label>
@@ -107,9 +107,9 @@ export default function SignUpForm() {
         </button>
       </form>
 
-      <p className={`mt-5 text-center text-sm ${mutedTextDaylight}`}>
+      <p className={`mt-5 text-center text-sm ${mutedText}`}>
         Already have an account?{" "}
-        <Link href="/sign-in" className={linkTextDaylight}>
+        <Link href="/sign-in" className={linkText}>
           Sign in
         </Link>
       </p>

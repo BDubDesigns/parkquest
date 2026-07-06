@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { linkTextDaylight, mutedTextDaylight } from "@/components/ui/styles";
+import { linkText, mutedText } from "@/components/ui/styles";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           <h2 className="mb-3 text-xl font-bold text-forest-ink">
             Beta status
           </h2>
-          <p className={`leading-7 ${mutedTextDaylight}`}>
+          <p className={`leading-7 ${mutedText}`}>
             ParkQuest is in early beta. Features, data, and availability may
             change. If you have questions or run into issues, open a GitHub
             issue on the project repository.
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             Your privacy
           </h2>
           <ul
-            className={`list-disc space-y-3 pl-5 leading-7 ${mutedTextDaylight}`}
+            className={`list-disc space-y-3 pl-5 leading-7 ${mutedText}`}
           >
             <li>
               <strong>Family progress is private.</strong> Stamps, Adventure
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
           <h2 className="mb-3 text-xl font-bold text-forest-ink">
             Data you provide
           </h2>
-          <p className={`leading-7 ${mutedTextDaylight}`}>
+          <p className={`leading-7 ${mutedText}`}>
             When you sign up, we store your name, email address, and a hashed
             password (via Better Auth). When you stamp a park, we store the park
             ID, visit date, optional rating, safety answer, and optional memory
@@ -74,11 +74,11 @@ export default function PrivacyPage() {
 
         <section className="py-7 last:pb-6">
           <h2 className="mb-3 text-xl font-bold text-forest-ink">Contact</h2>
-          <p className={`leading-7 ${mutedTextDaylight}`}>
+          <p className={`leading-7 ${mutedText}`}>
             For account deletion or privacy requests, email{" "}
             <a
               href="mailto:privacy@parkquest.club"
-              className={linkTextDaylight}
+              className={linkText}
             >
               privacy@parkquest.club
             </a>

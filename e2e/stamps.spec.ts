@@ -30,7 +30,7 @@ test.describe.serial("stamp flow", () => {
     await page.goto("/passport");
     await expect(page.getByText(/1 \/ 46/)).toBeVisible({ timeout: 10_000 });
     // 50 base AP + 75 quest rewards = 125
-    await expect(page.getByText("125 Adventure Points")).toBeVisible({
+    await expect(page.getByText(/125\s*Adventure Points/)).toBeVisible({
       timeout: 10_000,
     });
   });
@@ -63,7 +63,7 @@ test.describe.serial("stamp flow", () => {
 
     // Verify AP is at 225 (125 + 50 + 50)
     await page.goto("/passport");
-    await expect(page.getByText("225 Adventure Points")).toBeVisible({
+    await expect(page.getByText(/225\s*Adventure Points/)).toBeVisible({
       timeout: 10_000,
     });
 
@@ -73,7 +73,7 @@ test.describe.serial("stamp flow", () => {
 
     // AP should be unchanged
     await page.goto("/passport");
-    await expect(page.getByText("225 Adventure Points")).toBeVisible({
+    await expect(page.getByText(/225\s*Adventure Points/)).toBeVisible({
       timeout: 10_000,
     });
   });

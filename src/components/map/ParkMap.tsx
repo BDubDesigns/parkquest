@@ -4,7 +4,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Link from "next/link";
 import type { ParkInfo } from "@/lib/parks";
-import { linkPrimaryDaylight, mutedTextDaylight } from "@/components/ui/styles";
+import { linkPrimary, mutedText } from "@/components/ui/styles";
 
 const defaultIcon = new L.Icon({
   iconUrl: "/leaflet/marker-icon.png",
@@ -71,20 +71,20 @@ export default function ParkMap({
                 <div className="text-sm">
                   <Link
                     href={`/parks/${park.slug}`}
-                    className={`font-semibold ${linkPrimaryDaylight}`}
+                    className={`font-semibold ${linkPrimary}`}
                   >
                     {nickname ?? park.name}
                   </Link>
                   {nickname ? (
-                    <p className={`mt-0.5 ${mutedTextDaylight}`}>
+                    <p className={`mt-0.5 ${mutedText}`}>
                       Official: {park.name} &middot; {park.regionName}
                     </p>
                   ) : (
-                    <p className={`mt-0.5 ${mutedTextDaylight}`}>
+                    <p className={`mt-0.5 ${mutedText}`}>
                       {park.regionName}
                     </p>
                   )}
-                  <p className={mutedTextDaylight}>
+                  <p className={mutedText}>
                     {park.amenities.length}{" "}
                     {park.amenities.length === 1 ? "amenity" : "amenities"}
                   </p>

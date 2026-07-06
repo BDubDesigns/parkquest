@@ -6,7 +6,7 @@ import {
   actionPrimary,
   fieldLabel,
   fieldSelect,
-  mutedTextDaylight,
+  mutedText,
 } from "@/components/ui/styles";
 import StatusBadge from "@/components/ui/StatusBadge";
 import {
@@ -74,7 +74,7 @@ export default function AmenitySuggestionForm({
           <h2 className="text-sm font-semibold text-forest-ink">
             See an amenity that needs updating?
           </h2>
-          <p className={`mt-1 text-xs ${mutedTextDaylight}`}>
+          <p className={`mt-1 text-xs ${mutedText}`}>
             Send a quick correction for admin review.
           </p>
         </div>
@@ -163,7 +163,7 @@ export default function AmenitySuggestionForm({
               </button>
             </div>
           </form>
-          <p className={`mt-3 text-xs leading-5 ${mutedTextDaylight}`}>
+          <p className={`mt-3 text-xs leading-5 ${mutedText}`}>
             Suggestions only create a pending review and never change listed
             amenities immediately.
           </p>
@@ -205,7 +205,7 @@ export default function AmenitySuggestionForm({
                         <span className="capitalize">{suggestion.status}</span>
                       </StatusBadge>
                       <time
-                        className={mutedTextDaylight}
+                        className={mutedText}
                         dateTime={suggestion.createdAt}
                       >
                         {new Intl.DateTimeFormat("en-US", {

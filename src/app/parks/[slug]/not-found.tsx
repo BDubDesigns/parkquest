@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
-  linkTextDaylight,
-  mutedTextDaylight,
+  linkText,
+  mutedText,
   surfacePrimary,
 } from "@/components/ui/styles";
 
@@ -13,10 +13,10 @@ export default function ParkNotFound() {
       <h2 className="text-xl font-bold tracking-tight text-forest-ink">
         Park not found
       </h2>
-      <p className={mutedTextDaylight}>
+      <p className={mutedText}>
         The park you are looking for does not exist or may have been removed.
       </p>
-      <Link href="/parks" className={`text-sm font-medium ${linkTextDaylight}`}>
+      <Link href="/parks" className={`text-sm font-medium ${linkText}`}>
         Back to parks
       </Link>
     </div>

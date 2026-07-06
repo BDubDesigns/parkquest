@@ -8,7 +8,7 @@ import {
   actionSecondary,
   fieldInput,
   fieldLabel,
-  mutedTextDaylight,
+  mutedText,
 } from "@/components/ui/styles";
 
 const initialState: NicknameState = { error: null, success: false };
@@ -78,7 +78,7 @@ function NicknameFormInner({ parkSlug, parkName, currentNickname }: Props) {
             className={`w-full ${fieldInput}`}
             autoFocus
           />
-          <span className={`text-xs ${mutedTextDaylight}`}>
+          <span className={`text-xs ${mutedText}`}>
             Private to your family. Other families won&apos;t see it.
           </span>
         </label>

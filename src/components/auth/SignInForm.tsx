@@ -8,8 +8,8 @@ import {
   actionPrimary,
   fieldInput,
   fieldLabel,
-  linkTextDaylight,
-  mutedTextDaylight,
+  linkText,
+  mutedText,
 } from "@/components/ui/styles";
 
 export default function SignInForm() {
@@ -41,7 +41,7 @@ export default function SignInForm() {
         Sign in
       </h1>
 
-      <p className={`mt-2 text-sm leading-6 ${mutedTextDaylight}`}>
+      <p className={`mt-2 text-sm leading-6 ${mutedText}`}>
         Welcome back to your Park Passport.
       </p>
 
@@ -87,9 +87,9 @@ export default function SignInForm() {
         </button>
       </form>
 
-      <p className={`mt-5 text-center text-sm ${mutedTextDaylight}`}>
+      <p className={`mt-5 text-center text-sm ${mutedText}`}>
         Don&apos;t have an account?{" "}
-        <Link href="/sign-up" className={linkTextDaylight}>
+        <Link href="/sign-up" className={linkText}>
           Sign up
         </Link>
       </p>

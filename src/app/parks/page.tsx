@@ -4,7 +4,7 @@ import { getCurrentFamilyContext } from "@/lib/family";
 import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import ParkCard from "@/components/parks/ParkCard";
 import EmptyState from "@/components/ui/EmptyState";
-import { mutedTextDaylight } from "@/components/ui/styles";
+import { mutedText } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +46,7 @@ export default async function ParksPage() {
   return (
     <>
       <div className="mb-5 flex items-center justify-between gap-4 border-b border-forest-ink/12 pb-4">
-        <p className={`text-sm ${mutedTextDaylight}`}>
+        <p className={`text-sm ${mutedText}`}>
           {parks.length} parks in {parks[0].regionName}
         </p>
       </div>

@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
-import { linkTextDaylight, mutedTextDaylight } from "@/components/ui/styles";
+import { linkText, mutedText } from "@/components/ui/styles";
 
 export default function UserMenu() {
   const { data: session, isPending } = useSession();
 
   if (isPending) {
     return (
-      <span className={mutedTextDaylight} aria-hidden="true">
+      <span className={mutedText} aria-hidden="true">
         &middot;
       </span>
     );
@@ -17,7 +17,7 @@ export default function UserMenu() {
 
   if (!session) {
     return (
-      <Link href="/sign-in" className={`text-sm ${linkTextDaylight}`}>
+      <Link href="/sign-in" className={`text-sm ${linkText}`}>
         Sign in
       </Link>
     );
@@ -28,16 +28,16 @@ export default function UserMenu() {
       <span className="text-sm font-medium text-graphite/75">
         {session.user.name}
       </span>
-      <span aria-hidden="true" className={mutedTextDaylight}>
+      <span aria-hidden="true" className={mutedText}>
         &middot;
       </span>
-      <Link href="/passport" className={`text-sm ${linkTextDaylight}`}>
+      <Link href="/passport" className={`text-sm ${linkText}`}>
         Passport
       </Link>
-      <span aria-hidden="true" className={mutedTextDaylight}>
+      <span aria-hidden="true" className={mutedText}>
         &middot;
       </span>
-      <Link href="/account" className={`text-sm ${linkTextDaylight}`}>
+      <Link href="/account" className={`text-sm ${linkText}`}>
         Account
       </Link>
     </>

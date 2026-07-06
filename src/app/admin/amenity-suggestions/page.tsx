@@ -5,7 +5,7 @@ import { amenitySuggestions } from "@/db/public";
 import EmptyState from "@/components/ui/EmptyState";
 import SectionHeader from "@/components/ui/SectionHeader";
 import {
-  mutedTextDaylight,
+  mutedText,
   sectionTitle,
   surfacePrimary,
 } from "@/components/ui/styles";
@@ -53,10 +53,10 @@ export default async function AmenitySuggestionsAdminPage() {
                     {suggestion.suggestionType === "add" ? "Add" : "Remove"}{" "}
                     {suggestion.amenity.name}
                   </p>
-                  <p className={mutedTextDaylight}>
+                  <p className={mutedText}>
                     Park: {suggestion.park.name}
                   </p>
-                  <p className={mutedTextDaylight}>
+                  <p className={mutedText}>
                     Submitted by: {suggestion.submittedBy.name} (
                     {suggestion.submittedBy.email})
                   </p>

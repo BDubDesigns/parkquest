@@ -6,7 +6,7 @@ import {
   actionGhost,
   actionPrimary,
   actionSecondary,
-  dividerSubtleDaylight,
+  dividerSubtle,
   fieldInput,
   fieldLabel,
   fieldSelect,
@@ -410,7 +410,7 @@ export default function StampForm({
           </label>
 
           {/* Step 5: Stamp action */}
-          <hr className={dividerSubtleDaylight} />
+          <hr className={dividerSubtle} />
           <div className="space-y-3">
             <p className={fieldLabel}>Ready to stamp?</p>
             <div className="flex flex-wrap gap-3">

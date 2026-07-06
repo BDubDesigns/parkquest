@@ -15,10 +15,10 @@ import { getFamilyParkNicknames } from "@/lib/park-nicknames";
 import { ensureActiveBoard } from "@/lib/quest-board";
 import {
   collectibleTitle,
-  dividerSubtleDaylight,
-  linkMutedDaylight,
-  linkPrimaryDaylight,
-  mutedTextDaylight,
+  dividerSubtle,
+  linkMuted,
+  linkPrimary,
+  mutedText,
   sectionTitle,
   surfacePrimary,
   surfaceSecondary,
@@ -74,7 +74,7 @@ export default async function PassportPage() {
         </p>
         <Link
           href="/account"
-          className={`mt-3 inline-block text-sm ${linkPrimaryDaylight}`}
+          className={`mt-3 inline-block text-sm ${linkPrimary}`}
         >
           Go to Account
         </Link>
@@ -88,7 +88,7 @@ export default async function PassportPage() {
 
   if (!region) {
     return (
-      <p className={`text-sm ${mutedTextDaylight}`}>
+      <p className={`text-sm ${mutedText}`}>
         No region data available. Run the seed to populate parks.
       </p>
     );
@@ -249,7 +249,7 @@ export default async function PassportPage() {
             {boardQuests.map((ch) => (
               <li
                 key={ch.id}
-                className={`flex flex-col gap-0.5 border-b ${dividerSubtleDaylight} py-2 text-sm last:border-b-0`}
+                className={`flex flex-col gap-0.5 border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
               >
                 <div className="flex items-center gap-2">
                   {ch.status === "completed" ? (
@@ -270,7 +270,7 @@ export default async function PassportPage() {
                       <span aria-hidden="true" className="text-canopy">
                         ○
                       </span>
-                      <span className={mutedTextDaylight}>{ch.name}</span>
+                      <span className={mutedText}>{ch.name}</span>
                     </>
                   )}
                   {ch.status === "completed" && (
@@ -283,7 +283,7 @@ export default async function PassportPage() {
                   </span>
                 </div>
                 {ch.description && (
-                  <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
+                  <p className={`ml-5 text-xs ${mutedText}`}>
                     {ch.description}
                   </p>
                 )}
@@ -315,7 +315,7 @@ export default async function PassportPage() {
                   </span>
                   {s.description && (
                     <p
-                      className={`mt-1 text-xs leading-5 ${mutedTextDaylight}`}
+                      className={`mt-1 text-xs leading-5 ${mutedText}`}
                     >
                       {s.description}
                     </p>
@@ -328,7 +328,7 @@ export default async function PassportPage() {
 
         {unearnedStickers.length > 0 && (
           <div className={earnedStickers.length > 0 ? "mt-4" : "mt-3"}>
-            <p className={`text-sm font-bold ${mutedTextDaylight}`}>
+            <p className={`text-sm font-bold ${mutedText}`}>
               Still to discover
             </p>
             <ul className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -337,12 +337,12 @@ export default async function PassportPage() {
                   key={s.slug}
                   className="rounded-collectible border border-dashed border-forest-ink/22 p-3 text-sm"
                 >
-                  <span className={`font-semibold ${mutedTextDaylight}`}>
+                  <span className={`font-semibold ${mutedText}`}>
                     {s.name}
                   </span>
                   {s.description && (
                     <p
-                      className={`mt-1 text-xs leading-5 ${mutedTextDaylight}`}
+                      className={`mt-1 text-xs leading-5 ${mutedText}`}
                     >
                       {s.description}
                     </p>
@@ -363,7 +363,7 @@ export default async function PassportPage() {
               return (
                 <li
                   key={stamp.id}
-                  className={`border-b ${dividerSubtleDaylight} py-2 text-sm last:border-b-0`}
+                  className={`border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
                 >
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <div>
@@ -371,15 +371,15 @@ export default async function PassportPage() {
                         name={stamp.park.name}
                         nickname={n}
                         slug={stamp.park.slug}
-                        linkClass={`font-medium ${linkPrimaryDaylight}`}
+                        linkClass={`font-medium ${linkPrimary}`}
                       />
                       {n && (
-                        <p className={`text-xs ${mutedTextDaylight}`}>
+                        <p className={`text-xs ${mutedText}`}>
                           Official: {stamp.park.name}
                         </p>
                       )}
                     </div>
-                    <span className={mutedTextDaylight}>
+                    <span className={mutedText}>
                       &mdash; {formatDate(stamp.visitDate)}
                     </span>
                     {stamp.rating && (
@@ -416,13 +416,13 @@ export default async function PassportPage() {
                     name={p.name}
                     nickname={n}
                     slug={p.slug}
-                    linkClass={linkPrimaryDaylight}
+                    linkClass={linkPrimary}
                   />
-                  <span className={`ml-2 text-xs ${mutedTextDaylight}`}>
+                  <span className={`ml-2 text-xs ${mutedText}`}>
                     {hasLiveStamp ? "Stamped" : "Previously visited"}
                   </span>
                   {n && (
-                    <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
+                    <p className={`ml-5 text-xs ${mutedText}`}>
                       Official: {p.name}
                     </p>
                   )}
@@ -448,10 +448,10 @@ export default async function PassportPage() {
                     name={p.name}
                     nickname={n}
                     slug={p.slug}
-                    linkClass={linkMutedDaylight}
+                    linkClass={linkMuted}
                   />
                   {n && (
-                    <p className={`ml-5 text-xs ${mutedTextDaylight}`}>
+                    <p className={`ml-5 text-xs ${mutedText}`}>
                       Official: {p.name}
                     </p>
                   )}

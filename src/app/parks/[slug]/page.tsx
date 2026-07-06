@@ -13,10 +13,10 @@ import NicknameForm from "@/components/parks/NicknameForm";
 import ParkDisplayName from "@/components/parks/ParkDisplayName";
 import StampSection from "@/components/parks/StampSection";
 import {
-  linkMutedDaylight,
-  linkPrimaryDaylight,
-  linkTextDaylight,
-  mutedTextDaylight,
+  linkMuted,
+  linkPrimary,
+  linkText,
+  mutedText,
   sectionTitle,
   surfacePrimary,
 } from "@/components/ui/styles";
@@ -78,7 +78,7 @@ export default async function ParkDetailPage({ params }: Props) {
 
   return (
     <div>
-      <Link href="/parks" className={`text-sm ${linkTextDaylight}`}>
+      <Link href="/parks" className={`text-sm ${linkText}`}>
         &larr; Back to parks
       </Link>
 
@@ -118,7 +118,7 @@ export default async function ParkDetailPage({ params }: Props) {
               href={park.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`break-all text-sm font-medium ${linkPrimaryDaylight}`}
+              className={`break-all text-sm font-medium ${linkPrimary}`}
             >
               {park.officialUrl}
             </a>
@@ -127,14 +127,14 @@ export default async function ParkDetailPage({ params }: Props) {
 
         {park.sourceUrl && (
           <section className="mt-6">
-            <h2 className={`mb-1 text-xs font-medium ${mutedTextDaylight}`}>
+            <h2 className={`mb-1 text-xs font-medium ${mutedText}`}>
               Data source
             </h2>
             <a
               href={park.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`break-all text-xs ${linkMutedDaylight}`}
+              className={`break-all text-xs ${linkMuted}`}
             >
               {park.sourceUrl}
             </a>

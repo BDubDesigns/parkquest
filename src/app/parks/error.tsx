@@ -2,7 +2,7 @@
 
 import {
   actionPrimary,
-  mutedTextDaylight,
+  mutedText,
   surfacePrimary,
 } from "@/components/ui/styles";
 
@@ -19,7 +19,7 @@ export default function ParksError({
       <h2 className="text-xl font-bold tracking-tight text-forest-ink">
         Something went wrong
       </h2>
-      <p className={mutedTextDaylight}>
+      <p className={mutedText}>
         Could not load parks. Please try again.
       </p>
       <button onClick={reset} className={actionPrimary}>

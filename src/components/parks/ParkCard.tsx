@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { mutedTextDaylight } from "@/components/ui/styles";
+import { mutedText } from "@/components/ui/styles";
 import AmenityBadge from "./AmenityBadge";
 
 interface ParkCardProps {
@@ -34,11 +34,11 @@ export default function ParkCard({
             {nickname ?? name}
           </h2>
           {nickname && (
-            <p className={`mt-0.5 text-xs ${mutedTextDaylight}`}>
+            <p className={`mt-0.5 text-xs ${mutedText}`}>
               Official: {name}
             </p>
           )}
-          <p className={`mt-1 text-sm ${mutedTextDaylight}`}>{regionName}</p>
+          <p className={`mt-1 text-sm ${mutedText}`}>{regionName}</p>
           {description && (
             <p className="mt-2 max-w-[65ch] line-clamp-2 text-sm leading-6 text-graphite/76">
               {description}

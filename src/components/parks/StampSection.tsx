@@ -6,8 +6,8 @@ import { getCurrentFamilyContext } from "@/lib/family";
 import { getParkBySlug, getParkIdBySlug } from "@/lib/parks";
 import {
   collectibleTitle,
-  linkTextDaylight,
-  mutedTextDaylight,
+  linkText,
+  mutedText,
   surfacePrimary,
 } from "@/components/ui/styles";
 import BackfillForm from "./BackfillForm";
@@ -25,12 +25,12 @@ export default async function StampSection({ parkSlug }: Props) {
     return (
       <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
         <h2 className={collectibleTitle}>Park Passport</h2>
-        <p className={`mt-2 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           Sign in to stamp this park in your family passport.
         </p>
         <Link
           href="/sign-in"
-          className={`mt-3 inline-flex min-h-11 items-center text-sm ${linkTextDaylight}`}
+          className={`mt-3 inline-flex min-h-11 items-center text-sm ${linkText}`}
         >
           Sign in
         </Link>
@@ -45,7 +45,7 @@ export default async function StampSection({ parkSlug }: Props) {
     return (
       <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
         <h2 className={collectibleTitle}>Park Passport</h2>
-        <p className={`mt-2 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           This park is not available for stamping.
         </p>
       </section>
@@ -76,7 +76,7 @@ export default async function StampSection({ parkSlug }: Props) {
     return (
       <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
         <h2 className={collectibleTitle}>Park Passport</h2>
-        <p className={`mt-2 text-sm ${mutedTextDaylight}`}>
+        <p className={`mt-2 text-sm ${mutedText}`}>
           You haven&apos;t stamped this park yet.
         </p>
         <div className="mt-3">
