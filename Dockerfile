@@ -36,14 +36,19 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # Commands (run from the Coolify terminal):
 #   cd /app/tools && npm run db:migrate
 #   cd /app/tools && ALLOW_PRODUCTION_SEED=1 npm run db:seed
+#   cd /app/tools && npm run admin:sync
 COPY --from=builder /app/drizzle /app/tools/drizzle
 COPY --from=builder /app/drizzle.config.ts /app/tools/drizzle.config.ts
 COPY --from=builder /app/package.json /app/tools/package.json
 COPY --from=builder /app/package-lock.json /app/tools/package-lock.json
 COPY --from=builder /app/tsconfig.json /app/tools/tsconfig.json
 COPY --from=builder /app/src/db /app/tools/src/db
+COPY --from=builder /app/src/scripts/admin-sync.ts /app/tools/src/scripts/admin-sync.ts
+COPY --from=builder /app/src/lib/admin-sync.ts /app/tools/src/lib/admin-sync.ts
 COPY --from=builder /app/node_modules /app/tools/node_modules
-RUN chown -R nextjs:nodejs /app/tools
+RUN test -f /app/tools/src/scripts/admin-sync.ts \
+    && test -f /app/tools/src/lib/admin-sync.ts \
+    && chown -R nextjs:nodejs /app/tools
 
 USER nextjs
 
