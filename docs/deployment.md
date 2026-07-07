@@ -3,27 +3,34 @@
 ## Quick reference
 
 ```bash
-npm run build    # production build
-npm run db:migrate  # apply pending database migrations
+npm run build       # production build
+docker compose up   # local production test
 ```
+
+## How migrations run
+
+Migrations are applied **automatically at container startup** via `start.sh`.
+On every deploy, before the Next.js server starts, `npm run db:migrate` runs
+against the Postgres database. Already-applied migrations are skipped safely.
+
+The startup script uses Drizzle's built-in migration tracking
+(`__drizzle_migrations` table) to know which migrations have already run.
 
 ## Database migrations
 
-Migrations live in `drizzle/` as numbered SQL files. Drizzle tracks which
-migrations have been applied in a `__drizzle_migrations` table.
+Migrations live in `drizzle/` as numbered SQL files tracked by
+`drizzle/meta/_journal.json`.
 
-### Apply migrations
+### Apply manually if needed
 
 ```bash
-# On the production server, after deploying new code:
-npm run db:migrate
+# SSH into the production server and run:
+docker exec -it <container> sh -c "cd /app/tools && npm run db:migrate"
 ```
-
-This is safe to run multiple times — already-applied migrations are skipped.
 
 ### Admin panel fallback
 
-If you can't SSH into the server, sign in as an admin user and visit `/admin`.
+If you can't access the server, sign in as an admin user and visit `/admin`.
 The admin dashboard shows pending migration counts and lets you apply them
 from the browser.
 
@@ -31,14 +38,15 @@ from the browser.
 
 1. Edit the Drizzle schema in `src/db/`.
 2. Run `npm run db:generate` to produce new migration SQL files.
-3. Commit both the generated SQL and the updated journal files.
-4. Deploy, then run `npm run db:migrate`.
+3. Commit the generated SQL and updated journal files.
+4. Deploy — migrations run automatically on container start.
 
 ## Environment
 
 Required environment variables for production:
 
 - `DATABASE_URL` — Postgres connection string
-- Auth environment variables (see `src/lib/auth.ts`)
+- `BETTER_AUTH_SECRET` — auth encryption key
+- `BETTER_AUTH_URL` — public URL of the app
 
 Copy `.env.example` and fill in production values. Never commit `.env`.
