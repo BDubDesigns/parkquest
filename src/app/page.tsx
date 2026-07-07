@@ -47,7 +47,7 @@ export default function Home() {
           </nav>
         </header>
 
-        <section className="grid flex-1 items-start gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
+        <section className="grid items-start gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
           <div>
             <p className="mb-4 max-w-max rounded-full bg-mist px-3 py-1.5 text-sm font-semibold text-canopy">
               A family park passport for Bellingham

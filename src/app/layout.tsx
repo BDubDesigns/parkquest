@@ -52,14 +52,14 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-atlas-paper pb-[calc(4rem+env(safe-area-inset-bottom))] text-graphite md:pb-0">
+      <body className="flex min-h-dvh flex-col bg-atlas-paper text-graphite md:pb-0">
         <a
           href="#main-content"
           className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-control bg-forest-ink px-4 py-3 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
         >
           Skip to main content
         </a>
-        <div id="main-content" className="flex-1">
+        <div id="main-content" className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
           {children}
         </div>
         <Footer />
