@@ -39,15 +39,17 @@ function makeSerialNumber(slug: string): string {
   return `PQ-${code}-${suffix}`;
 }
 
-function Stars({ count }: { count: number }) {
-  const filled = "\u2605".repeat(count);
-  const empty = "\u2606".repeat(5 - count);
-  return (
-    <span className="text-reward-ink" aria-label={`${count} out of 5 stars`}>
-      {filled}
-      {empty}
-    </span>
-  );
+const GRID_COLS = 3;
+const GRID_COLS_LG = 6;
+const GRID_ROWS = 2;
+const MAX_VISIBLE = GRID_COLS_LG * GRID_ROWS;
+
+/**
+ * Given the desired column count (from a specific breakpoint), returns the
+ * maximum number of slots for a 2-row grid.
+ */
+function slotsForCols(cols: number): number {
+  return cols * GRID_ROWS;
 }
 
 export default function StampHistory({
@@ -57,12 +59,11 @@ export default function StampHistory({
   parkName,
   stampedToday,
 }: Props) {
-  const displayVisits = visits.slice(0, 5);
+  const liveStamps = visits.filter((v) => v.visitSource === "live_stamp");
+  const backfills = visits.filter((v) => v.visitSource === "backfill");
 
-  const liveCount = visits.filter((v) => v.visitSource === "live_stamp").length;
-  const backfillCount = visits.filter(
-    (v) => v.visitSource === "backfill",
-  ).length;
+  const liveCount = liveStamps.length;
+  const backfillCount = backfills.length;
 
   const heading = stampedToday
     ? "Today's stamp is already in your passport."
@@ -80,6 +81,13 @@ export default function StampHistory({
     stampedToday || liveCount > 0
       ? "bg-stamp-red/10 text-stamp-red"
       : "bg-graphite/8 text-graphite/65";
+
+  // Show enough stamps to fill 2 rows at the widest breakpoint
+  const visibleStamps = liveStamps.slice(0, MAX_VISIBLE);
+  const totalSlots = slotsForCols(GRID_COLS);
+  const emptySlots = Math.max(0, totalSlots - visibleStamps.length);
+
+  const serialNumber = makeSerialNumber(parkSlug);
 
   return (
     <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
@@ -124,55 +132,73 @@ export default function StampHistory({
         </p>
       )}
 
-      {displayVisits.length > 0 && (
-        <ol className={`mt-4 space-y-4 border-t ${dividerSubtle} pt-4`}>
-          {displayVisits.map((v) => (
-            <li key={v.id} className="flex items-start gap-3 text-sm">
-              {v.visitSource === "live_stamp" ? (
-                <ParkQuestStamp
-                  topText="ParkQuest"
-                  bottomText="Family Park Passport"
-                  centerText={parkName}
-                  date={formatDate(v.visitDate)}
-                  serialNumber={makeSerialNumber(parkSlug)}
-                  color={v.stampColor ?? "#12372a"}
-                  rotation={v.stampRotation ?? 0}
-                  size={64}
-                  className="shrink-0"
-                />
-              ) : (
-                <div className="flex size-16 shrink-0 items-center justify-center rounded-collectible border border-dashed border-forest-ink/16 text-xs text-graphite/45">
-                  Visit
-                </div>
-              )}
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  {v.visitSource === "backfill" ? (
-                    <span className="font-medium text-graphite/60">
-                      Previously visited
-                    </span>
-                  ) : (
-                    <span className="font-medium text-forest-ink">
-                      {formatDate(v.visitDate)}
-                    </span>
-                  )}
-                  {v.rating && <Stars count={v.rating} />}
-                </div>
-                {v.notes && (
-                  <p className="mt-0.5 text-graphite/72 italic">
-                    &ldquo;{v.notes}&rdquo;
+      {visibleStamps.length > 0 && (
+        <div className={`mt-5 border-t ${dividerSubtle} pt-4`}>
+          <div
+            className="overflow-hidden rounded-xl border border-forest-ink/10"
+            role="list"
+            aria-label="Stamp collection"
+          >
+            <div
+              className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
+              style={{ gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)` }}
+            >
+              {visibleStamps.map((v) => (
+                <div
+                  key={v.id}
+                  role="listitem"
+                  className="flex flex-col items-center justify-end gap-2 border-r border-b border-forest-ink/10 p-3"
+                  style={{ minHeight: "112px" }}
+                >
+                  <ParkQuestStamp
+                    topText="ParkQuest"
+                    bottomText="Family Park Passport"
+                    centerText={parkName}
+                    date={formatDate(v.visitDate)}
+                    serialNumber={serialNumber}
+                    color={v.stampColor ?? "#12372a"}
+                    rotation={v.stampRotation ?? 0}
+                    size={64}
+                  />
+                  <p className="text-xs text-graphite/50">
+                    {formatDate(v.visitDate)}
                   </p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
+                </div>
+              ))}
+              {Array.from({ length: emptySlots }).map((_, i) => (
+                <div
+                  key={`empty-${i}`}
+                  aria-hidden="true"
+                  className="border-r border-b border-forest-ink/10 p-3"
+                  style={{ minHeight: "112px" }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {visitCount > MAX_VISIBLE && (
+            <p className={`mt-3 text-xs ${mutedText}`}>
+              Showing {MAX_VISIBLE} most recent stamps of {visitCount} total
+              records.
+            </p>
+          )}
+        </div>
       )}
 
-      {visitCount > 5 && (
-        <p className={`mt-3 text-xs ${mutedText}`}>
-          Showing 5 most recent records.
-        </p>
+      {backfills.length > 0 && (
+        <div className={`mt-4 space-y-1 border-t ${dividerSubtle} pt-4`}>
+          <p className="text-sm font-semibold text-graphite/55">
+            Past visits
+          </p>
+          {backfills.map((v) => (
+            <p key={v.id} className="text-sm text-graphite/60">
+              {formatDate(v.visitDate)}
+              {v.notes && (
+                <span className="italic"> &mdash; &ldquo;{v.notes}&rdquo;</span>
+              )}
+            </p>
+          ))}
+        </div>
       )}
 
       {!stampedToday && (
