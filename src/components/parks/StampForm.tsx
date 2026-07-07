@@ -183,6 +183,8 @@ export default function StampForm({
 
       {expanded && (
         <form ref={formRef} action={formAction} className="mt-4 space-y-5">
+          <input type="hidden" name="stampColor" value={stampColor} />
+          <input type="hidden" name="stampRotation" value={rotation} />
           {state.error && (
             <p
               role="alert"

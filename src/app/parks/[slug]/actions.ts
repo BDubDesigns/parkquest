@@ -67,6 +67,18 @@ export async function stampPark(
     memory = memoryRaw.trim().slice(0, 1000);
   }
 
+  const stampColorRaw = formData.get("stampColor");
+  const stampColor =
+    stampColorRaw && typeof stampColorRaw === "string"
+      ? stampColorRaw.trim().slice(0, 7)
+      : "#12372a";
+
+  const rotationRaw = formData.get("stampRotation");
+  const stampRotation =
+    rotationRaw && typeof rotationRaw === "string"
+      ? Math.max(-15, Math.min(15, parseInt(rotationRaw, 10) || 0))
+      : 0;
+
   const today = new Date().toISOString().split("T")[0];
 
   try {
@@ -143,6 +155,8 @@ export async function stampPark(
         notes: memory,
         createdByUserId: ctx.userId,
         visitSource: "live_stamp",
+        stampColor,
+        stampRotation,
       });
 
       const xp = calculateBaseXP(isFirstStampOfPark, stampsToday);

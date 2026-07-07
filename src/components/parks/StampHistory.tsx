@@ -4,6 +4,7 @@ import {
   surfacePrimary,
 } from "@/components/ui/styles";
 import StampForm from "./StampForm";
+import ParkQuestStamp from "./ParkQuestStamp";
 
 interface VisitRow {
   id: string;
@@ -11,6 +12,8 @@ interface VisitRow {
   rating: number | null;
   notes: string | null;
   visitSource: "live_stamp" | "backfill";
+  stampColor?: string | null;
+  stampRotation?: number | null;
 }
 
 interface Props {
@@ -28,6 +31,12 @@ function formatDate(dateStr: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+function makeSerialNumber(slug: string): string {
+  const code = slug.replace(/-/g, "").toUpperCase().slice(0, 6);
+  const suffix = String(slug.length).padStart(3, "0");
+  return `PQ-${code}-${suffix}`;
 }
 
 function Stars({ count }: { count: number }) {
@@ -116,26 +125,45 @@ export default function StampHistory({
       )}
 
       {displayVisits.length > 0 && (
-        <ol className={`mt-4 space-y-3 border-t ${dividerSubtle} pt-4`}>
+        <ol className={`mt-4 space-y-4 border-t ${dividerSubtle} pt-4`}>
           {displayVisits.map((v) => (
-            <li key={v.id} className="text-sm">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                {v.visitSource === "backfill" ? (
-                  <span className="text-graphite/65 italic">
-                    Previously visited
-                  </span>
-                ) : (
-                  <span className={mutedText}>
-                    {formatDate(v.visitDate)}
-                  </span>
-                )}
-                {v.rating && <Stars count={v.rating} />}
-              </div>
-              {v.notes && (
-                <p className="mt-1 text-graphite/72 italic">
-                  &ldquo;{v.notes}&rdquo;
-                </p>
+            <li key={v.id} className="flex items-start gap-3 text-sm">
+              {v.visitSource === "live_stamp" ? (
+                <ParkQuestStamp
+                  topText="ParkQuest"
+                  bottomText="Family Park Passport"
+                  centerText={parkName}
+                  date={formatDate(v.visitDate)}
+                  serialNumber={makeSerialNumber(parkSlug)}
+                  color={v.stampColor ?? "#12372a"}
+                  rotation={v.stampRotation ?? 0}
+                  size={64}
+                  className="shrink-0"
+                />
+              ) : (
+                <div className="flex size-16 shrink-0 items-center justify-center rounded-collectible border border-dashed border-forest-ink/16 text-xs text-graphite/45">
+                  Visit
+                </div>
               )}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  {v.visitSource === "backfill" ? (
+                    <span className="font-medium text-graphite/60">
+                      Previously visited
+                    </span>
+                  ) : (
+                    <span className="font-medium text-forest-ink">
+                      {formatDate(v.visitDate)}
+                    </span>
+                  )}
+                  {v.rating && <Stars count={v.rating} />}
+                </div>
+                {v.notes && (
+                  <p className="mt-0.5 text-graphite/72 italic">
+                    &ldquo;{v.notes}&rdquo;
+                  </p>
+                )}
+              </div>
             </li>
           ))}
         </ol>

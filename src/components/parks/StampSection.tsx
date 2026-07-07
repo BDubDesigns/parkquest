@@ -62,6 +62,8 @@ export default async function StampSection({ parkSlug }: Props) {
       notes: true,
       createdAt: true,
       visitSource: true,
+      stampColor: true,
+      stampRotation: true,
     },
     where: and(
       eq(visits.familyGroupId, ctx.familyGroupId),
