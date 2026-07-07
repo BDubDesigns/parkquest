@@ -209,8 +209,22 @@ export default async function PassportPage() {
       />
 
       <section className={`mt-6 ${surfacePrimary}`}>
+        <div className="flex items-center gap-2">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            className="size-4 fill-none stroke-forest-ink/60 stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]"
+          >
+            <rect x="3" y="1" width="14" height="18" rx="2" />
+            <path d="M7 5h6M7 9h6M7 13h4" />
+          </svg>
+          <p className="text-xs font-semibold text-graphite/55">
+            Journal progress
+          </p>
+        </div>
+
         <div
-          className="h-3 w-full overflow-hidden rounded-full bg-mist"
+          className="mt-4 h-3 w-full overflow-hidden rounded-full bg-mist"
           role="progressbar"
           aria-label={`${region.name} parks visited`}
           aria-valuemin={0}
@@ -222,16 +236,23 @@ export default async function PassportPage() {
             style={{ width: `${percent}%` }}
           />
         </div>
-        <p className="mt-3 text-sm font-semibold text-forest-ink">
+        <p className="mt-2 text-sm font-semibold text-forest-ink">
           {uniqueVisited} / {totalParks} {region.name} parks visited
         </p>
 
         <p className="mt-5 flex flex-wrap items-baseline gap-2 border-t border-forest-ink/10 pt-4">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            className="size-5 shrink-0 fill-trail-gold stroke-none"
+          >
+            <path d="M10 2l2.32 5.14L18 8.32l-4 3.9L14.86 18 10 15.1 5.14 18 6 12.22l-4-3.9 5.68-1.18L10 2z" />
+          </svg>
           <span className="font-display text-2xl font-semibold text-forest-ink">
             {totalAdventurePoints.toLocaleString()}
           </span>
           <span className="text-sm font-semibold text-graphite/70">
-            Adventure Points
+            Adventure Points earned
           </span>
         </p>
       </section>
@@ -246,49 +267,65 @@ export default async function PassportPage() {
             />
           </div>
           <ul className="mt-3">
-            {boardQuests.map((ch) => (
-              <li
-                key={ch.id}
-                className={`flex flex-col gap-0.5 border-b ${dividerSubtle} py-2 text-sm last:border-b-0`}
-              >
-                <div className="flex items-center gap-2">
-                  {ch.status === "completed" ? (
-                    <StatusBadge tone="success" mark="✓">
-                      Completed
-                    </StatusBadge>
-                  ) : ch.status === "expired" ? (
-                    <>
-                      <span aria-hidden="true" className="text-graphite/45">
-                        ✗
-                      </span>
-                      <span className="text-graphite/58 line-through">
-                        {ch.name}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span aria-hidden="true" className="text-canopy">
-                        ○
-                      </span>
-                      <span className={mutedText}>{ch.name}</span>
-                    </>
-                  )}
-                  {ch.status === "completed" && (
-                    <span className="font-medium text-forest-ink">
+            {boardQuests.map((ch) => {
+              const isCompleted = ch.status === "completed";
+              const isExpired = ch.status === "expired";
+              return (
+                <li
+                  key={ch.id}
+                  className={`border-b ${dividerSubtle} py-2.5 text-sm last:border-b-0`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    {isCompleted ? (
+                      <svg
+                        aria-label="Completed"
+                        viewBox="0 0 16 16"
+                        className="size-4 shrink-0"
+                      >
+                        <circle cx="8" cy="8" r="6" className="fill-canopy" />
+                        <path
+                          d="M5 8.5 7 10.5l4-4"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : isExpired ? (
+                      <svg
+                        aria-label="Expired"
+                        viewBox="0 0 16 16"
+                        className="size-4 shrink-0 fill-none stroke-graphite/40 stroke-[1.5] [stroke-linecap:round]"
+                      >
+                        <path d="M4 4l8 8M12 4l-8 8" />
+                      </svg>
+                    ) : (
+                      <svg
+                        aria-label="Not yet completed"
+                        viewBox="0 0 16 16"
+                        className="size-4 shrink-0 fill-none stroke-canopy/60 stroke-[1.5]"
+                      >
+                        <circle cx="8" cy="8" r="6" />
+                      </svg>
+                    )}
+                    <span
+                      className={`font-medium ${isCompleted ? "text-forest-ink" : isExpired ? "text-graphite/45 line-through" : mutedText}`}
+                    >
                       {ch.name}
                     </span>
+                    <span className="ml-auto text-xs font-semibold text-forest-ink">
+                      +{ch.xpReward} AP
+                    </span>
+                  </div>
+                  {ch.description && (
+                    <p className={`ml-6.5 text-xs ${mutedText}`}>
+                      {ch.description}
+                    </p>
                   )}
-                  <span className="ml-auto text-xs font-semibold text-forest-ink">
-                    {ch.xpReward} Adventure Points
-                  </span>
-                </div>
-                {ch.description && (
-                  <p className={`ml-5 text-xs ${mutedText}`}>
-                    {ch.description}
-                  </p>
-                )}
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -308,15 +345,28 @@ export default async function PassportPage() {
               {earnedStickers.map((s) => (
                 <li
                   key={s.slug}
-                  className="rounded-collectible bg-white p-3 text-sm ring-1 ring-canopy/16"
+                  className="relative rounded-collectible bg-white p-3 text-sm ring-1 ring-forest-ink/12"
                 >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 12 12"
+                    className="absolute right-2.5 top-2.5 size-3.5"
+                  >
+                    <circle cx="6" cy="6" r="6" className="fill-canopy" />
+                    <path
+                      d="M4 6.5 5.5 8 8 4.5"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                   <span className="font-display font-semibold text-forest-ink">
                     {s.name}
                   </span>
                   {s.description && (
-                    <p
-                      className={`mt-1 text-xs leading-5 ${mutedText}`}
-                    >
+                    <p className={`mt-1 pr-5 text-xs leading-5 ${mutedText}`}>
                       {s.description}
                     </p>
                   )}
@@ -335,18 +385,41 @@ export default async function PassportPage() {
               {unearnedStickers.map((s) => (
                 <li
                   key={s.slug}
-                  className="rounded-collectible border border-dashed border-forest-ink/22 p-3 text-sm"
+                  className="rounded-collectible border border-dashed border-forest-ink/20 p-3 text-sm"
                 >
-                  <span className={`font-semibold ${mutedText}`}>
-                    {s.name}
-                  </span>
-                  {s.description && (
-                    <p
-                      className={`mt-1 text-xs leading-5 ${mutedText}`}
+                  <div className="flex items-start gap-2">
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      className="mt-0.5 size-4 shrink-0 fill-none stroke-graphite/35 stroke-[1.5]"
                     >
-                      {s.description}
-                    </p>
-                  )}
+                      <rect
+                        x="4"
+                        y="6"
+                        width="8"
+                        height="7"
+                        rx="1"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5 6V4.5a3 3 0 0 1 6 0V6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle cx="8" cy="9.5" r="0.8" fill="currentColor" />
+                    </svg>
+                    <div>
+                      <span className={`font-semibold ${mutedText}`}>
+                        {s.name}
+                      </span>
+                      {s.description && (
+                        <p className={`mt-1 text-xs leading-5 ${mutedText}`}>
+                          {s.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
