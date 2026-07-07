@@ -5,7 +5,7 @@ export default async function Footer() {
   const isAdmin = !!(await getCurrentAdminUserId());
 
   return (
-    <footer className="border-t border-forest-ink/12 bg-white px-4 py-7 text-sm text-graphite/70">
+    <footer className="mb-[calc(4rem+env(safe-area-inset-bottom))] border-t border-forest-ink/12 bg-white px-4 py-7 text-sm text-graphite/70 md:mb-0">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
         <p>
           <span className="font-semibold text-forest-ink">ParkQuest</span>
