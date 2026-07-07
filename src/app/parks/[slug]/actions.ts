@@ -10,6 +10,7 @@ import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import { completeMatchingPassportChallenges } from "@/lib/challenges";
 import { ensureActiveBoard } from "@/lib/quest-board";
 import { calculateBaseXP } from "@/lib/rewards";
+import { DEFAULT_STAMP_COLOR, isValidStampColor } from "@/lib/stamp-palette";
 export interface StampState {
   error: string | null;
   info: string | null;
@@ -69,9 +70,10 @@ export async function stampPark(
 
   const stampColorRaw = formData.get("stampColor");
   const stampColor =
-    stampColorRaw && typeof stampColorRaw === "string"
-      ? stampColorRaw.trim().slice(0, 7)
-      : "#12372a";
+    stampColorRaw && typeof stampColorRaw === "string" &&
+    isValidStampColor(stampColorRaw.trim())
+      ? stampColorRaw.trim()
+      : DEFAULT_STAMP_COLOR;
 
   const rotationRaw = formData.get("stampRotation");
   const stampRotation =

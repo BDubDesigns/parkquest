@@ -11,18 +11,15 @@ import {
   fieldLabel,
   fieldSelect,
 } from "@/components/ui/styles";
+import {
+  STAMP_PALETTE,
+  DEFAULT_STAMP_COLOR,
+  type StampColor,
+} from "@/lib/stamp-palette";
 import ParkQuestStamp from "./ParkQuestStamp";
 import PassportSurface from "./PassportSurface";
 
 const initialState: StampState = { error: null, info: null, success: false };
-
-const STAMP_PALETTE = [
-  { value: "#12372a", label: "Forest ink" },
-  { value: "#b84b3c", label: "Stamp red" },
-  { value: "#2e7191", label: "Lake blue" },
-  { value: "#1f5a42", label: "Canopy green" },
-  { value: "#1e2924", label: "Graphite" },
-];
 
 type StampPhase =
   | "idle"
@@ -82,7 +79,7 @@ export default function StampForm({
   );
 
   const [expanded, setExpanded] = useState(false);
-  const [stampColor, setStampColor] = useState(STAMP_PALETTE[0].value);
+  const [stampColor, setStampColor] = useState<StampColor>(DEFAULT_STAMP_COLOR);
   const [rotation, setRotation] = useState(0);
   const [placement] = useState<"left" | "center" | "right">("center");
   const [dragY, setDragY] = useState(0);

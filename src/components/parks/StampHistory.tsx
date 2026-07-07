@@ -4,7 +4,7 @@ import {
   surfacePrimary,
 } from "@/components/ui/styles";
 import StampForm from "./StampForm";
-import ParkQuestStamp from "./ParkQuestStamp";
+import StampGrid from "./StampGrid";
 
 interface VisitRow {
   id: string;
@@ -39,10 +39,6 @@ function makeSerialNumber(slug: string): string {
   return `PQ-${code}-${suffix}`;
 }
 
-const GRID_COLS_WIDE = 6;
-const GRID_ROWS = 2;
-const MAX_VISIBLE = GRID_COLS_WIDE * GRID_ROWS;
-
 export default function StampHistory({
   visits,
   visitCount,
@@ -72,9 +68,6 @@ export default function StampHistory({
     stampedToday || liveCount > 0
       ? "bg-stamp-red/10 text-stamp-red"
       : "bg-graphite/8 text-graphite/65";
-
-  const visibleStamps = liveStamps.slice(0, MAX_VISIBLE);
-  const emptySlots = Math.max(0, MAX_VISIBLE - visibleStamps.length);
 
   const serialNumber = makeSerialNumber(parkSlug);
 
@@ -121,59 +114,16 @@ export default function StampHistory({
         </p>
       )}
 
-      {visibleStamps.length > 0 && (
+      {liveStamps.length > 0 && (
         <div className={`mt-5 border-t ${dividerSubtle} pt-4`}>
-          <div
-            className="overflow-hidden rounded-xl border border-forest-ink/10"
-            role="list"
-            aria-label="Stamp collection"
-          >
-            <div
-              className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
-              style={{
-                gridTemplateRows: `repeat(${GRID_ROWS}, minmax(112px, 1fr))`,
-                gridAutoRows: "0px",
-              }}
-            >
-              {visibleStamps.map((v) => (
-                <div
-                  key={v.id}
-                  role="listitem"
-                  className="flex flex-col items-center justify-end gap-2 border-r border-b border-forest-ink/10 p-3"
-                  style={{ minHeight: "112px" }}
-                >
-                  <ParkQuestStamp
-                    topText="ParkQuest"
-                    bottomText="Family Park Passport"
-                    centerText={parkName}
-                    date={formatDate(v.visitDate)}
-                    serialNumber={serialNumber}
-                    color={v.stampColor ?? "#12372a"}
-                    rotation={v.stampRotation ?? 0}
-                    size={64}
-                  />
-                  <p className="text-xs text-graphite/50">
-                    {formatDate(v.visitDate)}
-                  </p>
-                </div>
-              ))}
-              {Array.from({ length: emptySlots }).map((_, i) => (
-                <div
-                  key={`empty-${i}`}
-                  aria-hidden="true"
-                  className="border-r border-b border-forest-ink/10 p-3"
-                  style={{ minHeight: "112px" }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {visitCount > MAX_VISIBLE && (
-            <p className={`mt-3 text-xs ${mutedText}`}>
-              Showing {MAX_VISIBLE} most recent stamps of {visitCount} total
-              records.
-            </p>
-          )}
+          <StampGrid
+            stamps={liveStamps.map((v) => ({
+              ...v,
+              formattedDate: formatDate(v.visitDate),
+            }))}
+            parkName={parkName}
+            serialNumber={serialNumber}
+          />
         </div>
       )}
 
