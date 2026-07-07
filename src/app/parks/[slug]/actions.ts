@@ -10,6 +10,7 @@ import { setFamilyParkNickname } from "@/lib/park-nicknames";
 import { completeMatchingPassportChallenges } from "@/lib/challenges";
 import { ensureActiveBoard } from "@/lib/quest-board";
 import { calculateBaseXP } from "@/lib/rewards";
+import { DEFAULT_STAMP_COLOR, isValidStampColor } from "@/lib/stamp-palette";
 export interface StampState {
   error: string | null;
   info: string | null;
@@ -66,6 +67,19 @@ export async function stampPark(
   if (memoryRaw && typeof memoryRaw === "string" && memoryRaw.trim() !== "") {
     memory = memoryRaw.trim().slice(0, 1000);
   }
+
+  const stampColorRaw = formData.get("stampColor");
+  const stampColor =
+    stampColorRaw && typeof stampColorRaw === "string" &&
+    isValidStampColor(stampColorRaw.trim())
+      ? stampColorRaw.trim()
+      : DEFAULT_STAMP_COLOR;
+
+  const rotationRaw = formData.get("stampRotation");
+  const stampRotation =
+    rotationRaw && typeof rotationRaw === "string"
+      ? Math.max(-15, Math.min(15, parseInt(rotationRaw, 10) || 0))
+      : 0;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -143,6 +157,8 @@ export async function stampPark(
         notes: memory,
         createdByUserId: ctx.userId,
         visitSource: "live_stamp",
+        stampColor,
+        stampRotation,
       });
 
       const xp = calculateBaseXP(isFirstStampOfPark, stampsToday);

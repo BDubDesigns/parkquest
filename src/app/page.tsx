@@ -19,8 +19,8 @@ const steps = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-atlas-paper text-graphite">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-5 sm:px-8">
+    <main className="bg-atlas-paper text-graphite">
+      <div className="mx-auto flex max-w-6xl flex-col px-5 sm:px-8">
         <header className="flex items-center justify-between border-b border-forest-ink/12 py-5 sm:py-6">
           <Link
             href="/"
@@ -47,7 +47,7 @@ export default function Home() {
           </nav>
         </header>
 
-        <section className="grid flex-1 items-start gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
+        <section className="grid items-start gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
           <div>
             <p className="mb-4 max-w-max rounded-full bg-mist px-3 py-1.5 text-sm font-semibold text-canopy">
               A family park passport for Bellingham
