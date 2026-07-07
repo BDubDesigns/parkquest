@@ -19,8 +19,8 @@ const steps = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-atlas-paper text-graphite">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-5 sm:px-8">
+    <main className="bg-atlas-paper text-graphite">
+      <div className="mx-auto flex max-w-6xl flex-col px-5 sm:px-8">
         <header className="flex items-center justify-between border-b border-forest-ink/12 py-5 sm:py-6">
           <Link
             href="/"
