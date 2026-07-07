@@ -36,7 +36,7 @@ test.describe.serial("quest board lifecycle", () => {
     await page.goto("/passport");
 
     const section = getQuestBoardSection(page);
-    const completedChecks = section.locator('span:text-is("✓")');
+    const completedChecks = section.locator('svg[aria-label="Completed"]');
     await expect(completedChecks).toHaveCount(4);
   });
 

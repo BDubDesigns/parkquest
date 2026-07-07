@@ -47,24 +47,24 @@ export default function Home() {
           </nav>
         </header>
 
-        <section className="grid flex-1 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
+        <section className="grid flex-1 items-start gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
           <div>
             <p className="mb-4 max-w-max rounded-full bg-mist px-3 py-1.5 text-sm font-semibold text-canopy">
               A family park passport for Bellingham
             </p>
-            <h1 className="max-w-3xl font-display text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-balance text-forest-ink sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-balance text-forest-ink sm:text-5xl lg:text-6xl">
               Every park can become part of your family story.
             </h1>
-            <p className="mt-5 max-w-2xl text-xl font-semibold tracking-[-0.015em] text-canopy sm:text-2xl">
+            <p className="mt-4 max-w-2xl text-xl font-semibold tracking-[-0.015em] text-canopy sm:mt-5 sm:text-2xl">
               {tagline}
             </p>
-            <p className="mt-5 max-w-[62ch] text-base leading-7 text-pretty text-graphite/78 sm:text-lg">
+            <p className="mt-4 max-w-[62ch] text-base leading-7 text-pretty text-graphite/78 sm:mt-5 sm:text-lg">
               Discover Bellingham parks together, stamp every family visit, and
               turn days outside into a collection of Adventure Points, stickers,
               and Daily Quests.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/parks" className={actionPrimary}>
                 Explore Parks
               </Link>
@@ -80,35 +80,91 @@ export default function Home() {
             </div>
           </div>
 
-          <aside className="rounded-collectible bg-forest-ink p-6 text-white sm:p-8">
-            <div className="flex items-center justify-between gap-4 border-b border-white/18 pb-5">
+          <Link
+            href="/passport"
+            className="group block rounded-collectible bg-white p-5 ring-1 ring-forest-ink/12 transition-shadow hover:shadow-[0_4px_8px_rgba(18,55,42,0.14)] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-lake-blue sm:p-6"
+          >
+            <div className="flex items-center gap-2">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                className="size-4 shrink-0 fill-none stroke-forest-ink stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]"
+              >
+                <rect x="3" y="1" width="14" height="18" rx="2" />
+                <path d="M7 5h6M7 9h6M7 13h4" />
+              </svg>
+              <p className="text-xs font-semibold text-graphite/55">
+                Family Passport Preview
+              </p>
+            </div>
+
+            <div className="mt-4 flex items-start justify-between gap-3 border-b border-forest-ink/10 pb-3">
               <div>
-                <p className="text-sm font-semibold text-white/72">
-                  Your next outing can be
+                <p className="text-sm font-bold text-forest-ink">
+                  Whatcom Falls Park
                 </p>
-                <p className="mt-1 font-display text-2xl font-semibold tracking-[-0.015em]">
-                  A park-sized adventure
+                <p className="mt-0.5 text-xs text-graphite/50">
+                  Bellingham, WA
                 </p>
               </div>
-              <span className="text-4xl" aria-hidden="true">
-                🌲
+              <span className="inline-flex shrink-0 items-center rounded-md bg-stamp-red px-2 py-1 text-[0.625rem] font-bold leading-none tracking-wide text-white">
+                STAMPED
               </span>
             </div>
-            <ul className="mt-5 space-y-4 text-sm leading-6 text-white/82">
-              <li className="flex items-center gap-3">
-                <span aria-hidden="true">📍</span>
-                Explore parks across Bellingham
-              </li>
-              <li className="flex items-center gap-3">
-                <span aria-hidden="true">✓</span>
-                Stamp each park in your family passport
-              </li>
-              <li className="flex items-center gap-3">
-                <span aria-hidden="true">★</span>
-                Collect points, stickers, and rewards
-              </li>
-            </ul>
-          </aside>
+
+            <div className="space-y-2 border-b border-forest-ink/10 py-3 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 12 12"
+                    className="size-3 shrink-0"
+                  >
+                    <circle cx="6" cy="6" r="5" className="fill-canopy" />
+                    <path
+                      d="M4 6.5 5.5 8 8 4.5"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="text-graphite/72">Park Scout</span>
+                </span>
+                <span className="text-xs font-semibold text-forest-ink">
+                  +25 AP
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 12 12"
+                    className="size-3 shrink-0"
+                  >
+                    <circle cx="6" cy="6" r="5" className="fill-trail-gold" />
+                  </svg>
+                  <span className="text-graphite/72">First Stamp sticker</span>
+                </span>
+                <span className="text-xs font-semibold text-canopy">
+                  Earned
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-3">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-mist">
+                <div
+                  className="h-2 rounded-full bg-canopy transition-[width]"
+                  style={{ width: "17%" }}
+                />
+              </div>
+              <p className="mt-1.5 text-xs text-graphite/50">
+                8 of 46 Bellingham parks
+              </p>
+            </div>
+          </Link>
         </section>
 
         <section
@@ -133,16 +189,6 @@ export default function Home() {
               </li>
             ))}
           </ol>
-        </section>
-
-        <section className="border-t border-forest-ink/12 py-12 text-center sm:py-16">
-          <h2 className="font-display text-2xl font-semibold text-forest-ink">
-            Built for Bellingham families
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-lg leading-8 text-graphite/74">
-            Start close to home. Find a familiar favorite or discover a park
-            your family has never explored.
-          </p>
         </section>
       </div>
     </main>
