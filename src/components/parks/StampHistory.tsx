@@ -39,18 +39,9 @@ function makeSerialNumber(slug: string): string {
   return `PQ-${code}-${suffix}`;
 }
 
-const GRID_COLS = 3;
-const GRID_COLS_LG = 6;
+const GRID_COLS_WIDE = 6;
 const GRID_ROWS = 2;
-const MAX_VISIBLE = GRID_COLS_LG * GRID_ROWS;
-
-/**
- * Given the desired column count (from a specific breakpoint), returns the
- * maximum number of slots for a 2-row grid.
- */
-function slotsForCols(cols: number): number {
-  return cols * GRID_ROWS;
-}
+const MAX_VISIBLE = GRID_COLS_WIDE * GRID_ROWS;
 
 export default function StampHistory({
   visits,
@@ -82,10 +73,8 @@ export default function StampHistory({
       ? "bg-stamp-red/10 text-stamp-red"
       : "bg-graphite/8 text-graphite/65";
 
-  // Show enough stamps to fill 2 rows at the widest breakpoint
   const visibleStamps = liveStamps.slice(0, MAX_VISIBLE);
-  const totalSlots = slotsForCols(GRID_COLS);
-  const emptySlots = Math.max(0, totalSlots - visibleStamps.length);
+  const emptySlots = Math.max(0, MAX_VISIBLE - visibleStamps.length);
 
   const serialNumber = makeSerialNumber(parkSlug);
 
@@ -141,7 +130,10 @@ export default function StampHistory({
           >
             <div
               className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
-              style={{ gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)` }}
+              style={{
+                gridTemplateRows: `repeat(${GRID_ROWS}, minmax(112px, 1fr))`,
+                gridAutoRows: "0px",
+              }}
             >
               {visibleStamps.map((v) => (
                 <div
