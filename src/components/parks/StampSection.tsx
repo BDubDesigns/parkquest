@@ -75,11 +75,23 @@ export default async function StampSection({ parkSlug }: Props) {
   if (visitRows.length === 0) {
     return (
       <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
-        <h2 className={collectibleTitle}>Park Passport</h2>
-        <p className={`mt-2 text-sm ${mutedText}`}>
-          You haven&apos;t stamped this park yet.
+        <div className="flex items-center gap-2">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            className="size-4 fill-none stroke-forest-ink/60 stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]"
+          >
+            <rect x="3" y="1" width="14" height="18" rx="2" />
+            <path d="M7 5h6M7 9h6M7 13h4" />
+          </svg>
+          <p className="text-xs font-semibold text-graphite/55">
+            Passport entry
+          </p>
+        </div>
+        <p className={`mt-3 text-sm font-semibold text-forest-ink`}>
+          Ready for your family passport
         </p>
-        <div className="mt-3">
+        <div className="mt-4">
           <StampForm key={parkSlug} parkSlug={parkSlug} parkName={park.name} />
         </div>
         {ctx.role === "owner" && <BackfillForm parkSlug={parkSlug} />}

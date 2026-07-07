@@ -1,5 +1,4 @@
 import {
-  collectibleTitle,
   dividerSubtle,
   mutedText,
   surfacePrimary,
@@ -62,11 +61,41 @@ export default function StampHistory({
       ? "This park is in your family history."
       : "Stamped! This park is in your family passport.";
 
+  const statusLabel = stampedToday
+    ? "Stamped today"
+    : liveCount > 0
+      ? "Stamped"
+      : "In your history";
+
+  const statusTone =
+    stampedToday || liveCount > 0
+      ? "bg-stamp-red/10 text-stamp-red"
+      : "bg-graphite/8 text-graphite/65";
+
   return (
     <section className={`mt-6 sm:mt-8 ${surfacePrimary}`}>
-      <h2 className={collectibleTitle}>Park Passport</h2>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            className="size-4 fill-none stroke-forest-ink/60 stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]"
+          >
+            <rect x="3" y="1" width="14" height="18" rx="2" />
+            <path d="M7 5h6M7 9h6M7 13h4" />
+          </svg>
+          <p className="text-xs font-semibold text-graphite/55">
+            Passport entry
+          </p>
+        </div>
+        <span
+          className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusTone}`}
+        >
+          {statusLabel}
+        </span>
+      </div>
 
-      <p className="mt-2 text-sm font-semibold text-forest-ink">{heading}</p>
+      <p className="mt-3 text-sm font-semibold text-forest-ink">{heading}</p>
 
       {liveCount > 0 && (
         <p className={`mt-1 text-sm ${mutedText}`}>
