@@ -5,6 +5,10 @@ import { familyGroups, familyMembers } from "@/db/private";
 import * as authSchema from "@/db/auth";
 
 export const auth = betterAuth({
+  baseURL: {
+    allowedHosts: ["parkquest.club", "*.parkquest.club", "localhost:*"],
+    protocol: process.env.NODE_ENV === "production" ? "https" : "auto",
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: authSchema,
