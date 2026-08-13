@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "projectSlug": "parkquest",
+  "workState": "active",
+  "currentFocus": "Continue improving ParkQuest's family park-discovery and passport experience through focused product slices.",
+  "latestCompleted": {
+    "summary": "Shipped the park-detail passport card, stamp grid, and admin verification tools.",
+    "date": "2026-08-13",
+    "url": "https://github.com/BDubDesigns/parkquest/pull/72"
+  },
+  "nextStep": "Choose the next approved ParkQuest product issue and run it through the normal one-issue, one-PR review loop.",
+  "lastMeaningfulUpdate": "2026-08-13",
+  "highlights": [
+    {
+      "summary": "Delivered the park-detail passport card with stamp grid and admin tools for ParkQuest.",
+      "date": "2026-08-13",
+      "url": "https://github.com/BDubDesigns/parkquest/pull/72"
+    }
+  ]
+}
