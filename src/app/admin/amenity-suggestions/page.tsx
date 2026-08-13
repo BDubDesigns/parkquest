@@ -29,7 +29,7 @@ export default async function AmenitySuggestionsAdminPage() {
   });
 
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-4 py-8 sm:px-6 md:py-10">
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 md:py-10">
       <SectionHeader
         as="h1"
         title="Amenity verification queue"

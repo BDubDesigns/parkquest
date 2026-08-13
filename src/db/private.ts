@@ -86,6 +86,8 @@ export const visits = pgTable(
     visitSource: visitSourceEnum("visit_source")
       .default("live_stamp")
       .notNull(),
+    stampColor: varchar("stamp_color", { length: 7 }).default("#12372a"),
+    stampRotation: integer("stamp_rotation").default(0).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

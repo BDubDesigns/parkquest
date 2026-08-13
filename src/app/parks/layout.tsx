@@ -1,5 +1,6 @@
 import Link from "next/link";
 import UserMenu from "@/components/auth/UserMenu";
+import AdminNavLink from "@/components/auth/AdminNavLink";
 import SectionHeader from "@/components/ui/SectionHeader";
 import {
   linkText,
@@ -30,6 +31,7 @@ export default function ParksLayout({
               /
             </span>
             <UserMenu />
+            <AdminNavLink />
           </nav>
           <SectionHeader
             as="h1"
