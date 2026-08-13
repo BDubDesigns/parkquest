@@ -187,15 +187,26 @@ function isAbsoluteHttpsUrl(value: string): boolean {
     }
     if (ipKind === 6) {
       const groups = expandIpv6(host);
-      // IPv4-mapped IPv6 (::ffff:0:0/96): translate the final 32 bits back
-      // into four octets and apply the IPv4 private-policy. `new URL`
-      // normalizes the dotted tail to hexadecimal (e.g. ::ffff:127.0.0.1 ->
-      // ::ffff:7f00:1), so this resolves the mapped octets from the hex groups
-      // rather than assuming a dotted tail survives URL normalization.
+      // Native private IPv6 guards (:: unspecified, ::1 loopback, link-local,
+      // unique-local) must stay rejected regardless of any embedded IPv4 form
+      // below. In particular `::1` decodes to 0.0.0.1, which the IPv4 policy
+      // does not flag, so reject native private IPv6 before translating any
+      // embedded IPv4.
+      if (isPrivateIpv6(groups)) {
+        return false;
+      }
+      // Embedded-IPv4 IPv6: either IPv4-mapped (::ffff:0:0/96, groups 0-4 zero
+      // with group 5 = 0xffff) or IPv4-compatible (::/96, groups 0-5 all zero).
+      // Translate the final 32 bits back into four octets and apply the IPv4
+      // private-policy. `new URL` normalizes the dotted tail to hexadecimal
+      // (e.g. ::127.0.0.1 -> ::7f00:1 and ::ffff:127.0.0.1 -> ::ffff:7f00:1),
+      // so this resolves the octets from the hex groups rather than assuming a
+      // dotted tail survives URL normalization.
       const isIpv4Mapped =
         groups.slice(0, 5).every((group) => group === 0) &&
         groups[5] === 0xffff;
-      if (isIpv4Mapped) {
+      const isIpv4Compatible = groups.slice(0, 6).every((group) => group === 0);
+      if (isIpv4Mapped || isIpv4Compatible) {
         const octets = [
           groups[6] >> 8,
           groups[6] & 0xff,
@@ -204,7 +215,7 @@ function isAbsoluteHttpsUrl(value: string): boolean {
         ];
         return !isPrivateIpv4(octets);
       }
-      return !isPrivateIpv6(groups);
+      return true;
     }
     const lower = host.toLowerCase();
     return !(lower === "localhost" || lower.endsWith(".localhost"));
@@ -402,6 +413,14 @@ describe("isAbsoluteHttpsUrl rejects non-public hosts", () => {
     "https://[::ffff:10.0.0.1]/example",
     "https://[::ffff:192.168.1.1]/example",
     "https://[::ffff:169.254.0.1]/example",
+    // IPv4-compatible IPv6 (::/96) that decodes to a non-public IPv4 host.
+    // `new URL` normalizes the dotted tail to hexadecimal (e.g.
+    // ::127.0.0.1 -> [::7f00:1]), so the predicate must translate the final
+    // 32 bits back into octets exactly as it does for the mapped form.
+    "https://[::127.0.0.1]/example",
+    "https://[::10.0.0.1]/example",
+    "https://[::192.168.1.1]/example",
+    "https://[::169.254.0.1]/example",
   ];
 
   for (const url of nonPublicUrls) {
