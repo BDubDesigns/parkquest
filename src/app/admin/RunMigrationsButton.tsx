@@ -7,7 +7,7 @@ import { runMigrations } from "./actions";
 export function RunMigrationsButton({
   pendingCount,
 }: {
-  pendingCount: number;
+  pendingCount: number | null;
 }) {
   const [confirming, setConfirming] = useState(false);
   const [running, setRunning] = useState(false);
@@ -29,16 +29,22 @@ export function RunMigrationsButton({
     }
   }
 
+  // Only a verified 0 hides the control. An unknown state (null) must keep the
+  // run action available rather than risk a false "all applied".
   if (pendingCount === 0 && !result) {
     return null;
   }
+
+  const countLabel =
+    pendingCount === null
+      ? "pending migrations"
+      : `${pendingCount} migration${pendingCount !== 1 ? "s" : ""}`;
 
   if (confirming) {
     return (
       <div className="mt-3 space-y-3">
         <p className="text-sm font-medium text-forest-ink">
-          Run {pendingCount} migration{pendingCount !== 1 ? "s" : ""}? This may
-          briefly lock tables.
+          Run {countLabel}? This may briefly lock tables.
         </p>
         <div className="flex flex-wrap gap-3">
           <button
@@ -68,7 +74,7 @@ export function RunMigrationsButton({
   return (
     <div className="mt-3 space-y-3">
       <button onClick={() => setConfirming(true)} className={actionSecondary}>
-        Run {pendingCount} migration{pendingCount !== 1 ? "s" : ""}
+        Run {countLabel}
       </button>
       {result && (
         <p className="rounded-control bg-danger/8 px-3 py-2 text-sm font-medium text-danger">

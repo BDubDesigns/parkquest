@@ -41,21 +41,48 @@ export async function runMigrations(): Promise<{
   }
 }
 
-export async function getPendingMigrationCount(): Promise<number> {
+type JournalEntry = { tag: string; when: number };
+
+/**
+ * Pure, DB-free accounting of how many journal entries Drizzle would still
+ * apply. Mirrors the migrator's applied-tracking check exactly
+ * (`!lastDbMigration || Number(created_at) < folderMillis` in
+ * pg-core/dialect.cjs): a journal entry is pending when its `when`
+ * (folderMillis) is strictly newer than the effective latest applied time.
+ */
+export function countPending(
+  entries: Pick<JournalEntry, "when">[],
+  effectiveLatest: number,
+): number {
+  return entries.filter((entry) => entry.when > effectiveLatest).length;
+}
+
+export async function getPendingMigrationCount(): Promise<number | null> {
+  let journalEntries: JournalEntry[];
   try {
     const journal = JSON.parse(
       readFileSync(join(process.cwd(), "drizzle/meta/_journal.json"), "utf-8"),
     );
-    const journalTags: string[] = journal.entries.map(
-      (e: { tag: string }) => e.tag,
-    );
-
-    const result = await db
-      .execute<{ hash: string }>(sql`SELECT hash FROM __drizzle_migrations`);
-
-    const applied = new Set(result.rows.map((r) => r.hash));
-    return journalTags.filter((tag) => !applied.has(tag)).length;
+    journalEntries = journal.entries as JournalEntry[];
   } catch {
-    return 0;
+    // Journal unreadable/corrupt — state genuinely cannot be determined.
+    return null;
   }
+
+  let effectiveLatest: number;
+  try {
+    // Single latest applied migration, exactly as Drizzle's migrator reads it
+    // (`select id, hash, created_at from drizzle.__drizzle_migrations order by
+    // created_at desc limit 1`). An empty table is the same as Drizzle's
+    // `!lastDbMigration`, so `created_at ?? 0` leaves everything pending.
+    const result = await db.execute<{ created_at: string | null }>(
+      sql`SELECT id, hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC LIMIT 1`,
+    );
+    effectiveLatest = Number(result.rows[0]?.created_at ?? 0);
+  } catch {
+    // DB unreachable / migrations table missing — never report a false 0.
+    return null;
+  }
+
+  return countPending(journalEntries, effectiveLatest);
 }

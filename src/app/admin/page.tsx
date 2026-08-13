@@ -28,7 +28,7 @@ export default async function AdminPage() {
   const pendingMigrations = await getPendingMigrationCount();
 
   return (
-    <div>
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 md:py-10">
       <SectionHeader
         as="h1"
         title="Admin"
@@ -52,12 +52,14 @@ export default async function AdminPage() {
       <section className={`mt-6 ${surfacePrimary}`}>
         <h2 className={sectionTitle}>Database migrations</h2>
         <p className={`mt-2 text-sm ${mutedText}`}>
-          {pendingMigrations > 0
-            ? `${pendingMigrations} pending migration${pendingMigrations !== 1 ? "s" : ""}.`
-            : "All migrations have been applied."}
+          {pendingMigrations === null
+            ? "Could not determine migration status."
+            : pendingMigrations > 0
+              ? `${pendingMigrations} pending migration${pendingMigrations !== 1 ? "s" : ""}.`
+              : "All migrations have been applied."}
         </p>
         <RunMigrationsButton pendingCount={pendingMigrations} />
       </section>
-    </div>
+    </main>
   );
 }
