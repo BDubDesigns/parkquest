@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { isIP } from "node:net";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -94,15 +95,101 @@ function isRealNonFutureDate(value: string): boolean {
   return date.getTime() <= todayUtc;
 }
 
+/**
+ * Expand a valid (brackets stripped) IPv6 literal into its 8 16-bit groups so
+ * prefix ranges can be checked deterministically. Handles "::" compression and
+ * an embedded IPv4 tail (for example `::ffff:127.0.0.1`). No DNS involved.
+ */
+function expandIpv6(address: string): number[] {
+  let head = address;
+  let tail: number[] = [];
+  if (head.includes(".")) {
+    const lastColon = head.lastIndexOf(":");
+    const ipv4 = head
+      .slice(lastColon + 1)
+      .split(".")
+      .map(Number);
+    head = head.slice(0, lastColon);
+    tail = [ipv4[0] * 256 + ipv4[1], ipv4[2] * 256 + ipv4[3]];
+  }
+  const halves = head.split("::");
+  const left = halves[0] ? halves[0].split(":").filter(Boolean) : [];
+  const right = halves[1] ? halves[1].split(":").filter(Boolean) : [];
+  const leftVals = left.map((part) => parseInt(part, 16));
+  const rightVals = right.map((part) => parseInt(part, 16)).concat(tail);
+  const missing = 8 - leftVals.length - rightVals.length;
+  return leftVals.concat(new Array(missing).fill(0), rightVals);
+}
+
+/** True for IPv4 [a, b, c, d] octets in a private / loopback / link-local / unspecified range. */
+function isPrivateIpv4(octets: number[]): boolean {
+  const [a, b, c, d] = octets;
+  if (a === 10) {
+    return true; // 10.0.0.0/8 private
+  }
+  if (a === 172 && b >= 16 && b <= 31) {
+    return true; // 172.16.0.0/12 private
+  }
+  if (a === 192 && b === 168) {
+    return true; // 192.168.0.0/16 private
+  }
+  if (a === 127) {
+    return true; // 127.0.0.0/8 loopback
+  }
+  if (a === 169 && b === 254) {
+    return true; // 169.254.0.0/16 link-local
+  }
+  if (a === 0 && b === 0 && c === 0 && d === 0) {
+    return true; // 0.0.0.0 unspecified
+  }
+  return false;
+}
+
+/** True for the 16-bit groups of an IPv6 literal in a private / loopback / link-local / unspecified range. */
+function isPrivateIpv6(groups: number[]): boolean {
+  if (groups.every((group) => group === 0)) {
+    return true; // :: unspecified
+  }
+  if (groups.slice(0, 7).every((group) => group === 0) && groups[7] === 1) {
+    return true; // ::1 loopback
+  }
+  if (groups[0] >> 6 === 0x3fa) {
+    return true; // fe80::/10 link-local
+  }
+  if (groups[0] >> 9 === 0x7e) {
+    return true; // fc00::/7 unique-local
+  }
+  return false;
+}
+
+/**
+ * Absolute public HTTPS URL contract (Issue #77): https protocol, a nonempty
+ * host, no username/password credentials, and a host that is not a localhost
+ * name or a private / loopback / link-local / unspecified IP (IPv4 or IPv6).
+ * IP detection uses node:net `isIP`; only the localhost DNS-name case is ever
+ * compared by name, so this stays a deterministic disk-reading unit test.
+ */
 function isAbsoluteHttpsUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return (
-      url.protocol === "https:" &&
-      url.hostname.length > 0 &&
-      url.username.length === 0 &&
-      url.password.length === 0
-    );
+    if (
+      url.protocol !== "https:" ||
+      url.hostname.length === 0 ||
+      url.username.length > 0 ||
+      url.password.length > 0
+    ) {
+      return false;
+    }
+    const host = url.hostname.replace(/^\[|\]$/g, "");
+    const ipKind = isIP(host);
+    if (ipKind === 4) {
+      return !isPrivateIpv4(host.split(".").map(Number));
+    }
+    if (ipKind === 6) {
+      return !isPrivateIpv6(expandIpv6(host));
+    }
+    const lower = host.toLowerCase();
+    return !(lower === "localhost" || lower.endsWith(".localhost"));
   } catch {
     return false;
   }
@@ -263,6 +350,42 @@ describe("qcfailed status manifest (schema version one)", () => {
         Number.isInteger(change.pullRequestNumber) &&
         change.pullRequestNumber > 0,
       "currentChange.pullRequestNumber must be a positive integer",
+    ).toBe(true);
+  });
+});
+
+describe("isAbsoluteHttpsUrl rejects non-public hosts", () => {
+  const nonPublicUrls = [
+    // localhost hostnames
+    "https://localhost/example",
+    "https://foo.localhost/example",
+    // IPv4 private / loopback / link-local / unspecified
+    "https://10.0.0.1/example",
+    "https://10.255.255.255/example",
+    "https://172.16.0.1/example",
+    "https://172.31.255.255/example",
+    "https://192.168.1.1/example",
+    "https://127.0.0.1/example",
+    "https://127.1.2.3/example",
+    "https://169.254.0.1/example",
+    "https://0.0.0.0/example",
+    // IPv6 loopback / unspecified / link-local / unique-local
+    "https://[::1]/example",
+    "https://[::]/example",
+    "https://[fe80::1]/example",
+    "https://[fc00::1]/example",
+    "https://[fd12:3456::1]/example",
+  ];
+
+  for (const url of nonPublicUrls) {
+    it(`rejects ${url}`, () => {
+      expect(isAbsoluteHttpsUrl(url)).toBe(false);
+    });
+  }
+
+  it("accepts the committed public GitHub PR URL", () => {
+    expect(
+      isAbsoluteHttpsUrl("https://github.com/BDubDesigns/parkquest/pull/72"),
     ).toBe(true);
   });
 });
