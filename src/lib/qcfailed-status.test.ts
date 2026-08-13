@@ -186,7 +186,25 @@ function isAbsoluteHttpsUrl(value: string): boolean {
       return !isPrivateIpv4(host.split(".").map(Number));
     }
     if (ipKind === 6) {
-      return !isPrivateIpv6(expandIpv6(host));
+      const groups = expandIpv6(host);
+      // IPv4-mapped IPv6 (::ffff:0:0/96): translate the final 32 bits back
+      // into four octets and apply the IPv4 private-policy. `new URL`
+      // normalizes the dotted tail to hexadecimal (e.g. ::ffff:127.0.0.1 ->
+      // ::ffff:7f00:1), so this resolves the mapped octets from the hex groups
+      // rather than assuming a dotted tail survives URL normalization.
+      const isIpv4Mapped =
+        groups.slice(0, 5).every((group) => group === 0) &&
+        groups[5] === 0xffff;
+      if (isIpv4Mapped) {
+        const octets = [
+          groups[6] >> 8,
+          groups[6] & 0xff,
+          groups[7] >> 8,
+          groups[7] & 0xff,
+        ];
+        return !isPrivateIpv4(octets);
+      }
+      return !isPrivateIpv6(groups);
     }
     const lower = host.toLowerCase();
     return !(lower === "localhost" || lower.endsWith(".localhost"));
@@ -375,6 +393,15 @@ describe("isAbsoluteHttpsUrl rejects non-public hosts", () => {
     "https://[fe80::1]/example",
     "https://[fc00::1]/example",
     "https://[fd12:3456::1]/example",
+    // IPv4-mapped IPv6 (::ffff:0:0/96) that resolves to a non-public IPv4
+    // loopback / private / link-local host. `new URL` normalizes the dotted
+    // tail to hexadecimal (e.g. ::ffff:127.0.0.1 -> ::ffff:7f00:1), so the
+    // predicate must translate the final 32 bits back into octets, not rely
+    // on a dotted tail surviving URL normalization.
+    "https://[::ffff:127.0.0.1]/example",
+    "https://[::ffff:10.0.0.1]/example",
+    "https://[::ffff:192.168.1.1]/example",
+    "https://[::ffff:169.254.0.1]/example",
   ];
 
   for (const url of nonPublicUrls) {
