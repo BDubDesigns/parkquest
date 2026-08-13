@@ -7,6 +7,7 @@ import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import { getCurrentAdminUserId } from "@/lib/admin";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { countPending, type JournalEntry } from "./migration-status";
 
 export async function runMigrations(): Promise<{
   success: boolean;
@@ -39,22 +40,6 @@ export async function runMigrations(): Promise<{
       // lock released on session end
     }
   }
-}
-
-type JournalEntry = { tag: string; when: number };
-
-/**
- * Pure, DB-free accounting of how many journal entries Drizzle would still
- * apply. Mirrors the migrator's applied-tracking check exactly
- * (`!lastDbMigration || Number(created_at) < folderMillis` in
- * pg-core/dialect.cjs): a journal entry is pending when its `when`
- * (folderMillis) is strictly newer than the effective latest applied time.
- */
-export function countPending(
-  entries: Pick<JournalEntry, "when">[],
-  effectiveLatest: number,
-): number {
-  return entries.filter((entry) => entry.when > effectiveLatest).length;
 }
 
 export async function getPendingMigrationCount(): Promise<number | null> {

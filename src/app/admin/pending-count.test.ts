@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { countPending, getPendingMigrationCount } from "./actions";
+import { countPending } from "./migration-status";
+import { getPendingMigrationCount } from "./actions";
 import type { db } from "@/db";
 
 const mocks = vi.hoisted(() => ({
